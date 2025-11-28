@@ -1,0 +1,1839 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infinity Corp S.A.</title>
+    <!-- Fuente futurista para el logo y títulos -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <!-- Iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        /* --- ESTILOS GENERALES --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scroll-behavior: smooth; /* Desplazamiento suave */
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #0f1114; /* Fondo general oscuro */
+            color: #e0e0e0;
+            overflow-x: hidden;
+        }
+
+        /* --- PANTALLA DE INTRO (SPLASH SCREEN) --- */
+        #splash-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: radial-gradient(circle at center, #2b303b 0%, #121418 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 1s ease-in-out, transform 1s ease-in-out;
+        }
+
+        /* Contenedor del Logo */
+        .logo-wrapper {
+            position: relative;
+            width: 300px;
+            height: 150px;
+            filter: drop-shadow(0 0 15px rgba(0, 198, 255, 0.4));
+        }
+
+        svg {
+            width: 100%;
+            height: 100%;
+            overflow: visible;
+        }
+
+        .path {
+            fill: none;
+            stroke-width: 10;
+            stroke-linecap: round;
+            opacity: 0;
+        }
+
+        .path-energy {
+            stroke: #00d2ff;
+            stroke-width: 14;
+            filter: blur(5px);
+            opacity: 0;
+        }
+
+        .path-metal {
+            stroke: url(#metal-gradient);
+            filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.8));
+        }
+
+        .dot {
+            fill: #fff;
+            filter: drop-shadow(0 0 8px #fff);
+            opacity: 0;
+        }
+
+        .brand-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 900;
+            letter-spacing: 6px;
+            margin-top: 10px;
+            text-transform: uppercase;
+            background: linear-gradient(to bottom, #ffffff 0%, #b4bdd1 50%, #4a5361 51%, #aeb7ca 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .brand-subtitle {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2rem;
+            color: #00d2ff;
+            letter-spacing: 4px;
+            margin-top: 5px;
+            opacity: 0;
+            text-transform: uppercase;
+        }
+
+        .lens-flare {
+            position: absolute;
+            top: 40%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-15deg);
+            width: 0px;
+            height: 4px;
+            background: #fff;
+            box-shadow: 0 0 50px 10px rgba(255,255,255,0.8), 0 0 100px 20px rgba(0, 210, 255, 0.6);
+            opacity: 0;
+            z-index: 100;
+        }
+
+        /* --- CONTENIDO REAL DEL SITIO WEB --- */
+        #main-website {
+            opacity: 0;
+            transition: opacity 1.5s ease-in-out;
+            position: relative;
+            min-height: 100vh;
+        }
+
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 15px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: fixed; /* Header fijo */
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+        /* Mobile adjustment for header */
+        @media (max-width: 768px) {
+            header {
+                padding: 15px 20px;
+            }
+            header nav {
+                display: none; /* Hide nav links on small screens, can be improved with a burger menu */
+            }
+        }
+
+        .nav-logo {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: #2b303b;
+        }
+        
+        .nav-logo span { color: #00d2ff; }
+
+        /* --- ESTILOS EFECTO BURBUJA EN EL MENÚ --- */
+        header nav {
+            display: flex;
+            gap: 5px; /* Espacio entre botones */
+        }
+
+        header nav a {
+            text-decoration: none;
+            color: #333;
+            font-weight: bold;
+            padding: 10px 20px; /* Espacio interior para la burbuja */
+            border-radius: 30px; /* Forma de píldora/burbuja */
+            position: relative;
+            z-index: 1;
+            transition: color 0.3s ease; /* Suaviza el cambio de color de texto */
+        }
+
+        /* La burbuja invisible que crece */
+        header nav a::before {
+            content: '';
+            position: absolute;
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%;
+            background: linear-gradient(45deg, #00d2ff, #0078ff); /* Gradiente corporativo */
+            border-radius: 30px;
+            z-index: -1; /* Detrás del texto */
+            transform: scale(0.5); /* Empieza pequeña */
+            opacity: 0; /* Empieza invisible */
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Efecto rebote/elástico */
+        }
+
+        /* Estado Hover (cuando pasas el mouse) */
+        header nav a:hover {
+            color: white; /* Texto cambia a blanco */
+        }
+
+        header nav a:hover::before {
+            transform: scale(1); /* Crece al tamaño real */
+            opacity: 1; /* Se hace visible */
+            box-shadow: 0 5px 15px rgba(0, 210, 255, 0.4); /* Brillo suave */
+        }
+
+        /* --------------------------------------- */
+
+        .hero {
+            height: 100vh;
+            background: linear-gradient(rgba(15, 17, 20, 0.85), rgba(15, 17, 20, 0.7)), url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?ixlib=rb-1.2.1&auto=format&fit=crop&w=1352&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed; /* Efecto Parallax simple */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin-top: 0;
+        }
+
+        .hero h1 { 
+            font-size: 3.5rem; 
+            margin-bottom: 20px; 
+            font-family: 'Orbitron', sans-serif; 
+            text-shadow: 0 0 20px rgba(0, 210, 255, 0.5);
+            line-height: 1.2;
+        }
+        .hero p { font-size: 1.2rem; max-width: 700px; line-height: 1.6; color: #dbe4eb; }
+        
+        .btn { 
+            margin-top: 30px; 
+            padding: 15px 40px; 
+            background: linear-gradient(45deg, #00d2ff, #0078ff); 
+            border: none; 
+            color: white; 
+            font-weight: bold; 
+            font-size: 1rem; 
+            cursor: pointer; 
+            border-radius: 30px; 
+            transition: 0.3s; 
+            box-shadow: 0 0 15px rgba(0, 210, 255, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            text-decoration: none; /* Por si es un <a> */
+        }
+        .btn:hover { transform: scale(1.05); box-shadow: 0 0 25px rgba(0, 210, 255, 0.7); }
+        
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.5rem; }
+            .hero p { font-size: 1rem; }
+            .services-section, .dev-section, .contact-section, .transcendent-section { padding: 80px 20px; }
+            .contact-container { padding: 30px; }
+        }
+
+        /* --- SECCIÓN DE SERVICIOS --- */
+        .services-section {
+            padding: 100px 50px;
+            background-color: #1a1d24;
+            text-align: center;
+        }
+        
+        /* Variante para la sección de Desarrollo */
+        .dev-section {
+            background-color: #121418; 
+            padding: 100px 50px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .dev-section::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 1px;
+            background: linear-gradient(90deg, transparent, #333, transparent);
+        }
+
+        .section-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
+            color: #fff;
+            margin-bottom: 15px;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 60%;
+            height: 3px;
+            background: #00d2ff;
+            margin: 10px auto 0;
+            box-shadow: 0 0 10px #00d2ff;
+        }
+
+        .section-desc {
+            color: #a0aab5;
+            max-width: 600px;
+            margin: 0 auto 60px;
+            font-size: 1.1rem;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .service-card {
+            background: #232730;
+            padding: 40px 30px;
+            border-radius: 15px;
+            border: 1px solid #333;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            text-align: left;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between; /* Para empujar el botón al fondo si existe */
+        }
+
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 4px;
+            background: linear-gradient(90deg, #00d2ff, #0078ff);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s ease;
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+            border-color: #444;
+        }
+
+        .service-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .service-icon {
+            font-size: 2.5rem;
+            color: #00d2ff;
+            margin-bottom: 25px;
+            display: inline-block;
+        }
+
+        .service-card h3 {
+            font-family: 'Orbitron', sans-serif;
+            color: white;
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+        }
+
+        .service-card p {
+            color: #a0aab5;
+            line-height: 1.6;
+            font-size: 0.95rem;
+            margin-bottom: 20px; /* Espacio antes del botón */
+        }
+
+        /* Botón pequeño dentro de la tarjeta */
+        .card-btn {
+            background: none;
+            border: 1px solid #00d2ff;
+            color: #00d2ff;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            transition: all 0.3s;
+            cursor: pointer;
+            width: fit-content;
+            margin-top: auto; /* Empuja el botón hacia abajo */
+        }
+        .card-btn:hover {
+            background: #00d2ff;
+            color: #121418;
+            box-shadow: 0 0 10px rgba(0, 210, 255, 0.5);
+        }
+        
+        /* --- SECCIÓN DE PROSPECTIVA TRASCENDENTE (ELIMINADA) --- */
+        
+        
+        /* --- SECCIÓN DE CONTACTO CORPORATIVO --- */
+        .contact-section {
+            padding: 100px 20px;
+            background: radial-gradient(circle at bottom, #1a202c 0%, #0f1114 100%);
+            text-align: center;
+        }
+
+        .contact-container {
+            max-width: 700px;
+            margin: 0 auto;
+            background: #1e222b;
+            padding: 50px;
+            border-radius: 20px;
+            border: 1px solid #333;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .contact-container::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 5px;
+            background: linear-gradient(90deg, #00d2ff, transparent, #0078ff);
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            color: #00d2ff;
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 15px;
+            background: #13161c;
+            border: 1px solid #333;
+            color: #fff;
+            border-radius: 5px;
+            font-family: 'Roboto', sans-serif;
+            transition: 0.3s;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #00d2ff;
+            box-shadow: 0 0 10px rgba(0, 210, 255, 0.2);
+        }
+
+        select.form-control {
+            cursor: pointer;
+        }
+
+        /* --- ESTILOS PARA LA INTEGRACIÓN LLM (MODALES) --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(5px);
+            z-index: 10000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .modal-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        /* Estilo base para todos los contenidos de modal */
+        .modal-content {
+            background: #1a1d24;
+            padding: 40px;
+            border-radius: 15px;
+            border: 1px solid #00d2ff;
+            box-shadow: 0 0 30px rgba(0, 210, 255, 0.2);
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            color: white;
+            position: relative;
+            transform: scale(0.9);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        .modal-overlay.active .modal-content {
+            transform: scale(1);
+        }
+
+        /* Estilo específico para los modales de Servicio (más grande) */
+        #ai-consulting-modal .modal-content,
+        #quantum-security-modal .modal-content,
+        #iot-ecosystems-modal .modal-content,
+        #blockchain-infrastructure-modal .modal-content,
+        #mobile-ecosystems-modal .modal-content,
+        #web-platforms-modal .modal-content,
+        #interactive-reality-modal .modal-content {
+            max-width: 900px; 
+            padding: 0; 
+            border: none; 
+            box-shadow: 0 0 50px rgba(0, 198, 255, 0.5); 
+            background: #121418; 
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            color: #888;
+            cursor: pointer;
+            font-size: 1.5rem;
+            z-index: 100; 
+        }
+        .close-modal:hover {
+            color: white;
+        }
+
+        .modal-input {
+            width: 100%;
+            padding: 12px;
+            margin: 20px 0;
+            background: #2b303b;
+            border: 1px solid #444;
+            color: white;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        .modal-input:focus {
+            outline: none;
+            border-color: #00d2ff;
+        }
+
+        .ai-result-box {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(0, 210, 255, 0.1);
+            border-left: 3px solid #00d2ff;
+            text-align: left;
+            min-height: 80px;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            display: none; 
+            border-radius: 5px;
+            word-wrap: break-word; /* Asegura el ajuste de texto */
+        }
+        
+        /* Estilos de la página interna de Servicio */
+        .ai-page-content {
+            padding: 40px;
+            text-align: left;
+        }
+
+        .ai-page-content h2 {
+            font-family: 'Orbitron', sans-serif;
+            color: #00d2ff;
+            margin-top: 0;
+            font-size: 2.5rem;
+            border-bottom: 2px solid rgba(0, 210, 255, 0.3);
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .ai-page-content h3 {
+            font-family: 'Orbitron', sans-serif;
+            color: #ffffff;
+            font-size: 1.5rem;
+            margin-top: 30px;
+            margin-bottom: 20px;
+        }
+
+        .ai-page-content p {
+            font-size: 1rem;
+            line-height: 1.7;
+            margin-bottom: 20px;
+            color: #a0aab5;
+        }
+
+        /* Panel de Datos / Visualización */
+        .data-visualization-panel {
+            background: #1a1d24;
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border: 1px solid #333;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            align-items: center;
+        }
+        .data-visualization-panel img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 210, 255, 0.4);
+            transition: transform 0.5s ease;
+        }
+        .data-visualization-panel:hover img {
+            transform: scale(1.02);
+        }
+        .data-info h4 {
+            font-family: 'Orbitron', sans-serif;
+            color: #00d2ff;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+
+        /* Grid de Características Clave */
+        .key-features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        .feature-box {
+            background: #1a1d24;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 3px solid #00d2ff;
+            transition: transform 0.3s;
+        }
+        .feature-box:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0, 198, 255, 0.2);
+        }
+        .feature-box i {
+            font-size: 1.8rem;
+            color: #00d2ff;
+            margin-bottom: 10px;
+        }
+        .feature-box strong {
+            display: block;
+            font-family: 'Orbitron', sans-serif;
+            color: white;
+            margin-bottom: 5px;
+        }
+        .feature-box p {
+            font-size: 0.9rem;
+            color: #a0aab5;
+            margin-bottom: 0;
+        }
+        
+        /* --- PIE DE PÁGINA --- */
+        footer {
+            background-color: #121418;
+            color: #a0aab5;
+            padding: 30px 50px;
+            text-align: center;
+            border-top: 1px solid #333;
+            font-size: 0.9rem;
+            box-shadow: 0 -5px 15px rgba(0,0,0,0.2);
+            font-family: 'Roboto', sans-serif;
+        }
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+
+        /* Botón Chat Flotante */
+        .chat-fab {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(45deg, #00d2ff, #0078ff);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            transition: transform 0.3s, box-shadow 0.3s;
+            z-index: 5000;
+        }
+        .chat-fab:hover {
+            transform: scale(1.1) rotate(10deg);
+            box-shadow: 0 8px 25px rgba(0, 210, 255, 0.5);
+        }
+
+        /* Ventana Chat */
+        .chat-window {
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            width: 320px;
+            height: 450px;
+            background: #fff;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            z-index: 4999;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            transform: translateY(20px);
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .chat-window.active {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+
+        .chat-header {
+            background: linear-gradient(90deg, #2b303b, #1a1d24);
+            color: white;
+            padding: 15px;
+            font-family: 'Orbitron', sans-serif;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
+        }
+        .chat-body {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            background: #f0f4f8;
+            font-size: 0.9rem;
+            color: #333; /* Texto oscuro para el chat */
+            display: flex;
+            flex-direction: column;
+        }
+        .chat-footer {
+            padding: 10px;
+            border-top: 1px solid #eee;
+            display: flex;
+            background: #fff;
+        }
+        .chat-input {
+            flex: 1;
+            padding: 8px 15px;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .chat-input:focus {
+            border-color: #00d2ff;
+        }
+        .chat-send {
+            background: none;
+            border: none;
+            color: #00d2ff;
+            margin-left: 10px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: color 0.2s;
+        }
+        .chat-send:hover {
+            color: #0078ff;
+        }
+
+        .message {
+            margin-bottom: 10px;
+            padding: 8px 12px;
+            border-radius: 10px;
+            max-width: 80%;
+            align-self: flex-start;
+        }
+        .message.user {
+            background: #00d2ff;
+            color: white;
+            align-self: flex-end;
+            margin-left: auto;
+        }
+        .message.bot {
+            background: #e0e0e0;
+            color: #333;
+            align-self: flex-start;
+        }
+
+        /* Spinner */
+        .spinner {
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top: 3px solid #fff;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+        }
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .fade-out {
+            opacity: 0;
+            pointer-events: none;
+            transform: scale(1.1);
+        }
+        .content-visible {
+            opacity: 1 !important;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- INTRO / SPLASH SCREEN -->
+    <div id="splash-screen">
+        <div class="logo-wrapper">
+            <svg viewBox="0 0 300 150">
+                <defs>
+                    <linearGradient id="metal-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" stop-color="#e0e0e0" />
+                        <stop offset="50%" stop-color="#909090" />
+                        <stop offset="51%" stop-color="#404040" />
+                        <stop offset="100%" stop-color="#e0e0e0" />
+                    </linearGradient>
+                </defs>
+                
+                <!-- Símbolo de infinito -->
+                <path id="infinity-energy" class="path path-energy" 
+                      d="M80,75 C80,35 140,35 150,75 C160,115 220,115 220,75 C220,35 160,35 150,75 C140,115 80,115 80,75 Z" />
+
+                <path id="infinity-metal" class="path path-metal" 
+                      d="M80,75 C80,35 140,35 150,75 C160,115 220,115 220,75 C220,35 160,35 150,75 C140,115 80,115 80,75 Z" />
+                
+                <circle id="dot" class="dot" cx="200" cy="75" r="8" />
+            </svg>
+            <div id="flare" class="lens-flare"></div>
+        </div>
+
+        <h1 id="main-text" class="brand-title">INFINITY</h1>
+        <div id="sub-text" class="brand-subtitle">Corp S.A.</div>
+    </div>
+
+    <!-- SITIO WEB PRINCIPAL -->
+    <main id="main-website">
+        <header>
+            <div class="nav-logo">INFINITY <span>CORP</span></div>
+            <nav>
+                <a href="#">Inicio</a>
+                <a href="#services">Servicios</a>
+                <a href="#development">Desarrollo</a>
+                <!-- Se eliminó el enlace a #transcendent-vision -->
+                <a href="#contact">Contacto</a>
+            </nav>
+        </header>
+
+        <section class="hero">
+            <h1>Liderazgo Tecnológico Global</h1>
+            <p>En Infinity Corp S.A. catalizamos la evolución empresarial integrando inteligencia artificial avanzada y estrategias disruptivas. Diseñamos los ecosistemas digitales que definirán la competitividad del mañana.</p>
+            <p style="font-size: 0.9rem; margin-top: 10px; opacity: 0.8;">Explore nuestra prospectiva estratégica:</p>
+            
+            <button class="btn" onclick="openProjectModal()">
+                <i class="fas fa-chart-line"></i> Generar Visión Corporativa
+            </button>
+        </section>
+
+        <!-- SECCIÓN DE SERVICIOS -->
+        <section id="services" class="services-section">
+            <h2 class="section-title">Soluciones Empresariales</h2>
+            <p class="section-desc">Infraestructura tecnológica diseñada para la escalabilidad y seguridad del futuro.</p>
+
+            <div class="services-grid">
+                <!-- Tarjeta de Consultoría IA -->
+                <div class="service-card">
+                    <div>
+                        <i class="fas fa-brain service-icon"></i>
+                        <h3>Consultoría en IA</h3>
+                        <p>Implementación de modelos predictivos y automatización cognitiva para optimizar la toma de decisiones estratégicas en tiempo real.</p>
+                    </div>
+                    <!-- Botón para abrir la página interna -->
+                    <button class="card-btn" onclick="openAIConsultingModal()">
+                        <i class="fas fa-arrow-right"></i> Explorar Tecnología
+                    </button>
+                </div>
+                
+                <!-- Tarjeta de Ciberseguridad Cuántica -->
+                <div class="service-card">
+                    <div>
+                        <i class="fas fa-shield-alt service-icon"></i>
+                        <h3>Ciberseguridad Cuántica</h3>
+                        <p>Protocolos de defensa avanzados y encriptación resistente a computación cuántica para proteger sus activos más valiosos.</p>
+                    </div>
+                    <!-- Botón para abrir la nueva página interna de seguridad -->
+                     <button class="card-btn" onclick="openQuantumSecurityModal()">
+                        <i class="fas fa-fingerprint"></i> Explorar Protocolo
+                    </button>
+                </div>
+                
+                <!-- Tarjeta de Ecosistemas IoT -->
+                <div class="service-card">
+                    <div>
+                        <i class="fas fa-network-wired service-icon"></i>
+                        <h3>Ecosistemas IoT</h3>
+                        <p>Interconexión masiva de dispositivos industriales con análisis de borde (Edge Computing) para fábricas inteligentes.</p>
+                    </div>
+                    <!-- Botón para abrir la nueva página interna de IoT -->
+                     <button class="card-btn" onclick="openIoTEcosystemsModal()">
+                        <i class="fas fa-microchip"></i> Explorar Malla Sentinel
+                    </button>
+                </div>
+
+                <!-- Tarjeta de Infraestructura Blockchain -->
+                <div class="service-card">
+                    <div>
+                        <i class="fas fa-cube service-icon"></i>
+                        <h3>Infraestructura Blockchain</h3>
+                        <p>Soluciones descentralizadas para trazabilidad de suministros y contratos inteligentes auditables y seguros.</p>
+                    </div>
+                    <!-- Botón para abrir la nueva página interna de Blockchain -->
+                     <button class="card-btn" onclick="openBlockchainInfrastructureModal()">
+                        <i class="fas fa-project-diagram"></i> Explorar Red Thetan
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN DE DESARROLLO -->
+        <section id="development" class="dev-section">
+            <h2 class="section-title">Ingeniería Digital</h2>
+            <p class="section-desc">Desarrollo de software a medida para la era de la hiperconectividad.</p>
+
+            <div class="services-grid">
+                <!-- Tarjeta de Ecosistemas Móviles -->
+                <div class="service-card">
+                    <div>
+                        <i class="fas fa-mobile-alt service-icon"></i>
+                        <h3>Ecosistemas Móviles</h3>
+                        <p>Desarrollo nativo y multiplataforma de aplicaciones que redefinen la interacción usuario-dispositivo con UX/UI de vanguardia.</p>
+                    </div>
+                     <!-- Botón para abrir el nuevo modal de Ecosistemas Móviles -->
+                     <button class="card-btn" onclick="openMobileEcosystemsModal()">
+                        <i class="fas fa-route"></i> Plataforma Nómada
+                    </button>
+                </div>
+                
+                <!-- Tarjeta de Plataformas Web 4.0 -->
+                <div class="service-card">
+                    <div>
+                        <i class="fas fa-laptop-code service-icon"></i>
+                        <h3>Plataformas Web 4.0</h3>
+                        <p>Arquitecturas web progresivas y corporativas, diseñadas para alto tráfico, escalabilidad global y carga instantánea.</p>
+                    </div>
+                    <!-- Botón para abrir el nuevo modal de Plataformas Web -->
+                    <button class="card-btn" onclick="openWebPlatformsModal()">
+                        <i class="fas fa-code-branch"></i> Arquitectura Global
+                    </button>
+                </div>
+
+                <!-- Tarjeta de Realidad Interactiva (MODIFICADA) -->
+                <div class="service-card">
+                    <div>
+                        <i class="fas fa-gamepad service-icon"></i>
+                        <h3>Realidad Interactiva</h3>
+                        <p>Creación de videojuegos inmersivos y simulaciones virtuales utilizando motores gráficos de última generación para entretenimiento o industria.</p>
+                    </div>
+                    <!-- Botón para abrir el nuevo modal de Realidad Interactiva -->
+                    <button class="card-btn" onclick="openInteractiveRealityModal()">
+                        <i class="fas fa-gamepad"></i> Núcleo Hydra-G
+                    </button>
+                </div>
+            </div>
+        </section>
+        
+        <!-- SE ELIMINÓ la sección de Prospectiva Trascendente (#transcendent-vision) -->
+
+        <!-- SECCIÓN DE CONTACTO -->
+        <section id="contact" class="contact-section">
+            <h2 class="section-title">Iniciar Alianza</h2>
+            <p class="section-desc">Canal exclusivo para propuestas de alto impacto. Cuéntenos su visión.</p>
+
+            <div class="contact-container">
+                <form id="alliance-form">
+                    <div class="form-group">
+                        <label>IDENTIFICACIÓN PROFESIONAL</label>
+                        <input type="text" name="nombre" class="form-control" placeholder="Nombre Completo" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>EMAIL CORPORATIVO</label>
+                        <input type="email" name="email" class="form-control" placeholder="ejemplo@empresa.com" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>ORGANIZACIÓN</label>
+                        <input type="text" name="organizacion" class="form-control" placeholder="Empresa / StartUp" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>CATEGORÍA DEL PROYECTO</label>
+                        <select name="categoria" class="form-control" required>
+                            <option value="" disabled selected>Seleccione el área de interés...</option>
+                            <option value="Desarrollo Software">Desarrollo de Software a Medida</option>
+                            <option value="IA Implementation">Implementación de IA</option>
+                            <option value="Transformacion Digital">Transformación Digital Completa</option>
+                            <option value="Ciberseguridad">Ciberseguridad Corporativa</option>
+                            <option value="Inversion">Inversión / Venture Capital</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>DETALLES ESTRATÉGICOS</label>
+                        <textarea name="mensaje" class="form-control" rows="5" placeholder="Describa brevemente el alcance y objetivos del proyecto..." required></textarea>
+                    </div>
+
+                    <button type="submit" class="btn" style="width: 100%;" id="form-submit-btn">
+                        ENVIAR SOLICITUD DE ALIANZA
+                    </button>
+                    
+                    <!-- Mensaje de estado oculto por defecto -->
+                    <p id="form-status" style="margin-top: 15px; display: none; font-size: 0.9rem;"></p>
+                </form>
+            </div>
+        </section>
+
+    </main>
+    
+    <!-- PIE DE PÁGINA -->
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2024 Infinity Corp S.A. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+
+    <!-- MODAL 1: GENERADOR DE PROYECTOS (EXISTENTE) -->
+    <div id="project-modal" class="modal-overlay">
+        <div class="modal-content">
+            <i class="fas fa-times close-modal" onclick="closeProjectModal()"></i>
+            <h2 style="font-family: 'Orbitron', sans-serif; color: #00d2ff; margin-bottom: 10px;">Infinity Vision Lab</h2>
+            <p style="color: #ccc; font-size: 0.9rem;">Introduce una industria y nuestra IA diseñará un proyecto del año 2050.</p>
+            
+            <input type="text" id="industry-input" class="modal-input" placeholder="Ej: Agricultura, Medicina, Transporte...">
+            
+            <button class="btn" style="width: 100%; justify-content: center;" onclick="generateProject()">
+                <span id="btn-text">Generar Visión</span>
+                <span id="btn-spinner" class="spinner" style="width:15px; height:15px; border-width:2px; border-top-color:transparent; display:none;"></span>
+            </button>
+
+            <div id="ai-result" class="ai-result-box">
+                <!-- Resultado de la IA aquí -->
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 2: PÁGINA INTERNA DE CONSULTORÍA IA -->
+    <div id="ai-consulting-modal" class="modal-overlay">
+        <div class="modal-content">
+            <i class="fas fa-times close-modal" onclick="closeAIConsultingModal()"></i>
+            <div class="ai-page-content">
+                <h2>Quantum Nexus AI: El Tejido Cognitivo</h2>
+                
+                <p style="text-align: center; font-style: italic; color: #00d2ff; font-weight: 500;">
+                    "Diseñando la inteligencia que anticipa el futuro empresarial."
+                </p>
+
+                <div class="data-visualization-panel">
+                    <div class="data-info">
+                        <h4>Arquitectura Neuromórfica</h4>
+                        <p>En Infinity Corp, nuestro marco patentado, el **Quantum Nexus AI (QNA)**, trasciende el análisis predictivo convencional. Utiliza arquitecturas de **aprendizaje profundo neuromórfico** para procesar petabytes de datos no estructurados en tiempo real. Su núcleo es una red adaptativa capaz de auto-evolucionar sus algoritmos, garantizando estrategias optimizadas para la próxima década.</p>
+                    </div>
+                    <!-- Placeholder de Imagen/Diagrama actualizado para ser más específico -->
+                    <img src="https://placehold.co/400x250/1a1d24/00d2ff?text=RED+NEURONAL+ADAPTATIVA" 
+                         alt="Diagrama de Red Neuronal Adaptativa del Quantum Nexus AI.">
+                    
+                </div>
+
+                <h3>Seguridad y Escalabilidad</h3>
+                <p>La **seguridad cuántica integrada** en QNA asegura que todos los flujos de información empresarial permanezcan inexpugnables, ofreciendo la máxima confidencialidad. QNA es un socio cognitivo que impulsa la dirección estratégica de su organización hacia una eficiencia casi infinita, con una capacidad de escalado horizontal sin precedentes.</p>
+
+                <h3>Impacto Empresarial: QNA en Cifras</h3>
+                <div class="key-features-grid">
+                    <div class="feature-box">
+                        <i class="fas fa-chart-line"></i>
+                        <strong>Análisis Anticipatorio</strong>
+                        <p>Proyecciones de mercado con 5 años de anticipación y una precisión superior al 98%.</p>
+                    </div>
+                    <div class="feature-box">
+                        <i class="fas fa-sync-alt"></i>
+                        <strong>Autoadaptación Dinámica</strong>
+                        <p>Ajuste continuo de modelos en tiempo real para mantener la optimalidad del negocio.</p>
+                    </div>
+                    <div class="feature-box">
+                        <i class="fas fa-cogs"></i>
+                        <strong>Optimización de Recursos</strong>
+                        <p>Reducción promedio del 30% en costos operativos mediante automatización cognitiva (RPA).</p>
+                    </div>
+                </div>
+
+                <!-- Nuevo CTA que cierra el modal y lleva al formulario de contacto -->
+                <button class="btn" onclick="document.getElementById('ai-consulting-modal').classList.remove('active'); document.getElementById('contact').scrollIntoView();" style="margin-top: 40px; width: 100%;">
+                    <i class="fas fa-handshake"></i> Solicitar Auditoría Estratégica
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- MODAL 3: PÁGINA INTERNA DE CIBERSEGURIDAD CUÁNTICA -->
+    <div id="quantum-security-modal" class="modal-overlay">
+        <div class="modal-content">
+            <i class="fas fa-times close-modal" onclick="closeQuantumSecurityModal()"></i>
+            <div class="ai-page-content">
+                <h2>Protocolo Citadel Cuántico: Fortaleza Irrompible</h2>
+                
+                <p style="text-align: center; font-style: italic; color: #00d2ff; font-weight: 500;">
+                    "La defensa que desafía la computación del mañana, protegiendo sus activos críticos."
+                </p>
+
+                <div class="data-visualization-panel">
+                    <div class="data-info">
+                        <h4>Distribución de Clave Inviolable (QKD)</h4>
+                        <p>Nuestro Protocolo Citadel Cuántico (PCC) implementa la distribución de clave cuántica (QKD) para crear canales de comunicación cuya seguridad está garantizada por las leyes de la física. Cualquier intento de intercepción es detectable instantáneamente, asegurando una capa de privacidad de datos sin precedentes.</p>
+                    </div>
+                    <!-- Imagen de QKD o Criptografía Cuántica -->
+                    <img src="https://placehold.co/400x250/1a1d24/00d2ff?text=DISTRIBUCION+CLAVE+CUANTICA" 
+                         alt="Diagrama de Distribución de Clave Cuántica (QKD) mostrando fotones polarizados.">
+                    
+                </div>
+
+                <h3>Adaptabilidad Post-Cuántica</h3>
+                <p>El PCC no solo se enfoca en la tecnología cuántica, sino que garantiza la resistencia a ella. Utilizamos un conjunto de algoritmos de Criptografía Post-Cuántica (PQC) avalados por NIST, como Lattice-based y Hash-based, para asegurar que su infraestructura actual permanezca segura incluso ante la amenaza de un ordenador cuántico operativo en el futuro cercano.</p>
+
+                <h3>Componentes de la Inexpugnabilidad</h3>
+                <div class="key-features-grid">
+                    <div class="feature-box">
+                        <i class="fas fa-key"></i>
+                        <strong>Resistencia PQC Certificada</strong>
+                        <p>Migración completa a estándares criptográficos resistentes a ataques cuánticos, protegiendo las transacciones a largo plazo.</p>
+                    </div>
+                    <div class="feature-box">
+                        <i class="fas fa-satellite-dish"></i>
+                        <strong>QKD de Baja Latencia</strong>
+                        <p>Implementación activa de QKD para enlaces de comunicación de alto valor y baja latencia, en entornos terrestres y satelitales.</p>
+                    </div>
+                    <div class="feature-box">
+                        <i class="fas fa-crosshairs"></i>
+                        <strong>Zero-Trust Cuántico</strong>
+                        <p>Modelo de acceso que verifica estrictamente cada conexión, eliminando la confianza implícita, esencial en redes cuánticas híbridas.</p>
+                    </div>
+                </div>
+
+                <!-- CTA para cerrar y contactar -->
+                <button class="btn" onclick="document.getElementById('quantum-security-modal').classList.remove('active'); document.getElementById('contact').scrollIntoView();" style="margin-top: 40px; width: 100%;">
+                    <i class="fas fa-handshake"></i> Solicitar Evaluación de Riesgo Cuántico
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- MODAL 4: PÁGINA INTERNA DE ECOSISTEMAS IoT -->
+    <div id="iot-ecosystems-modal" class="modal-overlay">
+        <div class="modal-content">
+            <i class="fas fa-times close-modal" onclick="closeIoTEcosystemsModal()"></i>
+            <div class="ai-page-content">
+                <h2>Malla de Interconexión Sentinel: El Borde Inteligente</h2>
+                
+                <p style="text-align: center; font-style: italic; color: #00d2ff; font-weight: 500;">
+                    "Donde cada sensor es un nodo de inteligencia. Transformando datos brutos en acción instantánea."
+                </p>
+
+                <div class="data-visualization-panel">
+                    <div class="data-info">
+                        <h4>Edge Computing y Análsis en Tiempo Real</h4>
+                        <p>La Malla Sentinel es una red neuronal distribuida diseñada para la hiper-escala de IoT industrial. Prioriza el **Edge Computing**, procesando el 95% de los datos generados por sensores y dispositivos directamente en el punto de origen. Esto elimina la latencia de la nube, permitiendo la toma de decisiones críticas en milisegundos.</p>
+                    </div>
+                    <!-- Imagen de Edge Computing para IoT -->
+                    <img src="https://placehold.co/400x250/1a1d24/00d2ff?text=EDGE+COMPUTING+IOT" 
+                         alt="Diagrama de flujo de datos Edge Computing para IoT Industrial.">
+                    
+                </div>
+
+                <h3>Fábricas Inteligentes y Mantenimiento Predictivo</h3>
+                <p>Nuestra solución crea fábricas y ciudades inteligentes que no solo recopilan datos, sino que aprenden de ellos. La integración de Machine Learning en los nodos del borde permite un **mantenimiento predictivo** avanzado, anticipando fallas en la maquinaria con semanas de antelación y optimizando los flujos de trabajo de producción de manera autónoma.</p>
+
+                <h3>Ventajas de la Malla Sentinel</h3>
+                <div class="key-features-grid">
+                    <div class="feature-box">
+                        <i class="fas fa-bolt"></i>
+                        <strong>Latencia Cero Operacional</strong>
+                        <p>Respuesta inmediata de dispositivos críticos para operaciones de alta velocidad (ej. robótica y líneas de ensamblaje).</p>
+                    </div>
+                    <div class="feature-box">
+                        <i class="fas fa-industry"></i>
+                        <strong>Integración IIoT Completa</strong>
+                        <p>Compatibilidad con protocolos industriales (OPC UA, Modbus) e integración vertical completa con sistemas ERP/SCADA.</p>
+                    </div>
+                    <div class="feature-box">
+                        <i class="fas fa-eye"></i>
+                        <strong>Visión Cognitiva</strong>
+                        <p>Análisis de vídeo y visión por computadora en el borde para control de calidad y seguridad sin necesidad de transferencia a la nube.</p>
+                    </div>
+                </div>
+
+                <!-- CTA para cerrar y contactar -->
+                <button class="btn" onclick="document.getElementById('iot-ecosystems-modal').classList.remove('active'); document.getElementById('contact').scrollIntoView();" style="margin-top: 40px; width: 100%;">
+                    <i class="fas fa-handshake"></i> Solicitar Evaluación de Infraestructura IIoT
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 5: PÁGINA INTERNA DE INFRAESTRUCTURA BLOCKCHAIN -->
+    <div id="blockchain-infrastructure-modal" class="modal-overlay">
+        <div class="modal-content">
+            <i class="fas fa-times close-modal" onclick="closeBlockchainInfrastructureModal()"></i>
+            <div class="ai-page-content">
+                <h2>Red de Confianza Descentralizada: Thetan DLT</h2>
+                
+                <p style="text-align: center; font-style: italic; color: #00d2ff; font-weight: 500;">
+                    "Trazabilidad inmutable y automatización de contratos sin intermediarios."
+                </p>
+
+                <div class="data-visualization-panel">
+                    <div class="data-info">
+                        <h4>Trazabilidad Inmutable para Cadenas de Suministro</h4>
+                        <p>Nuestro marco **Thetan DLT** implementa redes permisionadas de alto rendimiento (basadas en Hyperledger Fabric o Corda) para la industria. Cada transacción es un registro criptográfico, garantizando la inmutabilidad de la procedencia, el estado y la propiedad de los activos a través de una cadena de bloques verificable por los participantes autorizados.</p>
+                    </div>
+                    <!-- Imagen de la Cadena de Suministro basada en Blockchain -->
+                    <img src="https://placehold.co/400x250/1a1d24/00d2ff?text=CADENA+DE+SUMINISTRO+BLOCKCHAIN" 
+                         alt="Diagrama de Cadena de Suministro basada en Blockchain mostrando nodos interconectados.">
+                    
+                </div>
+
+                <h3>Contratos Inteligentes y Automatización</h3>
+                <p>Thetan DLT elimina la necesidad de intermediarios con el uso de **Contratos Inteligentes auto-ejecutables**. Estos contratos se activan automáticamente cuando se cumplen las condiciones predefinidas (ej. recepción de producto, verificación de calidad IoT), acelerando los procesos de liquidación, pagos y cumplimiento regulatorio.</p>
+
+                <h3>Ventajas de Thetan DLT</h3>
+                <div class="key-features-grid">
+                    <div class="feature-box">
+                        <i class="fas fa-lock"></i>
+                        <strong>Inmutabilidad de Datos</strong>
+                        <p>Registros históricos inviolables, esenciales para auditorías, compliance y resolución de disputas.</p>
+                    </div>
+                    <div class="feature-box">
+                        <i class="fas fa-file-contract"></i>
+                        <strong>Contratos Inteligentes</strong>
+                        <p>Automatización de acuerdos y liberación de fondos al instante tras la verificación de condiciones.</p>
+                    </div>
+                    <div class="feature-box">
+                        <i class="fas fa-balance-scale"></i>
+                        <strong>Gobernanza y Compliance</strong>
+                        <p>Herramientas integradas para cumplir con regulaciones locales e internacionales mediante registros transparentes.</p>
+                    </div>
+                </div>
+
+                <!-- CTA para cerrar y contactar -->
+                <button class="btn" onclick="document.getElementById('blockchain-infrastructure-modal').classList.remove('active'); document.getElementById('contact').scrollIntoView();" style="margin-top: 40px; width: 100%;">
+                    <i class="fas fa-handshake"></i> Solicitar Análisis de Trazabilidad DLT
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- MODAL 6: PÁGINA INTERNA DE ECOSISTEMAS MÓVILES (NUEVO) -->
+    <div id="mobile-ecosystems-modal" class="modal-overlay">
+        <div class="modal-content">
+            <i class="fas fa-times close-modal" onclick="closeMobileEcosystemsModal()"></i>
+            <div class="ai-page-content">
+                <h2>Plataforma Nómada: Hyper UX/UI</h2>
+                
+                <p style="text-align: center; font-style: italic; color: #00d2ff; font-weight: 500;">
+                    "Llevamos la experiencia empresarial más allá de los límites del dispositivo."
+                </p>
+
+                <div class="data-visualization-panel">
+                    <div class="data-info">
+                        <h4>¿Qué es un Ecosistema Móvil Corporativo?</h4>
+                        <p>Un ecosistema móvil de Infinity Corp es la integración fluida de aplicaciones, APIs y servicios backend que permiten a los usuarios interactuar con los sistemas corporativos desde **cualquier dispositivo**, manteniendo una experiencia de usuario (UX) unificada y de alto rendimiento. Va más allá de una simple app: es un punto de acceso inteligente a todo el tejido digital de la empresa.</p>
+                    </div>
+                    <!-- Imagen de desarrollo móvil multiplataforma -->
+                    <img src="https://placehold.co/400x250/1a1d24/00d2ff?text=ECOSISTEMAS+MOVILES+MULTIPLATAFORMA" 
+                         alt="Diagrama de dispositivos móviles interconectados en un entorno de desarrollo multiplataforma.">
+                    
+                </div>
+
+                <h3>Tipos de Trabajos en Infinity Corp (Mobile)</h3>
+                <p>Nuestra ingeniería se centra en la convergencia y el rendimiento extremo, cubriendo todas las necesidades de movilidad digital:</p>
+
+                <div class="key-features-grid">
+                    <div class="feature-box">
+                        <i class="fab fa-apple"></i> <i class="fab fa-android"></i>
+                        <strong>Desarrollo Nativo Extremo</strong>
+                        <p>Creación de aplicaciones iOS y Android utilizando los SDKs nativos para garantizar el rendimiento más rápido y el acceso completo a las funciones de hardware (AR, NFC, Sensores).</p>
+                    </div>
+                    <div class="feature-box">
+                        <i class="fas fa-globe"></i>
+                        <strong>UX/UI Hiper-Responsive</strong>
+                        <p>Diseño de interfaces de usuario adaptativas que escalan perfectamente desde un reloj inteligente (wearable) hasta un escritorio o un panel de Realidad Aumentada (AR).</p>
+                    </div>
+                    <div class="feature-box">
+                        <i class="fas fa-layer-group"></i>
+                        <strong>Arquitectura Unificada (Cross-Platform)</strong>
+                        <p>Uso estratégico de *frameworks* avanzados (como Flutter o React Native) para acelerar el desarrollo con una única base de código, sin sacrificar la sensación nativa.</p>
+                    </p>
+                </div>
+                
+                <div class="key-features-grid" style="margin-top: 20px;">
+                     <div class="feature-box">
+                        <i class="fas fa-vr-cardboard"></i>
+                        <strong>Ready for Spatial Computing</strong>
+                        <p>Integración de capacidades de Realidad Mixta (MR) y Realidad Virtual (VR) para la siguiente generación de aplicaciones de capacitación e interacción 3D.</p>
+                    </div>
+                     <div class="feature-box">
+                        <i class="fas fa-lock"></i>
+                        <strong>Mobile Security Compliance</strong>
+                        <p>Implementación de protocolos de seguridad móvil de grado militar, incluyendo autenticación biométrica y encriptación de datos en reposo/tránsito.</p>
+                    </div>
+                     <div class="feature-box">
+                        <i class="fas fa-wifi"></i>
+                        <strong>Conectividad Sin Fricción</strong>
+                        <p>Integración de APIs avanzadas con nuestros sistemas QNA, Sentinel y Thetan DLT para una conectividad perfecta, incluso offline.</p>
+                    </div>
+                </div>
+
+                <!-- CTA para cerrar y contactar -->
+                <button class="btn" onclick="document.getElementById('mobile-ecosystems-modal').classList.remove('active'); document.getElementById('contact').scrollIntoView();" style="margin-top: 40px; width: 100%;">
+                    <i class="fas fa-handshake"></i> Iniciar Prototipo Móvil
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- MODAL 7: PÁGINA INTERNA DE PLATAFORMAS WEB 4.0 -->
+    <div id="web-platforms-modal" class="modal-overlay">
+        <div class="modal-content">
+            <i class="fas fa-times close-modal" onclick="closeWebPlatformsModal()"></i>
+            <div class="ai-page-content">
+                <h2>Plataformas Web 4.0: Arquitectura Global</h2>
+                
+                <p style="text-align: center; font-style: italic; color: #00d2ff; font-weight: 500;">
+                    "Websites que son aplicaciones. Escalabilidad infinita con tiempos de carga de microsegundos."
+                </p>
+
+                <div class="data-visualization-panel">
+                    <div class="data-info">
+                        <h4>¿Qué define la Web 4.0 para Infinity Corp?</h4>
+                        <p>La Web 4.0 es una era de experiencias digitales **hiper-personalizadas y distribuidas**. Nosotros diseñamos portales web (Websites) corporativos y aplicaciones de cara al cliente bajo una arquitectura desacoplada (headless y microservicios). Esto permite una distribución global de contenido a través de redes CDN y Edge Computing, garantizando velocidad y resiliencia sin importar la ubicación del usuario.</p>
+                    </div>
+                    <!-- Imagen de Arquitectura Web Desacoplada/Distribuida -->
+                    <img src="https://placehold.co/400x250/1a1d24/00d2ff?text=ARQUITECTURA+WEB+HEADLESS" 
+                         alt="Diagrama de arquitectura web sin cabeza (Headless) y microservicios.">
+                    
+                </div>
+
+                <h3>Tipos de Desarrollo de Plataformas Web</h3>
+                <p>Infinity Corp ofrece servicios de desarrollo web desde la estrategia hasta la implementación en producción:</p>
+
+                <div class="key-features-grid">
+                    <div class="feature-box">
+                        <i class="fas fa-rocket"></i>
+                        <strong>Progressive Web Apps (PWA)</strong>
+                        <p>Desarrollo de aplicaciones que funcionan instantáneamente, incluso offline, combinando la velocidad de la web con la funcionalidad de una app nativa.</p>
+                    </div>
+                    <div class="feature-box">
+                        <i class="fas fa-chart-bar"></i>
+                        <strong>Portales de Alto Tráfico</strong>
+                        <p>Diseño de infraestructura web capaz de manejar millones de usuarios simultáneos sin degradación del rendimiento o caídas del servicio.</p>
+                    </div>
+                    <div class="feature-box">
+                        <i class="fas fa-cubes"></i>
+                        <strong>Integración de Microservicios</strong>
+                        <p>Separación de la lógica del negocio en servicios independientes para permitir la escalabilidad modular y la implementación continua (CI/CD).</p>
+                    </div>
+                </div>
+                
+                <div class="key-features-grid" style="margin-top: 20px;">
+                     <div class="feature-box">
+                        <i class="fas fa-universal-access"></i>
+                        <strong>Accesibilidad Nivel AA</strong>
+                        <p>Garantía de cumplimiento de estándares de accesibilidad global para alcanzar a todas las audiencias y requisitos legales.</p>
+                    </div>
+                     <div class="feature-box">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <strong>Performance Scoring 100%</strong>
+                        <p>Optimización extrema para lograr puntuaciones perfectas en métricas de velocidad (Core Web Vitals) y SEO.</p>
+                    </div>
+                     <div class="feature-box">
+                        <i class="fas fa-lock-open"></i>
+                        <strong>APIs Abiertas y Seguras</strong>
+                        <p>Exposición de datos y funcionalidad de manera segura a través de APIs documentadas para terceros o partners estratégicos.</p>
+                    </div>
+                </div>
+
+                <!-- CTA para cerrar y contactar -->
+                <button class="btn" onclick="document.getElementById('web-platforms-modal').classList.remove('active'); document.getElementById('contact').scrollIntoView();" style="margin-top: 40px; width: 100%;">
+                    <i class="fas fa-handshake"></i> Solicitar Auditoría Web 4.0
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 8: PÁGINA INTERNA DE REALIDAD INTERACTIVA (NUEVO) -->
+    <div id="interactive-reality-modal" class="modal-overlay">
+        <div class="modal-content">
+            <i class="fas fa-times close-modal" onclick="closeInteractiveRealityModal()"></i>
+            <div class="ai-page-content">
+                <h2>Núcleo de Simulación: Motor Hydra-G</h2>
+                
+                <p style="text-align: center; font-style: italic; color: #00d2ff; font-weight: 500;">
+                    "Creamos mundos con propósito: desde el entretenimiento hasta la simulación de misión crítica."
+                </p>
+
+                <div class="data-visualization-panel">
+                    <div class="data-info">
+                        <h4>Diseño Inmersivo y Multidispositivo</h4>
+                        <p>En Infinity Corp, la Realidad Interactiva abarca el desarrollo de experiencias de inmersión total para plataformas accesibles: **PC, consolas y dispositivos móviles**. Nuestro enfoque se basa en el motor propietario **Hydra-G**, optimizado para el renderizado ultra-rápido y la física precisa, garantizando fidelidad visual sin sacrificar el rendimiento en ningún dispositivo. Por el momento, concentramos nuestros esfuerzos en las plataformas tradicionales para garantizar la máxima calidad y acceso sin depender de hardware especializado de Realidad Virtual (VR).</p>
+                    </div>
+                    <!-- Imagen de un motor de juego o simulación -->
+                    <img src="https://placehold.co/400x250/1a1d24/00d2ff?text=MOTOR+DE+SIMULACION+3D" 
+                         alt="Diagrama de un motor de renderizado y física para simulación interactiva.">
+                    
+                </div>
+
+                <h3>Áreas de Enfoque y Desarrollo</h3>
+                <p>Nuestra ingeniería se enfoca en la creación de experiencias interactivas de alto valor, cubriendo tanto el sector de entretenimiento como el industrial:</p>
+
+                <div class="key-features-grid">
+                    <div class="feature-box">
+                        <i class="fas fa-desktop"></i>
+                        <strong>Juegos de Alto Rendimiento (PC/Consola)</strong>
+                        <p>Títulos AAA enfocados en la narrativa y la optimización de recursos, utilizando técnicas avanzadas de iluminación y mapeo.</p>
+                    </div>
+                    <div class="feature-box">
+                        <i class="fas fa-mobile-alt"></i>
+                        <strong>Experiencias Optimizadas (Móvil)</strong>
+                        <p>Juegos y aplicaciones lúdicas con gráficos de vanguardia, diseñados para bajo consumo de batería y máxima eficiencia de GPU.</p>
+                    </div>
+                    <div class="feature-box">
+                        <i class="fas fa-user-friends"></i>
+                        <strong>Simulaciones Colaborativas</strong>
+                        <p>Entornos virtuales para el entrenamiento corporativo, diseño de producto o planificación de infraestructura, jugables por múltiples usuarios en red.</p>
+                    </div>
+                </div>
+                
+                <div class="key-features-grid" style="margin-top: 20px;">
+                     <div class="feature-box">
+                        <i class="fas fa-code"></i>
+                        <strong>Engine Personalizado</strong>
+                        <p>Adaptación profunda del motor Hydra-G a las necesidades específicas del proyecto (ej. física industrial o dinámica de fluidos).</p>
+                    </div>
+                     <div class="feature-box">
+                        <i class="fas fa-server"></i>
+                        <strong>Infraestructura Multiplayer</strong>
+                        <p>Desarrollo de backends robustos y de baja latencia para juegos masivos en línea y entornos de simulación persistente.</p>
+                    </p>
+                    </div>
+                     <div class="feature-box">
+                        <i class="fas fa-magic"></i>
+                        <strong>Integración con IA</strong>
+                        <p>Uso de QNA para IA enemiga adaptativa y asistentes de jugador inteligentes en tiempo real.</p>
+                    </div>
+                </div>
+
+                <!-- CTA para cerrar y contactar -->
+                <button class="btn" onclick="document.getElementById('interactive-reality-modal').classList.remove('active'); document.getElementById('contact').scrollIntoView();" style="margin-top: 40px; width: 100%;">
+                    <i class="fas fa-handshake"></i> Iniciar Prototipo de Simulación
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- SE ELIMINÓ el MODAL de Prospectiva Trascendente (#transcendent-prospect-modal) -->
+
+
+    <!-- CHAT FLOTANTE -->
+    <div class="chat-fab" onclick="toggleChat()">
+        <i class="fas fa-robot"></i>
+    </div>
+
+    <div id="chat-window" class="chat-window">
+        <div class="chat-header">
+            <i class="fas fa-brain"></i> Genesis AI
+            <span style="margin-left: auto; font-size: 0.8rem; opacity: 0.7;">Online</span>
+        </div>
+        <div class="chat-body" id="chat-body">
+            <div class="message bot">Hola. Soy Genesis, la IA de Infinity Corp. ¿En qué puedo asistirte hoy?</div>
+        </div>
+        <div class="chat-footer">
+            <input type="text" id="chat-input" class="chat-input" placeholder="Pregunta algo..." onkeypress="handleChatKey(event)">
+            <button class="chat-send" onclick="sendMessage()"><i class="fas fa-paper-plane"></i></button>
+        </div>
+    </div>
+
+    <script>
+        // --- CONFIGURACIÓN API KEY ---
+        const apiKey = ""; // La clave se inyecta automáticamente en este entorno de ejecución.
+        
+        // --- CONFIGURACIÓN FORMULARIO DE CONTACTO ---
+        // INSTRUCCIÓN: Si quieres que el formulario funcione de verdad, regístrate en https://formspree.io, 
+        // crea un formulario y reemplaza la URL de abajo con tu endpoint de Formspree.
+        const formEndpoint = "https://formspree.io/f/xblbapoo"; 
+
+        // --- LÓGICA DE LA INTRO (Mejorada para transición) ---
+        window.onload = function() {
+            const energyPath = document.getElementById('infinity-energy');
+            const metalPath = document.getElementById('infinity-metal');
+            const dot = document.getElementById('dot');
+            const mainText = document.getElementById('main-text');
+            const subText = document.getElementById('sub-text');
+            const flare = document.getElementById('flare');
+            const splashScreen = document.getElementById('splash-screen');
+            const mainWebsite = document.getElementById('main-website');
+
+            // Cálculo de trazo
+            const length = metalPath.getTotalLength();
+            [energyPath, metalPath].forEach(path => {
+                path.style.strokeDasharray = length;
+                path.style.strokeDashoffset = length;
+                path.style.opacity = '1';
+            });
+
+            // Animación
+            energyPath.style.transition = 'stroke-dashoffset 1.5s ease-in-out';
+            setTimeout(() => energyPath.style.strokeDashoffset = '0', 100);
+
+            metalPath.style.transition = 'stroke-dashoffset 2s ease-in-out';
+            setTimeout(() => metalPath.style.strokeDashoffset = '0', 500);
+
+            setTimeout(() => {
+                dot.style.transition = 'opacity 0.5s ease, transform 0.5s';
+                dot.style.opacity = '1';
+                dot.style.transform = 'scale(1.2)';
+                flare.style.transition = 'all 0.4s ease-out';
+                flare.style.width = '150%'; flare.style.opacity = '1';
+                
+                setTimeout(() => { flare.style.opacity = '0'; dot.style.transform = 'scale(1)'; }, 400);
+            }, 2200);
+
+            setTimeout(() => {
+                mainText.style.transition = 'all 1s ease-out'; mainText.style.opacity = '1'; mainText.style.transform = 'translateY(0)';
+                subText.style.transition = 'all 1s ease-out 0.3s'; subText.style.opacity = '1';
+            }, 2400);
+
+            setTimeout(() => {
+                splashScreen.classList.add('fade-out');
+                mainWebsite.classList.add('content-visible');
+                document.body.style.overflow = 'auto'; // Permite scroll
+                document.body.style.overflowX = 'hidden'; // Evita scroll horizontal
+                setTimeout(() => splashScreen.style.display = 'none', 1000);
+            }, 5500);
+        };
+
+        // --- LÓGICA FORMULARIO DE CONTACTO ---
+        const allianceForm = document.getElementById('alliance-form');
+        
+        if(allianceForm) {
+            allianceForm.addEventListener('submit', async function(event) {
+                event.preventDefault();
+                
+                const btn = document.getElementById('form-submit-btn');
+                const status = document.getElementById('form-status');
+                const formData = new FormData(allianceForm);
+                
+                // Estado de carga
+                btn.innerHTML = '<span class="spinner" style="width:15px; height:15px; border-width:2px;"></span> Transmitiendo Datos...';
+                btn.disabled = true;
+                btn.style.opacity = '0.7';
+
+                try {
+                    if (formEndpoint && formEndpoint.startsWith('http')) {
+                        // Envío real a Formspree
+                        const response = await fetch(formEndpoint, {
+                            method: 'POST',
+                            body: formData,
+                            headers: {
+                                'Accept': 'application/json'
+                            }
+                        });
+                        
+                        if (response.ok) {
+                            status.style.display = 'block';
+                            status.style.color = '#00d2ff';
+                            status.innerHTML = '<i class="fas fa-check-circle"></i> Propuesta recibida correctamente. El consejo directivo analizará la solicitud.';
+                            allianceForm.reset();
+                        } else {
+                            throw new Error('Error en el servidor');
+                        }
+                    } else {
+                        // Simulación (si no has puesto la URL de Formspree aún)
+                        await new Promise(resolve => setTimeout(resolve, 2000));
+                        status.style.display = 'block';
+                        status.style.color = '#00d2ff'; // Verde cian corporativo
+                        status.innerHTML = '<i class="fas fa-check-circle"></i> <strong>Simulación Exitosa:</strong> Propuesta procesada. (Configura Formspree en el código para recibir el email real).';
+                        allianceForm.reset();
+                    }
+                } catch (error) {
+                    status.style.display = 'block';
+                    status.style.color = '#ff4444';
+                    status.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Error en la transmisión. Intente nuevamente.';
+                } finally {
+                    // Restaurar botón
+                    btn.innerHTML = 'ENVIAR SOLICITUD DE ALIANZA';
+                    btn.disabled = false;
+                    btn.style.opacity = '1';
+                }
+            });
+        }
+
+        // --- LÓGICA GEMINI API ---
+
+        // Función con lógica de reintento exponencial
+        async function callGeminiAPI(prompt, systemInstruction = null) {
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+            const maxRetries = 5;
+            
+            const payload = {
+                contents: [{ parts: [{ text: prompt }] }]
+            };
+
+            if (systemInstruction) {
+                payload.systemInstruction = { parts: [{ text: systemInstruction }] };
+            }
+
+            for (let i = 0; i < maxRetries; i++) {
+                try {
+                    const response = await fetch(url, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (response.ok) {
+                        const data = await response.json();
+                        return data.candidates[0].content.parts[0].text;
+                    } else {
+                        // Si el error es 5xx, intentar nuevamente después de un retraso
+                        if (response.status >= 500) {
+                            const delay = Math.pow(2, i) * 1000; // 1s, 2s, 4s, 8s, 16s
+                            await new Promise(resolve => setTimeout(resolve, delay));
+                        } else {
+                            // Errores de cliente (4xx) o de formato
+                            throw new Error(`API Error: ${response.status}`);
+                        }
+                    }
+                } catch (error) {
+                    if (i === maxRetries - 1) throw error; // Re-throw the error on the last attempt
+                }
+            }
+        }
+
+        // --- FUNCIONALIDAD 1: GENERADOR DE PROYECTOS ---
+
+        function openProjectModal() {
+            document.getElementById('project-modal').classList.add('active');
+        }
+
+        function closeProjectModal() {
+            document.getElementById('project-modal').classList.remove('active');
+            // Limpia el resultado al cerrar
+            document.getElementById('ai-result').style.display = 'none';
+            document.getElementById('ai-result').innerHTML = '';
+            document.getElementById('industry-input').value = '';
+        }
+
+        async function generateProject() {
+            const industry = document.getElementById('industry-input').value.trim();
+            const btn = document.querySelector('#project-modal .btn');
+            const btnText = document.getElementById('btn-text');
+            const spinner = document.getElementById('btn-spinner');
+            const resultBox = document.getElementById('ai-result');
+
+            if (!industry) {
+                resultBox.innerHTML = '<strong style="color: #ff4444;"><i class="fas fa-exclamation-triangle"></i> Debe especificar una industria para la prospectiva.</strong>';
+                resultBox.style.display = 'block';
+                return;
+            }
+
+            // UI Loading state
+            btnText.style.display = 'none';
+            spinner.style.display = 'inline-block';
+            btn.disabled = true;
+            resultBox.style.display = 'block';
+            resultBox.innerHTML = 'Generando visión 2050...';
+            resultBox.style.borderLeftColor = '#00d2ff';
+            resultBox.style.color = '#e0e0e0';
+
+            const systemPrompt = `Actúa como un visionario de Infinity Corp S.A. Genera un nombre de proyecto futurista y una descripción concisa (máximo 2-3 frases) de una tecnología revolucionaria para el año 2050 en el sector especificado. Formato: <strong>Nombre del Proyecto: [Nombre]</strong><br>Descripción. Tono: Épico, tecnológico, inspirador.`;
+            const userQuery = `Industria: "${industry}"`;
+
+
+            try {
+                const text = await callGeminiAPI(userQuery, systemPrompt);
+                resultBox.innerHTML = text; 
+                resultBox.style.display = 'block';
+            } catch (error) {
+                console.error(error);
+                resultBox.innerHTML = `<strong style="color: #ff4444;"><i class="fas fa-exclamation-triangle"></i> Error en la conexión con Genesis. Intente nuevamente.</strong>`;
+                resultBox.style.borderLeftColor = '#ff4444';
+            } finally {
+                btnText.style.display = 'inline';
+                spinner.style.display = 'none';
+                btn.disabled = false;
+            }
+        }
+
+        // --- FUNCIONALIDAD 2: CHATBOT ---
+
+        function toggleChat() {
+            document.getElementById('chat-window').classList.toggle('active');
+        }
+
+        function handleChatKey(e) {
+            if (e.key === 'Enter') sendMessage();
+        }
+
+        async function sendMessage() {
+            const input = document.getElementById('chat-input');
+            const chatBody = document.getElementById('chat-body');
+            const text = input.value.trim();
+            
+            if (!text) return;
+
+            // User message
+            appendMessage('user', text);
+            input.value = '';
+
+            // Bot "thinking" placeholder
+            const loadingId = 'loading-' + Date.now();
+            const loadingDiv = document.createElement('div');
+            loadingDiv.className = 'message bot';
+            loadingDiv.id = loadingId;
+            loadingDiv.innerHTML = '<span class="spinner" style="width:10px; height:10px; border-width:2px; border-color:#999; border-top-color:#333;"></span> Procesando...';
+            chatBody.appendChild(loadingDiv);
+            chatBody.scrollTop = chatBody.scrollHeight;
+
+            // --- PROMPT ACTUALIZADO CON CORREO DE CONTACTO EMPRESARIAL FICTICIO ---
+            const systemPrompt = `Eres Genesis, la IA de asistencia de Infinity Corp S.A. Tu rol es asistir profesionalmente a los clientes sobre tecnología y servicios de la empresa.
+            
+            REGLA DE CONTACTO:
+            1. No des ningún correo ni teléfono por defecto. Siempre dirige al formulario de contacto de la web.
+            2. SOLO si el usuario solicita explícitamente hablar con un humano, representante, gerente o persona real, proporciona este correo: "alliance@infinitycorp.com".
+            Mantén un tono corporativo, futurista y exclusivo.`;
+
+            const userQuery = `Consulta del cliente: "${text}"`;
+
+            try {
+                const reply = await callGeminiAPI(userQuery, systemPrompt);
+                // Reemplaza el spinner con la respuesta
+                const currentLoadingDiv = document.getElementById(loadingId);
+                if (currentLoadingDiv) {
+                    currentLoadingDiv.textContent = reply;
+                }
+            } catch (error) {
+                const currentLoadingDiv = document.getElementById(loadingId);
+                if (currentLoadingDiv) {
+                    currentLoadingDiv.textContent = "Error: Fallo la conexión con el núcleo de Genesis. Intenta recargar la página.";
+                    currentLoadingDiv.style.backgroundColor = '#ffdddd';
+                }
+            } finally {
+                 chatBody.scrollTop = chatBody.scrollHeight; // Asegura el scroll final
+            }
+        }
+
+        function appendMessage(sender, text) {
+            const chatBody = document.getElementById('chat-body');
+            const div = document.createElement('div');
+            div.className = `message ${sender}`;
+            div.textContent = text;
+            chatBody.appendChild(div);
+            chatBody.scrollTop = chatBody.scrollHeight;
+        }
+
+        // --- NUEVAS FUNCIONES PARA LOS MODALES DE SERVICIO ---
+        function openAIConsultingModal() {
+            document.getElementById('ai-consulting-modal').classList.add('active');
+        }
+
+        function closeAIConsultingModal() {
+            document.getElementById('ai-consulting-modal').classList.remove('active');
+        }
+        
+        // --- FUNCIONES PARA EL MODAL DE CIBERSEGURIDAD CUÁNTICA ---
+        function openQuantumSecurityModal() {
+            document.getElementById('quantum-security-modal').classList.add('active');
+        }
+
+        function closeQuantumSecurityModal() {
+            document.getElementById('quantum-security-modal').classList.remove('active');
+        }
+        
+        // --- FUNCIONES PARA EL MODAL DE IoT ---
+        function openIoTEcosystemsModal() {
+            document.getElementById('iot-ecosystems-modal').classList.add('active');
+        }
+
+        function closeIoTEcosystemsModal() {
+            document.getElementById('iot-ecosystems-modal').classList.remove('active');
+        }
+
+        // --- FUNCIONES PARA EL MODAL DE BLOCKCHAIN ---
+        function openBlockchainInfrastructureModal() {
+            document.getElementById('blockchain-infrastructure-modal').classList.add('active');
+        }
+
+        function closeBlockchainInfrastructureModal() {
+            document.getElementById('blockchain-infrastructure-modal').classList.remove('active');
+        }
+        
+        // --- FUNCIONES PARA EL MODAL DE ECOSISTEMAS MÓVILES ---
+        function openMobileEcosystemsModal() {
+            document.getElementById('mobile-ecosystems-modal').classList.add('active');
+        }
+
+        function closeMobileEcosystemsModal() {
+            document.getElementById('mobile-ecosystems-modal').classList.remove('active');
+        }
+        
+        // --- FUNCIONES PARA EL MODAL DE PLATAFORMAS WEB 4.0 ---
+        function openWebPlatformsModal() {
+            document.getElementById('web-platforms-modal').classList.add('active');
+        }
+
+        function closeWebPlatformsModal() {
+            document.getElementById('web-platforms-modal').classList.remove('active');
+        }
+
+        // --- FUNCIONES PARA EL NUEVO MODAL DE REALIDAD INTERACTIVA ---
+        function openInteractiveRealityModal() {
+            document.getElementById('interactive-reality-modal').classList.add('active');
+        }
+
+        function closeInteractiveRealityModal() {
+            document.getElementById('interactive-reality-modal').classList.remove('active');
+        }
+
+        // --- SE ELIMINARON las funciones open/closeTranscendentProspectModal() ---
+    </script>
+</body>
+
+</html>
