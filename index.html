@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -386,7 +386,96 @@
             box-shadow: 0 0 10px rgba(0, 210, 255, 0.5);
         }
         
-        /* --- SECCIÓN DE PROSPECTIVA TRASCENDENTE (ELIMINADA) --- */
+        /* --- SECCIÓN DE PROSPECTIVA TRASCENDENTE (NUEVA) --- */
+        .transcendent-section {
+            padding: 100px 50px;
+            background-color: #1a1d24; /* Mismo fondo que services, pero con acento diferente */
+            text-align: center;
+            position: relative;
+        }
+
+        /* Título con acento naranja/dorado */
+        .transcendent-section .section-title::after {
+            background: #ffaa00; /* Naranja/Oro */
+            box-shadow: 0 0 10px #ffaa00;
+        }
+
+        /* Tarjeta de la nueva sección */
+        .transcendent-card {
+            background: #232730;
+            padding: 40px 30px;
+            border-radius: 15px;
+            border: 1px solid #ffaa00; /* Borde naranja */
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            text-align: left;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .transcendent-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(255, 170, 0, 0.3);
+            border-color: #ffaa00;
+        }
+
+        .transcendent-card .service-icon {
+            color: #ffaa00; /* Icono naranja */
+        }
+
+        /* Botón pequeño dentro de la tarjeta Transcendente */
+        .transcendent-card .card-btn {
+            border: 1px solid #ffaa00;
+            color: #ffaa00;
+        }
+        .transcendent-card .card-btn:hover {
+            background: #ffaa00;
+            color: #121418;
+            box-shadow: 0 0 10px rgba(255, 170, 0, 0.5);
+        }
+
+        /* Modal específico para Prospectiva Trascendente */
+        #transcendent-prospect-modal .modal-content {
+            border: 1px solid #ffaa00 !important; /* Importante para sobreescribir el estilo general */
+            box-shadow: 0 0 50px rgba(255, 170, 0, 0.5) !important; 
+        }
+
+        #transcendent-prospect-modal .ai-page-content h2 {
+            color: #ffaa00;
+            border-bottom: 2px solid rgba(255, 170, 0, 0.3);
+        }
+
+        #transcendent-prospect-modal .data-visualization-panel img {
+            box-shadow: 0 0 15px rgba(255, 170, 0, 0.4);
+        }
+
+        #transcendent-prospect-modal .data-info h4 {
+            color: #ffaa00;
+        }
+
+        #transcendent-prospect-modal .feature-box {
+            border-left: 3px solid #ffaa00;
+        }
+        #transcendent-prospect-modal .feature-box i {
+            color: #ffaa00;
+        }
+        #transcendent-prospect-modal .feature-box:hover {
+            box-shadow: 0 5px 15px rgba(255, 170, 0, 0.2);
+        }
+
+        /* CTA del modal con color naranja */
+        #transcendent-prospect-modal .btn {
+            background: linear-gradient(45deg, #ffaa00, #ff7700);
+            box-shadow: 0 0 15px rgba(255, 170, 0, 0.4);
+        }
+        #transcendent-prospect-modal .btn:hover {
+            box-shadow: 0 0 25px rgba(255, 170, 0, 0.7);
+        }
+        /* --- FIN SECCIÓN PROSPECTIVA TRASCENDENTE --- */
         
         
         /* --- SECCIÓN DE CONTACTO CORPORATIVO --- */
@@ -499,7 +588,8 @@
         #blockchain-infrastructure-modal .modal-content,
         #mobile-ecosystems-modal .modal-content,
         #web-platforms-modal .modal-content,
-        #interactive-reality-modal .modal-content {
+        #interactive-reality-modal .modal-content,
+        #transcendent-prospect-modal .modal-content {
             max-width: 900px; 
             padding: 0; 
             border: none; 
@@ -644,20 +734,30 @@
             margin-bottom: 0;
         }
         
-        /* --- PIE DE PÁGINA --- */
-        footer {
-            background-color: #121418;
-            color: #a0aab5;
-            padding: 30px 50px;
-            text-align: center;
-            border-top: 1px solid #333;
-            font-size: 0.9rem;
-            box-shadow: 0 -5px 15px rgba(0,0,0,0.2);
-            font-family: 'Roboto', sans-serif;
-        }
-        .footer-content {
-            max-width: 1200px;
-            margin: 0 auto;
+        @media (max-width: 768px) {
+            .ai-page-content {
+                padding: 20px;
+            }
+            .ai-page-content h2 {
+                font-size: 1.8rem;
+            }
+            .data-visualization-panel {
+                grid-template-columns: 1fr;
+            }
+            .data-visualization-panel img {
+                order: -1;
+                margin-bottom: 20px;
+            }
+            #ai-consulting-modal .modal-content,
+            #quantum-security-modal .modal-content,
+            #iot-ecosystems-modal .modal-content,
+            #blockchain-infrastructure-modal .modal-content,
+            #mobile-ecosystems-modal .modal-content,
+            #web-platforms-modal .modal-content,
+            #interactive-reality-modal .modal-content,
+            #transcendent-prospect-modal .modal-content {
+                max-width: 95%;
+            }
         }
 
 
@@ -849,7 +949,7 @@
                 <a href="#">Inicio</a>
                 <a href="#services">Servicios</a>
                 <a href="#development">Desarrollo</a>
-                <!-- Se eliminó el enlace a #transcendent-vision -->
+                <a href="#transcendent-vision">Vision</a>
                 <a href="#contact">Contacto</a>
             </nav>
         </header>
@@ -971,7 +1071,23 @@
             </div>
         </section>
         
-        <!-- SE ELIMINÓ la sección de Prospectiva Trascendente (#transcendent-vision) -->
+        <!-- SECCIÓN DE PROSPECTIVA TRASCENDENTE (NUEVA) -->
+        <section id="transcendent-vision" class="transcendent-section">
+            <h2 class="section-title">Prospectiva Trascendente</h2>
+            <p class="section-desc">Proyectos con un horizonte de 50 a 500 años. Ingeniería de la civilización y expansión interestelar.</p>
+
+            <div class="transcendent-card">
+                <div>
+                    <i class="fas fa-rocket service-icon"></i>
+                    <h3>Proyecto 500: Ingeniería Civilizatoria</h3>
+                    <p>Infinity Corp lidera la conceptualización y desarrollo de la próxima generación de tecnologías fundacionales. Desde la reestructuración física de las ciudades hasta los motores que nos llevarán más allá de nuestro sistema solar.</p>
+                </div>
+                 <!-- Botón para abrir la página interna de Prospectiva Trascendente -->
+                 <button class="card-btn" onclick="openTranscendentProspectModal()">
+                    <i class="fas fa-eye"></i> Explorar Manifiesto
+                </button>
+            </div>
+        </section>
 
         <!-- SECCIÓN DE CONTACTO -->
         <section id="contact" class="contact-section">
@@ -1023,14 +1139,6 @@
         </section>
 
     </main>
-    
-    <!-- PIE DE PÁGINA -->
-    <footer>
-        <div class="footer-content">
-            <p>&copy; 2024 Infinity Corp S.A. Todos los derechos reservados.</p>
-        </div>
-    </footer>
-
 
     <!-- MODAL 1: GENERADOR DE PROYECTOS (EXISTENTE) -->
     <div id="project-modal" class="modal-overlay">
@@ -1300,7 +1408,7 @@
                         <i class="fas fa-layer-group"></i>
                         <strong>Arquitectura Unificada (Cross-Platform)</strong>
                         <p>Uso estratégico de *frameworks* avanzados (como Flutter o React Native) para acelerar el desarrollo con una única base de código, sin sacrificar la sensación nativa.</p>
-                    </p>
+                    </div>
                 </div>
                 
                 <div class="key-features-grid" style="margin-top: 20px;">
@@ -1451,7 +1559,6 @@
                         <i class="fas fa-server"></i>
                         <strong>Infraestructura Multiplayer</strong>
                         <p>Desarrollo de backends robustos y de baja latencia para juegos masivos en línea y entornos de simulación persistente.</p>
-                    </p>
                     </div>
                      <div class="feature-box">
                         <i class="fas fa-magic"></i>
@@ -1468,7 +1575,74 @@
         </div>
     </div>
     
-    <!-- SE ELIMINÓ el MODAL de Prospectiva Trascendente (#transcendent-prospect-modal) -->
+    <!-- MODAL 9: PÁGINA INTERNA DE PROSPECTIVA TRASCENDENTE (NUEVO) -->
+    <div id="transcendent-prospect-modal" class="modal-overlay">
+        <div class="modal-content">
+            <i class="fas fa-times close-modal" onclick="closeTranscendentProspectModal()"></i>
+            <div class="ai-page-content">
+                <h2>Proyecto 500: El Manifiesto Civilizatorio</h2>
+                
+                <p style="text-align: center; font-style: italic; color: #ffaa00; font-weight: 500;">
+                    "No predecimos el futuro, lo diseñamos. Una hoja de ruta para la evolución de la especie."
+                </p>
+
+                <div class="data-visualization-panel">
+                    <div class="data-info">
+                        <h4>Reestructuración de Sociedades y Planetas</h4>
+                        <p>El Proyecto 500 es el think-tank de élite de Infinity Corp, dedicado a la planificación de mega-estructuras sociales y tecnológicas a escala interplanetaria. Nos enfocamos en la simbiosis de la infraestructura digital (IA Cuántica y Computación Cuántica) con la bio-ingeniería y la nanotecnología para resolver problemas de escasez y habitabilidad a nivel de ecosistema global.</p>
+                    </div>
+                    <!-- Imagen de una ciudad futurista o un hábitat espacial -->
+                    <img src="https://placehold.co/400x250/1a1d24/ffaa00?text=CIUDAD+REESTRUCTURADA+HOLOGRAFICA" 
+                         alt="Diagrama de una ciudad futurista con tecnología holográfica y nanotecnológica.">
+                    
+                </div>
+
+                <h3>Frentes de Desarrollo Tecnológico (Próximos 500 Años)</h3>
+                <p>Nuestra inversión y desarrollo se centran en áreas que redefinirán la existencia humana y nuestra posición en el cosmos:</p>
+
+                <div class="key-features-grid">
+                    <div class="feature-box">
+                        <i class="fas fa-infinity" style="color:#ffaa00;"></i>
+                        <strong>Inteligencia Artificial Cuántica (QAI)</strong>
+                        <p>Sistemas cognitivos (QNA) escalados para gobernar redes planetarias enteras y simular millones de escenarios evolutivos para optimización social.</p>
+                    </div>
+                    <div class="feature-box">
+                        <i class="fas fa-microscope" style="color:#ffaa00;"></i>
+                        <strong>Nanotecnología y Bioingeniería</strong>
+                        <p>Despliegue de nanobots para la restauración ecológica a gran escala, reparación celular y la fusión biológica con interfaces digitales.</p>
+                    </div>
+                    <div class="feature-box">
+                        <i class="fas fa-lightbulb" style="color:#ffaa00;"></i>
+                        <strong>Tecnología Holográfica 3D</strong>
+                        <p>Creación de entornos de trabajo, comunicación y educación totalmente inmersivos mediante proyecciones holográficas de alta densidad y fidelidad sensorial.</p>
+                    </div>
+                </div>
+                
+                <div class="key-features-grid" style="margin-top: 20px;">
+                     <div class="feature-box">
+                        <i class="fas fa-atom" style="color:#ffaa00;"></i>
+                        <strong>Computación Cuántica Aplicada</strong>
+                        <p>Uso de procesadores cuánticos para resolver instantáneamente problemas de logística global, medicina personalizada y diseño de materiales avanzados.</p>
+                    </div>
+                     <div class="feature-box">
+                        <i class="fas fa-rocket" style="color:#ffaa00;"></i>
+                        <strong>Motores de Hipervelocidad e Interestelares</strong>
+                        <p>Investigación en propulsión de distorsión (Warp) y otros sistemas de alta velocidad para la exploración y colonización de exoplanetas cercanos.</p>
+                    </div>
+                     <div class="feature-box">
+                        <i class="fas fa-user-astronaut" style="color:#ffaa00;"></i>
+                        <strong>Expansión Interplanetaria</strong>
+                        <p>Diseño de hábitats autosuficientes y sistemas de terraformación robóticos para establecer colonias permanentes en Marte y otros cuerpos celestes.</p>
+                    </div>
+                </div>
+
+                <!-- CTA para cerrar y contactar, con acento naranja -->
+                <button class="btn" onclick="document.getElementById('transcendent-prospect-modal').classList.remove('active'); document.getElementById('contact').scrollIntoView();" style="margin-top: 40px; width: 100%;">
+                    <i class="fas fa-bolt"></i> Iniciar Colaboración Trascendente
+                </button>
+            </div>
+        </div>
+    </div>
 
 
     <!-- CHAT FLOTANTE -->
@@ -1832,8 +2006,14 @@
             document.getElementById('interactive-reality-modal').classList.remove('active');
         }
 
-        // --- SE ELIMINARON las funciones open/closeTranscendentProspectModal() ---
+        // --- FUNCIONES PARA EL NUEVO MODAL DE PROSPECTIVA TRASCENDENTE ---
+        function openTranscendentProspectModal() {
+            document.getElementById('transcendent-prospect-modal').classList.add('active');
+        }
+
+        function closeTranscendentProspectModal() {
+            document.getElementById('transcendent-prospect-modal').classList.remove('active');
+        }
     </script>
 </body>
-
 </html>
