@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Infinity Corp S.A.</title>
     <!-- Fuente futurista para el logo y títulos -->
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto:wght@300;400;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <!-- Iconos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
@@ -15,107 +15,156 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            scroll-behavior: smooth; /* Desplazamiento suave */
+            scroll-behavior: smooth;
         }
 
         body {
             font-family: 'Roboto', sans-serif;
-            background-color: #0f1114; /* Fondo general oscuro */
+            background-color: #0f1114;
             color: #e0e0e0;
             overflow-x: hidden;
         }
 
-        /* --- PANTALLA DE INTRO (SPLASH SCREEN) --- */
+        /* --- NUEVA PANTALLA DE INTRO (REDISEÑADA) --- */
         #splash-screen {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100vh;
-            background: radial-gradient(circle at center, #2b303b 0%, #121418 100%);
+            background-color: #000;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             z-index: 9999;
-            transition: opacity 1s ease-in-out, transform 1s ease-in-out;
+            overflow: hidden;
+            transition: opacity 0.8s ease-in-out;
+        }
+
+        /* Fondo de rejilla animada (Grid) */
+        .intro-grid {
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background-image: 
+                linear-gradient(rgba(0, 210, 255, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 210, 255, 0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+            transform: perspective(500px) rotateX(60deg) translateY(-100px) translateZ(-200px);
+            animation: gridMove 20s linear infinite;
+            opacity: 0.3;
+            pointer-events: none;
+        }
+
+        @keyframes gridMove {
+            0% { transform: perspective(500px) rotateX(60deg) translateY(0) translateZ(-200px); }
+            100% { transform: perspective(500px) rotateX(60deg) translateY(50px) translateZ(-200px); }
+        }
+
+        /* Efecto Vignette y Scanline */
+        .scanlines {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 50%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.2));
+            background-size: 100% 4px;
+            pointer-events: none;
+            z-index: 10;
+        }
+        
+        .vignette {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle, transparent 50%, #000 150%);
+            z-index: 11;
+            pointer-events: none;
         }
 
         /* Contenedor del Logo */
-        .logo-wrapper {
+        .intro-content {
             position: relative;
-            width: 300px;
-            height: 150px;
-            filter: drop-shadow(0 0 15px rgba(0, 198, 255, 0.4));
+            z-index: 20;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
-        svg {
+        /* Símbolo Infinito Neón */
+        .infinity-loader {
+            width: 120px;
+            height: 60px;
+            position: relative;
+            margin-bottom: 30px;
+        }
+
+        .infinity-svg {
             width: 100%;
             height: 100%;
-            overflow: visible;
-        }
-
-        .path {
             fill: none;
-            stroke-width: 10;
+            stroke-width: 8;
             stroke-linecap: round;
-            opacity: 0;
+            filter: drop-shadow(0 0 10px rgba(0, 210, 255, 0.8));
         }
 
-        .path-energy {
+        .infinity-bg {
+            stroke: #1a1d24;
+        }
+
+        .infinity-path {
             stroke: #00d2ff;
-            stroke-width: 14;
-            filter: blur(5px);
-            opacity: 0;
+            stroke-dasharray: 20 100;
+            animation: dash 1.5s linear infinite;
         }
 
-        .path-metal {
-            stroke: url(#metal-gradient);
-            filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.8));
+        @keyframes dash {
+            0% { stroke-dashoffset: 0; }
+            100% { stroke-dashoffset: -240; } /* Ajustado para el ciclo continuo */
         }
 
-        .dot {
-            fill: #fff;
-            filter: drop-shadow(0 0 8px #fff);
-            opacity: 0;
-        }
-
-        .brand-title {
+        /* Texto Decodificado */
+        .decode-text {
             font-family: 'Orbitron', sans-serif;
             font-size: 3.5rem;
             font-weight: 900;
-            letter-spacing: 6px;
-            margin-top: 10px;
+            letter-spacing: 8px;
+            color: white;
             text-transform: uppercase;
-            background: linear-gradient(to bottom, #ffffff 0%, #b4bdd1 50%, #4a5361 51%, #aeb7ca 100%);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            opacity: 0;
-            transform: translateY(30px);
+            position: relative;
+            min-height: 60px; /* Evita saltos */
+            text-shadow: 0 0 20px rgba(0, 210, 255, 0.5);
         }
 
-        .brand-subtitle {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.2rem;
+        .intro-subtitle {
+            font-family: 'Share Tech Mono', monospace;
             color: #00d2ff;
-            letter-spacing: 4px;
-            margin-top: 5px;
+            font-size: 1rem;
+            margin-top: 10px;
+            letter-spacing: 2px;
             opacity: 0;
-            text-transform: uppercase;
+            animation: fadeInSub 0.5s ease-out 1.5s forwards;
+        }
+        
+        @keyframes fadeInSub {
+            to { opacity: 0.8; }
         }
 
-        .lens-flare {
-            position: absolute;
-            top: 40%;
-            left: 50%;
-            transform: translate(-50%, -50%) rotate(-15deg);
-            width: 0px;
-            height: 4px;
-            background: #fff;
-            box-shadow: 0 0 50px 10px rgba(255,255,255,0.8), 0 0 100px 20px rgba(0, 210, 255, 0.6);
-            opacity: 0;
-            z-index: 100;
+        /* Barra de carga */
+        .loading-bar-container {
+            width: 200px;
+            height: 2px;
+            background: #333;
+            margin-top: 25px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .loading-bar-fill {
+            width: 0%;
+            height: 100%;
+            background: #00d2ff;
+            box-shadow: 0 0 10px #00d2ff;
+            transition: width 0.1s linear;
         }
 
         /* --- CONTENIDO REAL DEL SITIO WEB --- */
@@ -251,8 +300,9 @@
         @media (max-width: 768px) {
             .hero h1 { font-size: 2.5rem; }
             .hero p { font-size: 1rem; }
-            .services-section, .dev-section, .contact-section, .transcendent-section { padding: 80px 20px; }
+            .services-section, .dev-section, .contact-section { padding: 80px 20px; }
             .contact-container { padding: 30px; }
+            .decode-text { font-size: 2.5rem; }
         }
 
         /* --- SECCIÓN DE SERVICIOS --- */
@@ -386,98 +436,6 @@
             box-shadow: 0 0 10px rgba(0, 210, 255, 0.5);
         }
         
-        /* --- SECCIÓN DE PROSPECTIVA TRASCENDENTE (NUEVA) --- */
-        .transcendent-section {
-            padding: 100px 50px;
-            background-color: #1a1d24; /* Mismo fondo que services, pero con acento diferente */
-            text-align: center;
-            position: relative;
-        }
-
-        /* Título con acento naranja/dorado */
-        .transcendent-section .section-title::after {
-            background: #ffaa00; /* Naranja/Oro */
-            box-shadow: 0 0 10px #ffaa00;
-        }
-
-        /* Tarjeta de la nueva sección */
-        .transcendent-card {
-            background: #232730;
-            padding: 40px 30px;
-            border-radius: 15px;
-            border: 1px solid #ffaa00; /* Borde naranja */
-            transition: all 0.4s ease;
-            position: relative;
-            overflow: hidden;
-            text-align: left;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        .transcendent-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 30px rgba(255, 170, 0, 0.3);
-            border-color: #ffaa00;
-        }
-
-        .transcendent-card .service-icon {
-            color: #ffaa00; /* Icono naranja */
-        }
-
-        /* Botón pequeño dentro de la tarjeta Transcendente */
-        .transcendent-card .card-btn {
-            border: 1px solid #ffaa00;
-            color: #ffaa00;
-        }
-        .transcendent-card .card-btn:hover {
-            background: #ffaa00;
-            color: #121418;
-            box-shadow: 0 0 10px rgba(255, 170, 0, 0.5);
-        }
-
-        /* Modal específico para Prospectiva Trascendente */
-        #transcendent-prospect-modal .modal-content {
-            border: 1px solid #ffaa00 !important; /* Importante para sobreescribir el estilo general */
-            box-shadow: 0 0 50px rgba(255, 170, 0, 0.5) !important; 
-        }
-
-        #transcendent-prospect-modal .ai-page-content h2 {
-            color: #ffaa00;
-            border-bottom: 2px solid rgba(255, 170, 0, 0.3);
-        }
-
-        #transcendent-prospect-modal .data-visualization-panel img {
-            box-shadow: 0 0 15px rgba(255, 170, 0, 0.4);
-        }
-
-        #transcendent-prospect-modal .data-info h4 {
-            color: #ffaa00;
-        }
-
-        #transcendent-prospect-modal .feature-box {
-            border-left: 3px solid #ffaa00;
-        }
-        #transcendent-prospect-modal .feature-box i {
-            color: #ffaa00;
-        }
-        #transcendent-prospect-modal .feature-box:hover {
-            box-shadow: 0 5px 15px rgba(255, 170, 0, 0.2);
-        }
-
-        /* CTA del modal con color naranja */
-        #transcendent-prospect-modal .btn {
-            background: linear-gradient(45deg, #ffaa00, #ff7700);
-            box-shadow: 0 0 15px rgba(255, 170, 0, 0.4);
-        }
-        #transcendent-prospect-modal .btn:hover {
-            box-shadow: 0 0 25px rgba(255, 170, 0, 0.7);
-        }
-        /* --- FIN SECCIÓN PROSPECTIVA TRASCENDENTE --- */
-        
-        
         /* --- SECCIÓN DE CONTACTO CORPORATIVO --- */
         .contact-section {
             padding: 100px 20px;
@@ -588,8 +546,7 @@
         #blockchain-infrastructure-modal .modal-content,
         #mobile-ecosystems-modal .modal-content,
         #web-platforms-modal .modal-content,
-        #interactive-reality-modal .modal-content,
-        #transcendent-prospect-modal .modal-content {
+        #interactive-reality-modal .modal-content {
             max-width: 900px; 
             padding: 0; 
             border: none; 
@@ -754,8 +711,7 @@
             #blockchain-infrastructure-modal .modal-content,
             #mobile-ecosystems-modal .modal-content,
             #web-platforms-modal .modal-content,
-            #interactive-reality-modal .modal-content,
-            #transcendent-prospect-modal .modal-content {
+            #interactive-reality-modal .modal-content {
                 max-width: 95%;
             }
         }
@@ -912,33 +868,29 @@
 </head>
 <body>
 
-    <!-- INTRO / SPLASH SCREEN -->
+    <!-- NUEVA PANTALLA DE INTRO (FUTURISTA) -->
     <div id="splash-screen">
-        <div class="logo-wrapper">
-            <svg viewBox="0 0 300 150">
-                <defs>
-                    <linearGradient id="metal-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                        <stop offset="0%" stop-color="#e0e0e0" />
-                        <stop offset="50%" stop-color="#909090" />
-                        <stop offset="51%" stop-color="#404040" />
-                        <stop offset="100%" stop-color="#e0e0e0" />
-                    </linearGradient>
-                </defs>
-                
-                <!-- Símbolo de infinito -->
-                <path id="infinity-energy" class="path path-energy" 
-                      d="M80,75 C80,35 140,35 150,75 C160,115 220,115 220,75 C220,35 160,35 150,75 C140,115 80,115 80,75 Z" />
-
-                <path id="infinity-metal" class="path path-metal" 
-                      d="M80,75 C80,35 140,35 150,75 C160,115 220,115 220,75 C220,35 160,35 150,75 C140,115 80,115 80,75 Z" />
-                
-                <circle id="dot" class="dot" cx="200" cy="75" r="8" />
-            </svg>
-            <div id="flare" class="lens-flare"></div>
+        <div class="intro-grid"></div>
+        <div class="scanlines"></div>
+        <div class="vignette"></div>
+        
+        <div class="intro-content">
+            <!-- Infinito con animación de energía -->
+            <div class="infinity-loader">
+                <svg class="infinity-svg" viewBox="0 0 200 100">
+                    <path class="infinity-bg" d="M50,50 C50,20 100,20 100,50 C100,80 150,80 150,50 C150,20 100,20 100,50 C100,80 50,80 50,50 Z" />
+                    <path class="infinity-path" d="M50,50 C50,20 100,20 100,50 C100,80 150,80 150,50 C150,20 100,20 100,50 C100,80 50,80 50,50 Z" />
+                </svg>
+            </div>
+            
+            <!-- Texto que se decodifica -->
+            <h1 class="decode-text" id="intro-title" data-value="INFINITY">_</h1>
+            <div class="intro-subtitle">CORP S.A. | SYSTEMS ONLINE</div>
+            
+            <div class="loading-bar-container">
+                <div class="loading-bar-fill" id="loading-bar"></div>
+            </div>
         </div>
-
-        <h1 id="main-text" class="brand-title">INFINITY</h1>
-        <div id="sub-text" class="brand-subtitle">Corp S.A.</div>
     </div>
 
     <!-- SITIO WEB PRINCIPAL -->
@@ -949,7 +901,6 @@
                 <a href="#">Inicio</a>
                 <a href="#services">Servicios</a>
                 <a href="#development">Desarrollo</a>
-                <a href="#transcendent-vision">Vision</a>
                 <a href="#contact">Contacto</a>
             </nav>
         </header>
@@ -1068,24 +1019,6 @@
                         <i class="fas fa-gamepad"></i> Núcleo Hydra-G
                     </button>
                 </div>
-            </div>
-        </section>
-        
-        <!-- SECCIÓN DE PROSPECTIVA TRASCENDENTE (NUEVA) -->
-        <section id="transcendent-vision" class="transcendent-section">
-            <h2 class="section-title">Prospectiva Trascendente</h2>
-            <p class="section-desc">Proyectos con un horizonte de 50 a 500 años. Ingeniería de la civilización y expansión interestelar.</p>
-
-            <div class="transcendent-card">
-                <div>
-                    <i class="fas fa-rocket service-icon"></i>
-                    <h3>Proyecto 500: Ingeniería Civilizatoria</h3>
-                    <p>Infinity Corp lidera la conceptualización y desarrollo de la próxima generación de tecnologías fundacionales. Desde la reestructuración física de las ciudades hasta los motores que nos llevarán más allá de nuestro sistema solar.</p>
-                </div>
-                 <!-- Botón para abrir la página interna de Prospectiva Trascendente -->
-                 <button class="card-btn" onclick="openTranscendentProspectModal()">
-                    <i class="fas fa-eye"></i> Explorar Manifiesto
-                </button>
             </div>
         </section>
 
@@ -1575,76 +1508,6 @@
         </div>
     </div>
     
-    <!-- MODAL 9: PÁGINA INTERNA DE PROSPECTIVA TRASCENDENTE (NUEVO) -->
-    <div id="transcendent-prospect-modal" class="modal-overlay">
-        <div class="modal-content">
-            <i class="fas fa-times close-modal" onclick="closeTranscendentProspectModal()"></i>
-            <div class="ai-page-content">
-                <h2>Proyecto 500: El Manifiesto Civilizatorio</h2>
-                
-                <p style="text-align: center; font-style: italic; color: #ffaa00; font-weight: 500;">
-                    "No predecimos el futuro, lo diseñamos. Una hoja de ruta para la evolución de la especie."
-                </p>
-
-                <div class="data-visualization-panel">
-                    <div class="data-info">
-                        <h4>Reestructuración de Sociedades y Planetas</h4>
-                        <p>El Proyecto 500 es el think-tank de élite de Infinity Corp, dedicado a la planificación de mega-estructuras sociales y tecnológicas a escala interplanetaria. Nos enfocamos en la simbiosis de la infraestructura digital (IA Cuántica y Computación Cuántica) con la bio-ingeniería y la nanotecnología para resolver problemas de escasez y habitabilidad a nivel de ecosistema global.</p>
-                    </div>
-                    <!-- Imagen de una ciudad futurista o un hábitat espacial -->
-                    <img src="https://placehold.co/400x250/1a1d24/ffaa00?text=CIUDAD+REESTRUCTURADA+HOLOGRAFICA" 
-                         alt="Diagrama de una ciudad futurista con tecnología holográfica y nanotecnológica.">
-                    
-                </div>
-
-                <h3>Frentes de Desarrollo Tecnológico (Próximos 500 Años)</h3>
-                <p>Nuestra inversión y desarrollo se centran en áreas que redefinirán la existencia humana y nuestra posición en el cosmos:</p>
-
-                <div class="key-features-grid">
-                    <div class="feature-box">
-                        <i class="fas fa-infinity" style="color:#ffaa00;"></i>
-                        <strong>Inteligencia Artificial Cuántica (QAI)</strong>
-                        <p>Sistemas cognitivos (QNA) escalados para gobernar redes planetarias enteras y simular millones de escenarios evolutivos para optimización social.</p>
-                    </div>
-                    <div class="feature-box">
-                        <i class="fas fa-microscope" style="color:#ffaa00;"></i>
-                        <strong>Nanotecnología y Bioingeniería</strong>
-                        <p>Despliegue de nanobots para la restauración ecológica a gran escala, reparación celular y la fusión biológica con interfaces digitales.</p>
-                    </div>
-                    <div class="feature-box">
-                        <i class="fas fa-lightbulb" style="color:#ffaa00;"></i>
-                        <strong>Tecnología Holográfica 3D</strong>
-                        <p>Creación de entornos de trabajo, comunicación y educación totalmente inmersivos mediante proyecciones holográficas de alta densidad y fidelidad sensorial.</p>
-                    </div>
-                </div>
-                
-                <div class="key-features-grid" style="margin-top: 20px;">
-                     <div class="feature-box">
-                        <i class="fas fa-atom" style="color:#ffaa00;"></i>
-                        <strong>Computación Cuántica Aplicada</strong>
-                        <p>Uso de procesadores cuánticos para resolver instantáneamente problemas de logística global, medicina personalizada y diseño de materiales avanzados.</p>
-                    </div>
-                     <div class="feature-box">
-                        <i class="fas fa-rocket" style="color:#ffaa00;"></i>
-                        <strong>Motores de Hipervelocidad e Interestelares</strong>
-                        <p>Investigación en propulsión de distorsión (Warp) y otros sistemas de alta velocidad para la exploración y colonización de exoplanetas cercanos.</p>
-                    </div>
-                     <div class="feature-box">
-                        <i class="fas fa-user-astronaut" style="color:#ffaa00;"></i>
-                        <strong>Expansión Interplanetaria</strong>
-                        <p>Diseño de hábitats autosuficientes y sistemas de terraformación robóticos para establecer colonias permanentes en Marte y otros cuerpos celestes.</p>
-                    </div>
-                </div>
-
-                <!-- CTA para cerrar y contactar, con acento naranja -->
-                <button class="btn" onclick="document.getElementById('transcendent-prospect-modal').classList.remove('active'); document.getElementById('contact').scrollIntoView();" style="margin-top: 40px; width: 100%;">
-                    <i class="fas fa-bolt"></i> Iniciar Colaboración Trascendente
-                </button>
-            </div>
-        </div>
-    </div>
-
-
     <!-- CHAT FLOTANTE -->
     <div class="chat-fab" onclick="toggleChat()">
         <i class="fas fa-robot"></i>
@@ -1666,61 +1529,69 @@
 
     <script>
         // --- CONFIGURACIÓN API KEY ---
-        const apiKey = ""; // La clave se inyecta automáticamente en este entorno de ejecución.
+        // IMPORTANTE: Para que el chat funcione en GitHub Pages, debes obtener una API Key gratuita
+        // en https://aistudio.google.com/app/apikey y pegarla abajo dentro de las comillas.
+        // ADVERTENCIA: Si publicas esto en un repositorio PÚBLICO, tu clave será visible para todos.
+        
+        const manualApiKey = "AIzaSyA235D40VKZKRFHBbgiOLhTF9EqMVRIPX8"; // <--- PEGA TU CLAVE AQUÍ (Ej: "AlzaSy...")
+        
+        // La clave se inyecta automáticamente en el entorno de prueba, pero usa la manual si existe.
+        const apiKey = manualApiKey || ""; 
         
         // --- CONFIGURACIÓN FORMULARIO DE CONTACTO ---
         // INSTRUCCIÓN: Si quieres que el formulario funcione de verdad, regístrate en https://formspree.io, 
         // crea un formulario y reemplaza la URL de abajo con tu endpoint de Formspree.
         const formEndpoint = "https://formspree.io/f/xblbapoo"; 
 
-        // --- LÓGICA DE LA INTRO (Mejorada para transición) ---
+        // --- LÓGICA DE LA NUEVA INTRO (HACKER EFFECT) ---
         window.onload = function() {
-            const energyPath = document.getElementById('infinity-energy');
-            const metalPath = document.getElementById('infinity-metal');
-            const dot = document.getElementById('dot');
-            const mainText = document.getElementById('main-text');
-            const subText = document.getElementById('sub-text');
-            const flare = document.getElementById('flare');
-            const splashScreen = document.getElementById('splash-screen');
-            const mainWebsite = document.getElementById('main-website');
+            const titleElement = document.getElementById("intro-title");
+            const loadingBar = document.getElementById("loading-bar");
+            const splashScreen = document.getElementById("splash-screen");
+            const mainWebsite = document.getElementById("main-website");
+            const finalText = titleElement.getAttribute("data-value");
+            const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            
+            // Animación de barra de carga
+            let width = 0;
+            const loadingInterval = setInterval(() => {
+                if (width >= 100) {
+                    clearInterval(loadingInterval);
+                    
+                    // Al terminar la carga, desvanecer
+                    setTimeout(() => {
+                        splashScreen.style.opacity = '0';
+                        mainWebsite.classList.add('content-visible');
+                        document.body.style.overflow = 'auto'; // Permitir scroll
+                        document.body.style.overflowX = 'hidden'; 
+                        setTimeout(() => splashScreen.style.display = 'none', 800);
+                    }, 800);
 
-            // Cálculo de trazo
-            const length = metalPath.getTotalLength();
-            [energyPath, metalPath].forEach(path => {
-                path.style.strokeDasharray = length;
-                path.style.strokeDashoffset = length;
-                path.style.opacity = '1';
-            });
+                } else {
+                    width++;
+                    loadingBar.style.width = width + '%';
+                }
+            }, 30); // Duración de carga aprox 3s
 
-            // Animación
-            energyPath.style.transition = 'stroke-dashoffset 1.5s ease-in-out';
-            setTimeout(() => energyPath.style.strokeDashoffset = '0', 100);
-
-            metalPath.style.transition = 'stroke-dashoffset 2s ease-in-out';
-            setTimeout(() => metalPath.style.strokeDashoffset = '0', 500);
-
-            setTimeout(() => {
-                dot.style.transition = 'opacity 0.5s ease, transform 0.5s';
-                dot.style.opacity = '1';
-                dot.style.transform = 'scale(1.2)';
-                flare.style.transition = 'all 0.4s ease-out';
-                flare.style.width = '150%'; flare.style.opacity = '1';
+            // Efecto de Texto Hacker (Decode)
+            let iterations = 0;
+            const decodeInterval = setInterval(() => {
+                titleElement.innerText = finalText
+                    .split("")
+                    .map((letter, index) => {
+                        if (index < iterations) {
+                            return finalText[index];
+                        }
+                        return letters[Math.floor(Math.random() * 26)];
+                    })
+                    .join("");
                 
-                setTimeout(() => { flare.style.opacity = '0'; dot.style.transform = 'scale(1)'; }, 400);
-            }, 2200);
-
-            setTimeout(() => {
-                mainText.style.transition = 'all 1s ease-out'; mainText.style.opacity = '1'; mainText.style.transform = 'translateY(0)';
-                subText.style.transition = 'all 1s ease-out 0.3s'; subText.style.opacity = '1';
-            }, 2400);
-
-            setTimeout(() => {
-                splashScreen.classList.add('fade-out');
-                mainWebsite.classList.add('content-visible');
-                document.body.style.overflow = 'auto'; // Permite scroll
-                document.body.style.overflowX = 'hidden'; // Evita scroll horizontal
-                setTimeout(() => splashScreen.style.display = 'none', 1000);
-            }, 5500);
+                if (iterations >= finalText.length) { 
+                    clearInterval(decodeInterval);
+                }
+                
+                iterations += 1/3; // Velocidad del decodificado
+            }, 30);
         };
 
         // --- LÓGICA FORMULARIO DE CONTACTO ---
@@ -1783,6 +1654,11 @@
 
         // Función con lógica de reintento exponencial
         async function callGeminiAPI(prompt, systemInstruction = null) {
+            if (!apiKey) {
+                // Si no hay key, retornamos un mensaje de error especial
+                throw new Error("NO_API_KEY");
+            }
+
             const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
             const maxRetries = 5;
             
@@ -1867,7 +1743,11 @@
                 resultBox.style.display = 'block';
             } catch (error) {
                 console.error(error);
-                resultBox.innerHTML = `<strong style="color: #ff4444;"><i class="fas fa-exclamation-triangle"></i> Error en la conexión con Genesis. Intente nuevamente.</strong>`;
+                if (error.message === "NO_API_KEY") {
+                    resultBox.innerHTML = `<strong style="color: #ffaa00;"><i class="fas fa-key"></i> FALTAN CREDENCIALES:</strong><br>Para usar esta función en GitHub Pages, debes editar el archivo index.html y agregar tu API Key de Google Gemini en la variable "manualApiKey" (línea ~1230).`;
+                } else {
+                    resultBox.innerHTML = `<strong style="color: #ff4444;"><i class="fas fa-exclamation-triangle"></i> Error en la conexión con Genesis. Intente nuevamente.</strong>`;
+                }
                 resultBox.style.borderLeftColor = '#ff4444';
             } finally {
                 btnText.style.display = 'inline';
@@ -1926,7 +1806,11 @@
             } catch (error) {
                 const currentLoadingDiv = document.getElementById(loadingId);
                 if (currentLoadingDiv) {
-                    currentLoadingDiv.textContent = "Error: Fallo la conexión con el núcleo de Genesis. Intenta recargar la página.";
+                    if (error.message === "NO_API_KEY") {
+                         currentLoadingDiv.innerHTML = '<strong>Error de Configuración:</strong> No se detectó ninguna API Key. <br><br>Para que el chat funcione en la web publicada, edita el archivo <code>index.html</code> y pega tu clave de Google Gemini en la variable <code>manualApiKey</code> (cerca de la línea 1230).';
+                    } else {
+                        currentLoadingDiv.textContent = "Error: Fallo la conexión con el núcleo de Genesis. Intenta recargar la página.";
+                    }
                     currentLoadingDiv.style.backgroundColor = '#ffdddd';
                 }
             } finally {
@@ -2004,15 +1888,6 @@
 
         function closeInteractiveRealityModal() {
             document.getElementById('interactive-reality-modal').classList.remove('active');
-        }
-
-        // --- FUNCIONES PARA EL NUEVO MODAL DE PROSPECTIVA TRASCENDENTE ---
-        function openTranscendentProspectModal() {
-            document.getElementById('transcendent-prospect-modal').classList.add('active');
-        }
-
-        function closeTranscendentProspectModal() {
-            document.getElementById('transcendent-prospect-modal').classList.remove('active');
         }
     </script>
 </body>
