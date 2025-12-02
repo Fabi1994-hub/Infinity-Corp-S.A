@@ -260,6 +260,28 @@
             opacity: 1;
             box-shadow: 0 5px 15px rgba(0, 210, 255, 0.4);
         }
+        
+        /* ESTILO ESPECIAL PARA EL BOTÓN DE CONFIGURACIÓN */
+        .nav-settings-btn {
+            color: #a0aab5 !important;
+            font-size: 1.2rem;
+            margin-left: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 45px; /* Cuadrado/Circular */
+            padding: 0 !important; /* Reset del padding normal del menu */
+            height: 45px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .nav-settings-btn::before {
+            background: linear-gradient(45deg, #444, #666) !important; /* Gris técnico */
+        }
+        .nav-settings-btn:hover {
+            color: white !important;
+            border-color: #00d2ff;
+            transform: rotate(90deg); /* Animación de rotación al pasar el mouse */
+        }
 
         /* --- BOTÓN HAMBURGUESA (Móvil) --- */
         .menu-toggle {
@@ -676,7 +698,54 @@
             box-shadow: 0 0 50px rgba(0, 198, 255, 0.5); 
             background: #121418; 
         }
+
+        /* MODAL DE CONFIGURACIÓN (NUEVO) */
+        #settings-modal .modal-content {
+            max-width: 400px;
+            text-align: left;
+            border: 1px solid #333;
+            background: #15181e;
+        }
+        .settings-option {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #333;
+        }
+        .settings-option:last-child { border-bottom: none; }
+        .settings-label { color: #e0e0e0; font-size: 0.95rem; }
         
+        /* Switch Toggle */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #333;
+            transition: .4s;
+            border-radius: 34px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        input:checked + .slider { background-color: #00d2ff; }
+        input:checked + .slider:before { transform: translateX(26px); }
+
         .close-modal {
             position: absolute;
             top: 15px;
@@ -1202,6 +1271,27 @@
             100% { background-position: 0% 200%; }
         }
 
+        /* --- MODO RENDIMIENTO (SIN ANIMACIONES) --- */
+        body.no-animations *, 
+        body.no-animations *::before, 
+        body.no-animations *::after {
+            transition-duration: 0s !important;
+            animation: none !important;
+        }
+        
+        /* Asegurar visibilidad inmediata si se desactivan las animaciones */
+        body.no-animations .reveal-element {
+            opacity: 1 !important;
+            transform: none !important;
+        }
+        
+        /* Ocultar elementos decorativos pesados en modo rendimiento */
+        body.no-animations .intro-grid,
+        body.no-animations .planet-container::before,
+        body.no-animations .planet-container::after {
+            display: none !important;
+        }
+
     </style>
 </head>
 <body>
@@ -1245,44 +1335,49 @@
 
             <!-- Menú de Navegación -->
             <nav class="nav-menu">
-                <a href="#">Inicio</a>
-                <a href="#services">Servicios</a>
-                <a href="#development">Desarrollo</a>
+                <a href="#" id="nav-home">Inicio</a>
+                <a href="#services" id="nav-services">Servicios</a>
+                <a href="#development" id="nav-dev">Desarrollo</a>
                 <!-- NUEVO BOTÓN: CURSOS DE IA -->
-                <a href="#" onclick="openAcademyModal(); return false;">Academy</a>
-                <a href="#contact">Contacto</a>
+                <a href="#" onclick="openAcademyModal(); return false;" id="nav-academy">Academy</a>
+                <a href="#contact" id="nav-contact">Contacto</a>
+                
+                <!-- NUEVO BOTÓN DE CONFIGURACIÓN (ENGRANAJE) -->
+                <a href="#" class="nav-settings-btn" onclick="openSettingsModal(); return false;" title="Configuración del Sistema">
+                    <i class="fas fa-cog"></i>
+                </a>
             </nav>
         </header>
 
         <section class="hero">
-            <h1 class="reveal-element">Liderazgo Tecnológico Global</h1>
+            <h1 class="reveal-element" id="hero-title">Liderazgo Tecnológico Global</h1>
             <!-- NUEVO ESLOGAN AGREGADO AQUÍ CON COMILLAS -->
-            <h2 class="hero-slogan reveal-element delay-100">"Desplegamos arquitecturas digitales que escalan tu negocio."</h2>
+            <h2 class="hero-slogan reveal-element delay-100" id="hero-slogan">"Desplegamos arquitecturas digitales que escalan tu negocio."</h2>
             
-            <p class="reveal-element delay-200">En Infinity Corp S.A. catalizamos la evolución empresarial integrando inteligencia artificial avanzada y estrategias disruptivas. Diseñamos los ecosistemas digitales que definirán la competitividad del mañana.</p>
-            <p class="reveal-element delay-300" style="font-size: 0.9rem; margin-top: 10px; opacity: 0.8;">Explore nuestra prospectiva estratégica:</p>
+            <p class="reveal-element delay-200" id="hero-desc">En Infinity Corp S.A. catalizamos la evolución empresarial integrando inteligencia artificial avanzada y estrategias disruptivas. Diseñamos los ecosistemas digitales que definirán la competitividad del mañana.</p>
+            <p class="reveal-element delay-300" style="font-size: 0.9rem; margin-top: 10px; opacity: 0.8;" id="hero-sub">Explore nuestra prospectiva estratégica:</p>
             
             <button class="btn reveal-element delay-400" onclick="openProjectModal()">
-                <i class="fas fa-chart-line"></i> Generar Visión Corporativa
+                <i class="fas fa-chart-line"></i> <span id="hero-btn">Generar Visión Corporativa</span>
             </button>
         </section>
 
         <!-- SECCIÓN DE SERVICIOS -->
         <section id="services" class="services-section">
-            <h2 class="section-title reveal-element">Soluciones Empresariales</h2>
-            <p class="section-desc reveal-element delay-100">Infraestructura tecnológica diseñada para la escalabilidad y seguridad del futuro.</p>
+            <h2 class="section-title reveal-element" id="serv-title">Soluciones Empresariales</h2>
+            <p class="section-desc reveal-element delay-100" id="serv-desc">Infraestructura tecnológica diseñada para la escalabilidad y seguridad del futuro.</p>
 
             <div class="services-grid">
                 <!-- Tarjeta de Consultoría IA -->
                 <div class="service-card reveal-element delay-100">
                     <div>
                         <i class="fas fa-brain service-icon"></i>
-                        <h3>Consultoría en IA</h3>
-                        <p>Implementación de modelos predictivos y automatización cognitiva para optimizar la toma de decisiones estratégicas en tiempo real.</p>
+                        <h3 id="c1-title">Consultoría en IA</h3>
+                        <p id="c1-desc">Implementación de modelos predictivos y automatización cognitiva para optimizar la toma de decisiones estratégicas en tiempo real.</p>
                     </div>
                     <!-- Botón para abrir la página interna -->
                     <button class="card-btn" onclick="openAIConsultingModal()">
-                        <i class="fas fa-arrow-right"></i> Explorar Tecnología
+                        <i class="fas fa-arrow-right"></i> <span id="c1-btn">Explorar Tecnología</span>
                     </button>
                 </div>
                 
@@ -1290,12 +1385,12 @@
                 <div class="service-card reveal-element delay-200">
                     <div>
                         <i class="fas fa-shield-alt service-icon"></i>
-                        <h3>Ciberseguridad Cuántica</h3>
-                        <p>Protocolos de defensa avanzados y encriptación resistente a computación cuántica para proteger sus activos más valiosos.</p>
+                        <h3 id="c2-title">Ciberseguridad Cuántica</h3>
+                        <p id="c2-desc">Protocolos de defensa avanzados y encriptación resistente a computación cuántica para proteger sus activos más valiosos.</p>
                     </div>
                     <!-- Botón para abrir la nueva página interna de seguridad -->
                      <button class="card-btn" onclick="openQuantumSecurityModal()">
-                        <i class="fas fa-fingerprint"></i> Explorar Protocolo
+                        <i class="fas fa-fingerprint"></i> <span id="c2-btn">Explorar Protocolo</span>
                     </button>
                 </div>
                 
@@ -1303,12 +1398,12 @@
                 <div class="service-card reveal-element delay-300">
                     <div>
                         <i class="fas fa-network-wired service-icon"></i>
-                        <h3>Ecosistemas IoT</h3>
-                        <p>Interconexión masiva de dispositivos industriales con análisis de borde (Edge Computing) para fábricas inteligentes.</p>
+                        <h3 id="c3-title">Ecosistemas IoT</h3>
+                        <p id="c3-desc">Interconexión masiva de dispositivos industriales con análisis de borde (Edge Computing) para fábricas inteligentes.</p>
                     </div>
                     <!-- Botón para abrir la nueva página interna de IoT -->
                      <button class="card-btn" onclick="openIoTEcosystemsModal()">
-                        <i class="fas fa-microchip"></i> Explorar Malla Sentinel
+                        <i class="fas fa-microchip"></i> <span id="c3-btn">Explorar Malla Sentinel</span>
                     </button>
                 </div>
 
@@ -1316,12 +1411,12 @@
                 <div class="service-card reveal-element delay-400">
                     <div>
                         <i class="fas fa-cube service-icon"></i>
-                        <h3>Infraestructura Blockchain</h3>
-                        <p>Soluciones descentralizadas para trazabilidad de suministros y contratos inteligentes auditables y seguros.</p>
+                        <h3 id="c4-title">Infraestructura Blockchain</h3>
+                        <p id="c4-desc">Soluciones descentralizadas para trazabilidad de suministros y contratos inteligentes auditables y seguros.</p>
                     </div>
                     <!-- Botón para abrir la nueva página interna de Blockchain -->
                      <button class="card-btn" onclick="openBlockchainInfrastructureModal()">
-                        <i class="fas fa-project-diagram"></i> Explorar Red Thetan
+                        <i class="fas fa-project-diagram"></i> <span id="c4-btn">Explorar Red Thetan</span>
                     </button>
                 </div>
             </div>
@@ -1329,20 +1424,20 @@
 
         <!-- SECCIÓN DE DESARROLLO -->
         <section id="development" class="dev-section">
-            <h2 class="section-title reveal-element">Ingeniería Digital</h2>
-            <p class="section-desc reveal-element delay-100">Desarrollo de software a medida para la era de la hiperconectividad.</p>
+            <h2 class="section-title reveal-element" id="dev-title">Ingeniería Digital</h2>
+            <p class="section-desc reveal-element delay-100" id="dev-desc">Desarrollo de software a medida para la era de la hiperconectividad.</p>
 
             <div class="services-grid">
                 <!-- Tarjeta de Ecosistemas Móviles -->
                 <div class="service-card reveal-element delay-100">
                     <div>
                         <i class="fas fa-mobile-alt service-icon"></i>
-                        <h3>Ecosistemas Móviles</h3>
-                        <p>Desarrollo nativo y multiplataforma de aplicaciones que redefinen la interacción usuario-dispositivo con UX/UI de vanguardia.</p>
+                        <h3 id="c5-title">Ecosistemas Móviles</h3>
+                        <p id="c5-desc">Desarrollo nativo y multiplataforma de aplicaciones que redefinen la interacción usuario-dispositivo con UX/UI de vanguardia.</p>
                     </div>
                      <!-- Botón para abrir el nuevo modal de Ecosistemas Móviles -->
                      <button class="card-btn" onclick="openMobileEcosystemsModal()">
-                        <i class="fas fa-route"></i> Plataforma Nómada
+                        <i class="fas fa-route"></i> <span id="c5-btn">Plataforma Nómada</span>
                     </button>
                 </div>
                 
@@ -1350,12 +1445,12 @@
                 <div class="service-card reveal-element delay-200">
                     <div>
                         <i class="fas fa-laptop-code service-icon"></i>
-                        <h3>Plataformas Web 4.0</h3>
-                        <p>Arquitecturas web progresivas y corporativas, diseñadas para alto tráfico, escalabilidad global y carga instantánea.</p>
+                        <h3 id="c6-title">Plataformas Web 4.0</h3>
+                        <p id="c6-desc">Arquitecturas web progresivas y corporativas, diseñadas para alto tráfico, escalabilidad global y carga instantánea.</p>
                     </div>
                     <!-- Botón para abrir el nuevo modal de Plataformas Web -->
                     <button class="card-btn" onclick="openWebPlatformsModal()">
-                        <i class="fas fa-code-branch"></i> Arquitectura Global
+                        <i class="fas fa-code-branch"></i> <span id="c6-btn">Arquitectura Global</span>
                     </button>
                 </div>
 
@@ -1363,12 +1458,12 @@
                 <div class="service-card reveal-element delay-300">
                     <div>
                         <i class="fas fa-gamepad service-icon"></i>
-                        <h3>Realidad Interactiva</h3>
-                        <p>Creación de videojuegos inmersivos y simulaciones virtuales utilizando motores gráficos de última generación para entretenimiento o industria.</p>
+                        <h3 id="c7-title">Realidad Interactiva</h3>
+                        <p id="c7-desc">Creación de videojuegos inmersivos y simulaciones virtuales utilizando motores gráficos de última generación para entretenimiento o industria.</p>
                     </div>
                     <!-- Botón para abrir el nuevo modal de Realidad Interactiva -->
                     <button class="card-btn" onclick="openInteractiveRealityModal()">
-                        <i class="fas fa-gamepad"></i> Núcleo Hydra-G
+                        <i class="fas fa-gamepad"></i> <span id="c7-btn">Núcleo Hydra-G</span>
                     </button>
                 </div>
 
@@ -1376,11 +1471,11 @@
                 <div class="service-card reveal-element delay-400">
                     <div>
                         <i class="fas fa-robot service-icon"></i>
-                        <h3>Robótica & Innovación</h3>
-                        <p>Desarrollo de software de control avanzado, integración de sistemas autónomos y algoritmos de IA para la próxima generación de robótica industrial y de servicios.</p>
+                        <h3 id="c8-title">Robótica & Innovación</h3>
+                        <p id="c8-desc">Desarrollo de software de control avanzado, integración de sistemas autónomos y algoritmos de IA para la próxima generación de robótica industrial y de servicios.</p>
                     </div>
                     <button class="card-btn" onclick="openRoboticsModal()">
-                        <i class="fas fa-cogs"></i> Explorar Autonomía
+                        <i class="fas fa-cogs"></i> <span id="c8-btn">Explorar Autonomía</span>
                     </button>
                 </div>
 
@@ -1389,31 +1484,31 @@
 
         <!-- SECCIÓN DE CONTACTO -->
         <section id="contact" class="contact-section">
-            <h2 class="section-title reveal-element">Iniciar Alianza</h2>
+            <h2 class="section-title reveal-element" id="contact-title">Iniciar Alianza</h2>
             <!-- TEXTO ACTUALIZADO AQUÍ -->
-            <p class="section-desc reveal-element delay-100">Canal exclusivo para servicios, cursos y asociación.</p>
+            <p class="section-desc reveal-element delay-100" id="contact-desc">Canal exclusivo para servicios, cursos y asociación.</p>
 
             <div class="contact-container reveal-element delay-200">
                 <form id="alliance-form">
                     <div class="form-group">
-                        <label>IDENTIFICACIÓN PROFESIONAL</label>
-                        <input type="text" name="nombre" class="form-control" placeholder="Nombre Completo" required>
+                        <label id="lbl-name">IDENTIFICACIÓN PROFESIONAL</label>
+                        <input type="text" name="nombre" class="form-control" placeholder="Nombre Completo" required id="ph-name">
                     </div>
                     
                     <div class="form-group">
-                        <label>EMAIL CORPORATIVO</label>
-                        <input type="email" name="email" class="form-control" placeholder="ejemplo@empresa.com" required>
+                        <label id="lbl-email">EMAIL CORPORATIVO</label>
+                        <input type="email" name="email" class="form-control" placeholder="ejemplo@empresa.com" required id="ph-email">
                     </div>
 
                     <div class="form-group">
-                        <label>ORGANIZACIÓN</label>
-                        <input type="text" name="organizacion" class="form-control" placeholder="Empresa / StartUp" required>
+                        <label id="lbl-org">ORGANIZACIÓN</label>
+                        <input type="text" name="organizacion" class="form-control" placeholder="Empresa / StartUp" required id="ph-org">
                     </div>
 
                     <div class="form-group">
-                        <label>CATEGORÍA DEL PROYECTO</label>
-                        <select name="categoria" class="form-control" required>
-                            <option value="" disabled selected>Seleccione el área de interés...</option>
+                        <label id="lbl-cat">CATEGORÍA DEL PROYECTO</label>
+                        <select name="categoria" class="form-control" required id="sel-cat">
+                            <option value="" disabled selected id="opt-default">Seleccione el área de interés...</option>
                             <option value="Desarrollo Software">Desarrollo de Software a Medida</option>
                             <option value="IA Implementation">Implementación de IA</option>
                             <option value="Transformacion Digital">Transformación Digital Completa</option>
@@ -1423,8 +1518,8 @@
                     </div>
 
                     <div class="form-group">
-                        <label>DETALLES ESTRATÉGICOS</label>
-                        <textarea name="mensaje" class="form-control" rows="5" placeholder="Describa brevemente el alcance y objetivos del proyecto..." required></textarea>
+                        <label id="lbl-msg">DETALLES ESTRATÉGICOS</label>
+                        <textarea name="mensaje" class="form-control" rows="5" placeholder="Describa brevemente el alcance y objetivos del proyecto..." required id="ph-msg"></textarea>
                     </div>
 
                     <button type="submit" class="btn" style="width: 100%;" id="form-submit-btn">
@@ -1445,19 +1540,19 @@
                 <!-- AHORA VUELVE A ABRIR EL MODAL (openGlobalOpsModal) -->
                 <div class="planet-container reveal-element" onclick="openGlobalOpsModal()" title="Acceder a Red Neural Global"></div>
 
-                <h3 class="reveal-element delay-100" style="font-family: 'Orbitron', sans-serif; color: #fff; font-size: 2rem; margin-bottom: 20px; letter-spacing: 2px;">
+                <h3 class="reveal-element delay-100" style="font-family: 'Orbitron', sans-serif; color: #fff; font-size: 2rem; margin-bottom: 20px; letter-spacing: 2px;" id="foot-title">
                     OPERACIONES SIN FRONTERAS
                 </h3>
                 
                 <!-- Texto Corporativo Profesional -->
-                <p class="reveal-element delay-200" style="color: #a0aab5; font-size: 1.1rem; line-height: 1.8; margin-bottom: 10px; max-width: 800px; margin-left: auto; margin-right: auto;">
+                <p class="reveal-element delay-200" style="color: #a0aab5; font-size: 1.1rem; line-height: 1.8; margin-bottom: 10px; max-width: 800px; margin-left: auto; margin-right: auto;" id="foot-desc">
                     "Despliegue estratégico universal. Nuestra infraestructura posee la capacidad operativa para ejecutar servicios en la totalidad de las jurisdicciones soberanas del planeta, garantizando una interoperabilidad lingüística y cultural absoluta."
                 </p>
                 
                 <div class="reveal-element delay-300" style="width: 50px; height: 2px; background: #00d2ff; margin: 30px auto; opacity: 0.5;"></div>
 
                 <div class="reveal-element delay-400" style="padding-top: 10px; font-size: 0.8rem; color: #444; font-family: 'Share Tech Mono', monospace; text-transform: uppercase; letter-spacing: 1px;">
-                    <p>&copy; 2050 Infinity Corp S.A. | Montevideo, Uruguay | Global Systems Online</p>
+                    <p id="foot-copy">&copy; 2050 Infinity Corp S.A. | Montevideo, Uruguay | Global Systems Online</p>
                 </div>
             </div>
             
@@ -1473,7 +1568,7 @@
         <div class="modal-content">
             <i class="fas fa-times close-modal" onclick="closeProjectModal()"></i>
             <h2 style="font-family: 'Orbitron', sans-serif; color: #00d2ff; margin-bottom: 10px;">Infinity Vision Lab</h2>
-            <p style="color: #ccc; font-size: 0.9rem;">Introduce una industria y nuestra IA diseñará un proyecto del año 2050.</p>
+            <p style="color: #ccc; font-size: 0.9rem;" id="modal-proj-desc">Introduce una industria y nuestra IA diseñará un proyecto del año 2050.</p>
             
             <input type="text" id="industry-input" class="modal-input" placeholder="Ej: Agricultura, Medicina, Transporte...">
             
@@ -1488,21 +1583,50 @@
         </div>
     </div>
 
+    <!-- MODAL DE CONFIGURACIÓN DEL SISTEMA (NUEVO) -->
+    <div id="settings-modal" class="modal-overlay">
+        <div class="modal-content" style="max-width: 400px; padding: 30px;">
+            <i class="fas fa-times close-modal" onclick="closeSettingsModal()"></i>
+            <h2 style="font-family: 'Orbitron', sans-serif; color: #00d2ff; margin-bottom: 25px; font-size: 1.5rem;" id="set-title">SISTEMA</h2>
+            
+            <div style="text-align: left; margin-bottom: 20px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding: 15px; background: #232730; border-radius: 8px; border: 1px solid #333;">
+                    <span style="font-weight: bold;"><i class="fas fa-film" style="color: #00d2ff; margin-right: 10px;"></i> <span id="set-anim">Animaciones HQ</span></span>
+                    <!-- AÑADIDO ID Y ONCLICK PARA ACTIVAR LA FUNCIÓN -->
+                    <i id="anim-toggle-icon" class="fas fa-toggle-on" style="color: #00d2ff; font-size: 1.5rem; cursor: pointer;" onclick="toggleAnimations()"></i>
+                </div>
+                
+                <!-- SECCIÓN DE IDIOMA ACTUALIZADA -->
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 15px; background: #232730; border-radius: 8px; border: 1px solid #333;">
+                    <span style="font-weight: bold;"><i class="fas fa-language" style="color: #00d2ff; margin-right: 10px;"></i> <span id="set-lang">Idioma</span></span>
+                    <select onchange="changeLanguage(this.value)" style="background: #15181e; border: 1px solid #00d2ff; color: #00d2ff; font-weight: bold; font-family: 'Orbitron'; padding: 5px 10px; border-radius: 5px; cursor: pointer; outline: none;">
+                        <option value="es">ESPAÑOL</option>
+                        <option value="en">ENGLISH</option>
+                        <option value="fr">FRANÇAIS</option>
+                        <option value="pt">PORTUGUÊS</option>
+                    </select>
+                </div>
+            </div>
+
+            <p style="font-size: 0.8rem; color: #555; margin-top: 30px; font-family: 'Share Tech Mono', monospace;">Infinity OS | Kernel v2.5.0-Alpha</p>
+        </div>
+    </div>
+
     <!-- MODAL 2: PÁGINA INTERNA DE CONSULTORÍA IA -->
     <div id="ai-consulting-modal" class="modal-overlay">
         <div class="modal-content">
             <i class="fas fa-times close-modal" onclick="closeAIConsultingModal()"></i>
             <div class="ai-page-content">
-                <h2>Quantum Nexus AI: El Tejido Cognitivo</h2>
+                <h2 id="m1-title">Quantum Nexus AI: El Tejido Cognitivo</h2>
                 
-                <p style="text-align: center; font-style: italic; color: #00d2ff; font-weight: 500;">
+                <p style="text-align: center; font-style: italic; color: #00d2ff; font-weight: 500;" id="m1-quote">
                     "Diseñando la inteligencia que anticipa el futuro empresarial."
                 </p>
 
                 <div class="data-visualization-panel">
                     <div class="data-info">
                         <h4>Arquitectura Neuromórfica</h4>
-                        <p>En Infinity Corp, nuestro marco patentado, el **Quantum Nexus AI (QNA)**, trasciende el análisis predictivo convencional. Utiliza arquitecturas de **aprendizaje profundo neuromórfico** para procesar petabytes de datos no estructurados en tiempo real. Su núcleo es una red adaptativa capaz de auto-evolucionar sus algoritmos, garantizando estrategias optimizadas para la próxima década.</p>
+                        <p id="m1-desc">En Infinity Corp, nuestro marco patentado, el **Quantum Nexus AI (QNA)**, trasciende el análisis predictivo convencional. Utiliza arquitecturas de **aprendizaje profundo neuromórfico** para procesar petabytes de datos no estructurados en tiempo real. Su núcleo es una red adaptativa capaz de auto-evolucionar sus algoritmos, garantizando estrategias optimizadas para la próxima década.</p>
                     </div>
                     <!-- Placeholder de Imagen/Diagrama actualizado para ser más específico -->
                     <img src="https://placehold.co/400x250/1a1d24/00d2ff?text=RED+NEURONAL+ADAPTATIVA" 
@@ -1534,7 +1658,7 @@
 
                 <!-- Nuevo CTA que cierra el modal y lleva al formulario de contacto -->
                 <button class="btn" onclick="document.getElementById('ai-consulting-modal').classList.remove('active'); document.getElementById('contact').scrollIntoView();" style="margin-top: 40px; width: 100%;">
-                    <i class="fas fa-handshake"></i> Solicitar Auditoría Estratégica
+                    <i class="fas fa-handshake"></i> <span id="m1-btn">Solicitar Auditoría Estratégica</span>
                 </button>
             </div>
         </div>
@@ -1545,16 +1669,16 @@
         <div class="modal-content">
             <i class="fas fa-times close-modal" onclick="closeQuantumSecurityModal()"></i>
             <div class="ai-page-content">
-                <h2>Protocolo Citadel Cuántico: Fortaleza Irrompible</h2>
+                <h2 id="m2-title">Protocolo Citadel Cuántico: Fortaleza Irrompible</h2>
                 
-                <p style="text-align: center; font-style: italic; color: #00d2ff; font-weight: 500;">
+                <p style="text-align: center; font-style: italic; color: #00d2ff; font-weight: 500;" id="m2-quote">
                     "La defensa que desafía la computación del mañana, protegiendo sus activos críticos."
                 </p>
 
                 <div class="data-visualization-panel">
                     <div class="data-info">
                         <h4>Distribución de Clave Inviolable (QKD)</h4>
-                        <p>Nuestro Protocolo Citadel Cuántico (PCC) implementa la distribución de clave cuántica (QKD) para crear canales de comunicación cuya seguridad está garantizada por las leyes de la física. Cualquier intento de intercepción es detectable instantáneamente, asegurando una capa de privacidad de datos sin precedentes.</p>
+                        <p id="m2-desc">Nuestro Protocolo Citadel Cuántico (PCC) implementa la distribución de clave cuántica (QKD) para crear canales de comunicación cuya seguridad está garantizada por las leyes de la física. Cualquier intento de intercepción es detectable instantáneamente, asegurando una capa de privacidad de datos sin precedentes.</p>
                     </div>
                     <!-- Imagen de QKD o Criptografía Cuántica -->
                     <img src="https://placehold.co/400x250/1a1d24/00d2ff?text=DISTRIBUCION+CLAVE+CUANTICA" 
@@ -1586,7 +1710,7 @@
 
                 <!-- CTA para cerrar y contactar -->
                 <button class="btn" onclick="document.getElementById('quantum-security-modal').classList.remove('active'); document.getElementById('contact').scrollIntoView();" style="margin-top: 40px; width: 100%;">
-                    <i class="fas fa-handshake"></i> Solicitar Evaluación de Riesgo Cuántico
+                    <i class="fas fa-handshake"></i> <span id="m2-btn">Solicitar Evaluación de Riesgo Cuántico</span>
                 </button>
             </div>
         </div>
@@ -1597,16 +1721,16 @@
         <div class="modal-content">
             <i class="fas fa-times close-modal" onclick="closeIoTEcosystemsModal()"></i>
             <div class="ai-page-content">
-                <h2>Malla de Interconexión Sentinel: El Borde Inteligente</h2>
+                <h2 id="m3-title">Malla de Interconexión Sentinel: El Borde Inteligente</h2>
                 
-                <p style="text-align: center; font-style: italic; color: #00d2ff; font-weight: 500;">
+                <p style="text-align: center; font-style: italic; color: #00d2ff; font-weight: 500;" id="m3-quote">
                     "Donde cada sensor es un nodo de inteligencia. Transformando datos brutos en acción instantánea."
                 </p>
 
                 <div class="data-visualization-panel">
                     <div class="data-info">
                         <h4>Edge Computing y Análsis en Tiempo Real</h4>
-                        <p>La Malla Sentinel es una red neuronal distribuida diseñada para la hiper-escala de IoT industrial. Prioriza el **Edge Computing**, procesando el 95% de los datos generados por sensores y dispositivos directamente en el punto de origen. Esto elimina la latencia de la nube, permitiendo la toma de decisiones críticas en milisegundos.</p>
+                        <p id="m3-desc">La Malla Sentinel es una red neuronal distribuida diseñada para la hiper-escala de IoT industrial. Prioriza el **Edge Computing**, procesando el 95% de los datos generados por sensores y dispositivos directamente en el punto de origen. Esto elimina la latencia de la nube, permitiendo la toma de decisiones críticas en milisegundos.</p>
                     </div>
                     <!-- Imagen de Edge Computing para IoT -->
                     <img src="https://placehold.co/400x250/1a1d24/00d2ff?text=EDGE+COMPUTING+IOT" 
@@ -1638,7 +1762,7 @@
 
                 <!-- CTA para cerrar y contactar -->
                 <button class="btn" onclick="document.getElementById('iot-ecosystems-modal').classList.remove('active'); document.getElementById('contact').scrollIntoView();" style="margin-top: 40px; width: 100%;">
-                    <i class="fas fa-handshake"></i> Solicitar Evaluación de Infraestructura IIoT
+                    <i class="fas fa-handshake"></i> <span id="m3-btn">Solicitar Evaluación de Infraestructura IIoT</span>
                 </button>
             </div>
         </div>
@@ -1649,16 +1773,16 @@
         <div class="modal-content">
             <i class="fas fa-times close-modal" onclick="closeBlockchainInfrastructureModal()"></i>
             <div class="ai-page-content">
-                <h2>Red de Confianza Descentralizada: Thetan DLT</h2>
+                <h2 id="m4-title">Red de Confianza Descentralizada: Thetan DLT</h2>
                 
-                <p style="text-align: center; font-style: italic; color: #00d2ff; font-weight: 500;">
+                <p style="text-align: center; font-style: italic; color: #00d2ff; font-weight: 500;" id="m4-quote">
                     "Trazabilidad inmutable y automatización de contratos sin intermediarios."
                 </p>
 
                 <div class="data-visualization-panel">
                     <div class="data-info">
                         <h4>Trazabilidad Inmutable para Cadenas de Suministro</h4>
-                        <p>Nuestro marco **Thetan DLT** implementa redes permisionadas de alto rendimiento (basadas en Hyperledger Fabric o Corda) para la industria. Cada transacción es un registro criptográfico, garantizando la inmutabilidad de la procedencia, el estado y la propiedad de los activos a través de una cadena de bloques verificable por los participantes autorizados.</p>
+                        <p id="m4-desc">Nuestro marco **Thetan DLT** implementa redes permisionadas de alto rendimiento (basadas en Hyperledger Fabric o Corda) para la industria. Cada transacción es un registro criptográfico, garantizando la inmutabilidad de la procedencia, el estado y la propiedad de los activos a través de una cadena de bloques verificable por los participantes autorizados.</p>
                     </div>
                     <!-- Imagen de la Cadena de Suministro basada en Blockchain -->
                     <img src="https://placehold.co/400x250/1a1d24/00d2ff?text=CADENA+DE+SUMINISTRO+BLOCKCHAIN" 
@@ -1690,7 +1814,7 @@
 
                 <!-- CTA para cerrar y contactar -->
                 <button class="btn" onclick="document.getElementById('blockchain-infrastructure-modal').classList.remove('active'); document.getElementById('contact').scrollIntoView();" style="margin-top: 40px; width: 100%;">
-                    <i class="fas fa-handshake"></i> Solicitar Análisis de Trazabilidad DLT
+                    <i class="fas fa-handshake"></i> <span id="m4-btn">Solicitar Análisis de Trazabilidad DLT</span>
                 </button>
             </div>
         </div>
@@ -1701,16 +1825,16 @@
         <div class="modal-content">
             <i class="fas fa-times close-modal" onclick="closeMobileEcosystemsModal()"></i>
             <div class="ai-page-content">
-                <h2>Plataforma Nómada: Hyper UX/UI</h2>
+                <h2 id="m5-title">Plataforma Nómada: Hyper UX/UI</h2>
                 
-                <p style="text-align: center; font-style: italic; color: #00d2ff; font-weight: 500;">
+                <p style="text-align: center; font-style: italic; color: #00d2ff; font-weight: 500;" id="m5-quote">
                     "Llevamos la experiencia empresarial más allá de los límites del dispositivo."
                 </p>
 
                 <div class="data-visualization-panel">
                     <div class="data-info">
                         <h4>¿Qué es un Ecosistema Móvil Corporativo?</h4>
-                        <p>Un ecosistema móvil de Infinity Corp es la integración fluida de aplicaciones, APIs y servicios backend que permiten a los usuarios interactuar con los sistemas corporativos desde **cualquier dispositivo**, manteniendo una experiencia de usuario (UX) unificada y de alto rendimiento. Va más allá de una simple app: es un punto de acceso inteligente a todo el tejido digital de la empresa.</p>
+                        <p id="m5-desc">Un ecosistema móvil de Infinity Corp es la integración fluida de aplicaciones, APIs y servicios backend que permiten a los usuarios interactuar con los sistemas corporativos desde **cualquier dispositivo**, manteniendo una experiencia de usuario (UX) unificada y de alto rendimiento. Va más allá de una simple app: es un punto de acceso inteligente a todo el tejido digital de la empresa.</p>
                     </div>
                     <!-- Imagen de desarrollo móvil multiplataforma -->
                     <img src="https://placehold.co/400x250/1a1d24/00d2ff?text=ECOSISTEMAS+MOVILES+MULTIPLATAFORMA" 
@@ -1759,7 +1883,7 @@
 
                 <!-- CTA para cerrar y contactar -->
                 <button class="btn" onclick="document.getElementById('mobile-ecosystems-modal').classList.remove('active'); document.getElementById('contact').scrollIntoView();" style="margin-top: 40px; width: 100%;">
-                    <i class="fas fa-handshake"></i> Iniciar Prototipo Móvil
+                    <i class="fas fa-handshake"></i> <span id="m5-btn">Iniciar Prototipo Móvil</span>
                 </button>
             </div>
         </div>
@@ -1770,16 +1894,16 @@
         <div class="modal-content">
             <i class="fas fa-times close-modal" onclick="closeWebPlatformsModal()"></i>
             <div class="ai-page-content">
-                <h2>Plataformas Web 4.0: Arquitectura Global</h2>
+                <h2 id="m6-title">Plataformas Web 4.0: Arquitectura Global</h2>
                 
-                <p style="text-align: center; font-style: italic; color: #00d2ff; font-weight: 500;">
+                <p style="text-align: center; font-style: italic; color: #00d2ff; font-weight: 500;" id="m6-quote">
                     "Websites que son aplicaciones. Escalabilidad infinita con tiempos de carga de microsegundos."
                 </p>
 
                 <div class="data-visualization-panel">
                     <div class="data-info">
                         <h4>¿Qué define la Web 4.0 para Infinity Corp?</h4>
-                        <p>La Web 4.0 es una era de experiencias digitales **hiper-personalizadas y distribuidas**. Nosotros diseñamos portales web (Websites) corporativos y aplicaciones de cara al cliente bajo una arquitectura desacoplada (headless y microservicios). Esto permite una distribución global de contenido a través de redes CDN y Edge Computing, garantizando velocidad y resiliencia sin importar la ubicación del usuario.</p>
+                        <p id="m6-desc">La Web 4.0 es una era de experiencias digitales **hiper-personalizadas y distribuidas**. Nosotros diseñamos portales web (Websites) corporativos y aplicaciones de cara al cliente bajo una arquitectura desacoplada (headless y microservicios). Esto permite una distribución global de contenido a través de redes CDN y Edge Computing, garantizando velocidad y resiliencia sin importar la ubicación del usuario.</p>
                     </div>
                     <!-- Imagen de Arquitectura Web Desacoplada/Distribuida -->
                     <img src="https://placehold.co/400x250/1a1d24/00d2ff?text=ARQUITECTURA+WEB+HEADLESS" 
@@ -1828,7 +1952,7 @@
 
                 <!-- CTA para cerrar y contactar -->
                 <button class="btn" onclick="document.getElementById('web-platforms-modal').classList.remove('active'); document.getElementById('contact').scrollIntoView();" style="margin-top: 40px; width: 100%;">
-                    <i class="fas fa-handshake"></i> Solicitar Auditoría Web 4.0
+                    <i class="fas fa-handshake"></i> <span id="m6-btn">Solicitar Auditoría Web 4.0</span>
                 </button>
             </div>
         </div>
@@ -1839,16 +1963,16 @@
         <div class="modal-content">
             <i class="fas fa-times close-modal" onclick="closeInteractiveRealityModal()"></i>
             <div class="ai-page-content">
-                <h2>Núcleo de Simulación: Motor Hydra-G</h2>
+                <h2 id="m7-title">Núcleo de Simulación: Motor Hydra-G</h2>
                 
-                <p style="text-align: center; font-style: italic; color: #00d2ff; font-weight: 500;">
+                <p style="text-align: center; font-style: italic; color: #00d2ff; font-weight: 500;" id="m7-quote">
                     "Creamos mundos con propósito: desde el entretenimiento hasta la simulación de misión crítica."
                 </p>
 
                 <div class="data-visualization-panel">
                     <div class="data-info">
                         <h4>Diseño Inmersivo y Multidispositivo</h4>
-                        <p>En Infinity Corp, la Realidad Interactiva abarca el desarrollo de experiencias de inmersión total para plataformas accesibles: **PC, consolas y dispositivos móviles**. Nuestro enfoque se basa en el motor propietario **Hydra-G**, optimizado para el renderizado ultra-rápido y la física precisa, garantizando fidelidad visual sin sacrificar el rendimiento en ningún dispositivo. Por el momento, concentramos nuestros esfuerzos en las plataformas tradicionales para garantizar la máxima calidad y acceso sin depender de hardware especializado de Realidad Virtual (VR).</p>
+                        <p id="m7-desc">En Infinity Corp, la Realidad Interactiva abarca el desarrollo de experiencias de inmersión total para plataformas accesibles: **PC, consolas y dispositivos móviles**. Nuestro enfoque se basa en el motor propietario **Hydra-G**, optimizado para el renderizado ultra-rápido y la física precisa, garantizando fidelidad visual sin sacrificar el rendimiento en ningún dispositivo. Por el momento, concentramos nuestros esfuerzos en las plataformas tradicionales para garantizar la máxima calidad y acceso sin depender de hardware especializado de Realidad Virtual (VR).</p>
                     </div>
                     <!-- Imagen de un motor de juego o simulación -->
                     <img src="https://placehold.co/400x250/1a1d24/00d2ff?text=MOTOR+DE+SIMULACION+3D" 
@@ -1897,7 +2021,7 @@
 
                 <!-- CTA para cerrar y contactar -->
                 <button class="btn" onclick="document.getElementById('interactive-reality-modal').classList.remove('active'); document.getElementById('contact').scrollIntoView();" style="margin-top: 40px; width: 100%;">
-                    <i class="fas fa-handshake"></i> Iniciar Prototipo de Simulación
+                    <i class="fas fa-handshake"></i> <span id="m7-btn">Iniciar Prototipo de Simulación</span>
                 </button>
             </div>
         </div>
@@ -1908,15 +2032,15 @@
         <div class="modal-content">
             <i class="fas fa-times close-modal" onclick="closeGlobalOpsModal()"></i>
             <div class="ai-page-content">
-                <h2>Red Neural Planetaria</h2>
-                <p style="text-align: center; font-style: italic; color: #00d2ff; font-weight: 500;">
+                <h2 id="m8-title">Red Neural Planetaria</h2>
+                <p style="text-align: center; font-style: italic; color: #00d2ff; font-weight: 500;" id="m8-quote">
                     "La distancia ha dejado de existir. Infraestructura unificada para una especie multi-continental."
                 </p>
 
                 <div class="data-visualization-panel">
                     <div class="data-info">
                         <h4>Despliegue de Baja Latencia</h4>
-                        <p>La columna vertebral de Infinity Corp no conoce fronteras. Operamos una red privada de fibra oscura y enlaces satelitales que conectan <strong>150 centros de datos de borde (Edge Data Centers)</strong>. Esto garantiza latencias inferiores a 50ms en el 99% de las zonas urbanas del planeta, permitiendo operaciones críticas en tiempo real desde Montevideo hasta Tokio.</p>
+                        <p id="m8-desc">La columna vertebral de Infinity Corp no conoce fronteras. Operamos una red privada de fibra oscura y enlaces satelitales que conectan <strong>150 centros de datos de borde (Edge Data Centers)</strong>. Esto garantiza latencias inferiores a 50ms en el 99% de las zonas urbanas del planeta, permitiendo operaciones críticas en tiempo real desde Montevideo hasta Tokio.</p>
                     </div>
                     <img src="https://placehold.co/400x250/1a1d24/00d2ff?text=RED+GLOBAL+LATENCIA+ZERO" alt="Mapa de red global de baja latencia.">
                 </div>
@@ -1951,7 +2075,7 @@
                 </div>
 
                 <button class="btn" onclick="document.getElementById('global-ops-modal').classList.remove('active'); document.getElementById('contact').scrollIntoView();" style="margin-top: 40px; width: 100%;">
-                    <i class="fas fa-satellite"></i> Solicitar Despliegue Internacional
+                    <i class="fas fa-satellite"></i> <span id="m8-btn">Solicitar Despliegue Internacional</span>
                 </button>
             </div>
         </div>
@@ -1962,15 +2086,15 @@
         <div class="modal-content">
             <i class="fas fa-times close-modal" onclick="closeRoboticsModal()"></i>
             <div class="ai-page-content">
-                <h2>Ingeniería Robótica: Autonomía Total</h2>
-                <p style="text-align: center; font-style: italic; color: #00d2ff; font-weight: 500;">
+                <h2 id="m9-title">Ingeniería Robótica: Autonomía Total</h2>
+                <p style="text-align: center; font-style: italic; color: #00d2ff; font-weight: 500;" id="m9-quote">
                     "Dando vida al hardware mediante algoritmos de comportamiento adaptativo."
                 </p>
 
                 <div class="data-visualization-panel">
                     <div class="data-info">
                         <h4>Cerebros Digitales para Máquinas</h4>
-                        <p>En Infinity Corp, no solo programamos robots; diseñamos su cognición. Desarrollamos software de control de bajo y alto nivel, integrando sistemas de percepción (visión artificial, LiDAR) con toma de decisiones autónoma para transformar máquinas estáticas en agentes inteligentes.</p>
+                        <p id="m9-desc">En Infinity Corp, no solo programamos robots; diseñamos su cognición. Desarrollamos software de control de bajo y alto nivel, integrando sistemas de percepción (visión artificial, LiDAR) con toma de decisiones autónoma para transformar máquinas estáticas en agentes inteligentes.</p>
                     </div>
                     <img src="https://placehold.co/400x250/1a1d24/00d2ff?text=ROBOTICA+AVANZADA" alt="Brazo robótico industrial automatizado.">
                 </div>
@@ -1995,7 +2119,7 @@
                 </div>
 
                 <button class="btn" onclick="document.getElementById('robotics-modal').classList.remove('active'); document.getElementById('contact').scrollIntoView();" style="margin-top: 40px; width: 100%;">
-                    <i class="fas fa-handshake"></i> Iniciar Proyecto de Robótica
+                    <i class="fas fa-handshake"></i> <span id="m9-btn">Iniciar Proyecto de Robótica</span>
                 </button>
             </div>
         </div>
@@ -2006,15 +2130,15 @@
         <div class="modal-content">
             <i class="fas fa-times close-modal" onclick="closeAcademyModal()"></i>
             <div class="ai-page-content">
-                <h2 style="color: #39ff14; border-color: rgba(57, 255, 20, 0.3);">Infinity Academy</h2>
-                <p style="text-align: center; font-style: italic; color: #88ff88; font-weight: 500;">
+                <h2 style="color: #39ff14; border-color: rgba(57, 255, 20, 0.3);" id="ac-title">Infinity Academy</h2>
+                <p style="text-align: center; font-style: italic; color: #88ff88; font-weight: 500;" id="ac-quote">
                     "Capacitación de élite para la era de la Inteligencia Artificial."
                 </p>
 
                 <div class="data-visualization-panel" style="border-color: #39ff14;">
                     <div class="data-info">
                         <h4 style="color: #39ff14;">Formación Corporativa</h4>
-                        <p>No basta con implementar tecnología; su equipo debe dominarla. Infinity Academy ofrece programas intensivos de capacitación diseñados para cerrar la brecha de habilidades digitales en su organización, desde ejecutivos hasta desarrolladores.</p>
+                        <p id="ac-desc">No basta con implementar tecnología; su equipo debe dominarla. Infinity Academy ofrece programas intensivos de capacitación diseñados para cerrar la brecha de habilidades digitales en su organización, desde ejecutivos hasta desarrolladores.</p>
                     </div>
                     <img src="https://placehold.co/400x250/1a1d24/39ff14?text=ACADEMIA+IA" alt="Aula futurista de aprendizaje digital.">
                 </div>
@@ -2039,7 +2163,7 @@
                 </div>
 
                 <button class="btn" onclick="document.getElementById('academy-modal').classList.remove('active'); document.getElementById('contact').scrollIntoView();" style="margin-top: 40px; width: 100%; background: linear-gradient(45deg, #00cc00, #39ff14); color: #0f1114;">
-                    <i class="fas fa-graduation-cap"></i> Solicitar Catálogo de Cursos
+                    <i class="fas fa-graduation-cap"></i> <span id="ac-btn">Solicitar Catálogo de Cursos</span>
                 </button>
             </div>
         </div>
@@ -2061,7 +2185,7 @@
             <span style="margin-left: auto; font-size: 0.8rem; opacity: 0.7;">Online</span>
         </div>
         <div class="chat-body" id="chat-body">
-            <div class="message bot">Hola. Soy Genesis, la IA de Infinity Corp. ¿En qué puedo asistirte hoy?</div>
+            <div class="message bot" id="chat-welcome">Hola. Soy Genesis, la IA de Infinity Corp. ¿En qué puedo asistirte hoy?</div>
         </div>
         <div class="chat-footer">
             <input type="text" id="chat-input" class="chat-input" placeholder="Pregunta algo..." onkeypress="handleChatKey(event)">
@@ -2070,6 +2194,333 @@
     </div>
 
     <script>
+        // --- DICCIONARIO DE TRADUCCIÓN COMPLETO ---
+        const translations = {
+            es: {
+                nav: { home: "Inicio", serv: "Servicios", dev: "Desarrollo", acad: "Academy", cont: "Contacto" },
+                hero: {
+                    title: "Liderazgo Tecnológico Global",
+                    slogan: '"Desplegamos arquitecturas digitales que escalan tu negocio."',
+                    desc: "En Infinity Corp S.A. catalizamos la evolución empresarial integrando inteligencia artificial avanzada y estrategias disruptivas. Diseñamos los ecosistemas digitales que definirán la competitividad del mañana.",
+                    sub: "Explore nuestra prospectiva estratégica:",
+                    btn: "Generar Visión Corporativa"
+                },
+                sections: {
+                    serv_title: "Soluciones Empresariales",
+                    serv_desc: "Infraestructura tecnológica diseñada para la escalabilidad y seguridad del futuro.",
+                    dev_title: "Ingeniería Digital",
+                    dev_desc: "Desarrollo de software a medida para la era de la hiperconectividad.",
+                    cont_title: "Iniciar Alianza",
+                    cont_desc: "Canal exclusivo para servicios, cursos y asociación."
+                },
+                cards: {
+                    c1_title: "Consultoría en IA", c1_desc: "Implementación de modelos predictivos y automatización cognitiva para optimizar la toma de decisiones estratégicas en tiempo real.", c1_btn: "Explorar Tecnología",
+                    c2_title: "Ciberseguridad Cuántica", c2_desc: "Protocolos de defensa avanzados y encriptación resistente a computación cuántica para proteger sus activos más valiosos.", c2_btn: "Explorar Protocolo",
+                    c3_title: "Ecosistemas IoT", c3_desc: "Interconexión masiva de dispositivos industriales con análisis de borde (Edge Computing) para fábricas inteligentes.", c3_btn: "Explorar Malla Sentinel",
+                    c4_title: "Infraestructura Blockchain", c4_desc: "Soluciones descentralizadas para trazabilidad de suministros y contratos inteligentes auditables y seguros.", c4_btn: "Explorar Red Thetan",
+                    c5_title: "Ecosistemas Móviles", c5_desc: "Desarrollo nativo y multiplataforma de aplicaciones que redefinen la interacción usuario-dispositivo con UX/UI de vanguardia.", c5_btn: "Plataforma Nómada",
+                    c6_title: "Plataformas Web 4.0", c6_desc: "Arquitecturas web progresivas y corporativas, diseñadas para alto tráfico, escalabilidad global y carga instantánea.", c6_btn: "Arquitectura Global",
+                    c7_title: "Realidad Interactiva", c7_desc: "Creación de videojuegos inmersivos y simulaciones virtuales utilizando motores gráficos de última generación para entretenimiento o industria.", c7_btn: "Núcleo Hydra-G",
+                    c8_title: "Robótica & Innovación", c8_desc: "Desarrollo de software de control avanzado, integración de sistemas autónomos y algoritmos de IA para la próxima generación de robótica industrial y de servicios.", c8_btn: "Explorar Autonomía"
+                },
+                modals: {
+                    proj_desc: "Introduce una industria y nuestra IA diseñará un proyecto del año 2050.",
+                    m1_title: "Quantum Nexus AI: El Tejido Cognitivo", m1_quote: '"Diseñando la inteligencia que anticipa el futuro empresarial."', m1_desc: "En Infinity Corp, nuestro marco patentado, el **Quantum Nexus AI (QNA)**, trasciende el análisis predictivo convencional. Utiliza arquitecturas de **aprendizaje profundo neuromórfico** para procesar petabytes de datos no estructurados en tiempo real.", m1_btn: "Solicitar Auditoría Estratégica",
+                    m2_title: "Protocolo Citadel Cuántico: Fortaleza Irrompible", m2_quote: '"La defensa que desafía la computación del mañana, protegiendo sus activos críticos."', m2_desc: "Nuestro Protocolo Citadel Cuántico (PCC) implementa la distribución de clave cuántica (QKD) para crear canales de comunicación cuya seguridad está garantizada por las leyes de la física.", m2_btn: "Solicitar Evaluación de Riesgo Cuántico",
+                    m3_title: "Malla de Interconexión Sentinel: El Borde Inteligente", m3_quote: '"Donde cada sensor es un nodo de inteligencia. Transformando datos brutos en acción instantánea."', m3_desc: "La Malla Sentinel es una red neuronal distribuida diseñada para la hiper-escala de IoT industrial. Prioriza el **Edge Computing**, procesando el 95% de los datos generados por sensores y dispositivos directamente en el punto de origen.", m3_btn: "Solicitar Evaluación de Infraestructura IIoT",
+                    m4_title: "Red de Confianza Descentralizada: Thetan DLT", m4_quote: '"Trazabilidad inmutable y automatización de contratos sin intermediarios."', m4_desc: "Nuestro marco **Thetan DLT** implementa redes permisionadas de alto rendimiento. Cada transacción es un registro criptográfico, garantizando la inmutabilidad de la procedencia.", m4_btn: "Solicitar Análisis de Trazabilidad DLT",
+                    m5_title: "Plataforma Nómada: Hyper UX/UI", m5_quote: '"Llevamos la experiencia empresarial más allá de los límites del dispositivo."', m5_desc: "Un ecosistema móvil de Infinity Corp es la integración fluida de aplicaciones, APIs y servicios backend que permiten a los usuarios interactuar con los sistemas corporativos desde **cualquier dispositivo**.", m5_btn: "Iniciar Prototipo Móvil",
+                    m6_title: "Plataformas Web 4.0: Arquitectura Global", m6_quote: '"Websites que son aplicaciones. Escalabilidad infinita con tiempos de carga de microsegundos."', m6_desc: "La Web 4.0 es una era de experiencias digitales **hiper-personalizadas y distribuidas**. Nosotros diseñamos portales web (Websites) corporativos y aplicaciones de cara al cliente bajo una arquitectura desacoplada.", m6_btn: "Solicitar Auditoría Web 4.0",
+                    m7_title: "Núcleo de Simulación: Motor Hydra-G", m7_quote: '"Creamos mundos con propósito: desde el entretenimiento hasta la simulación de misión crítica."', m7_desc: "En Infinity Corp, la Realidad Interactiva abarca el desarrollo de experiencias de inmersión total para plataformas accesibles: **PC, consolas y dispositivos móviles**. Basado en nuestro motor propietario **Hydra-G**.", m7_btn: "Iniciar Prototipo de Simulación",
+                    m8_title: "Red Neural Planetaria", m8_quote: '"La distancia ha dejado de existir. Infraestructura unificada para una especie multi-continental."', m8_desc: "La columna vertebral de Infinity Corp no conoce fronteras. Operamos una red privada de fibra oscura y enlaces satelitales que conectan <strong>150 centros de datos de borde (Edge Data Centers)</strong>.", m8_btn: "Solicitar Despliegue Internacional",
+                    m9_title: "Ingeniería Robótica: Autonomía Total", m9_quote: '"Dando vida al hardware mediante algoritmos de comportamiento adaptativo."', m9_desc: "En Infinity Corp, no solo programamos robots; diseñamos su cognición. Desarrollamos software de control de bajo y alto nivel, integrando sistemas de percepción con toma de decisiones autónoma.", m9_btn: "Iniciar Proyecto de Robótica",
+                    ac_title: "Infinity Academy", ac_quote: '"Capacitación de élite para la era de la Inteligencia Artificial."', ac_desc: "No basta con implementar tecnología; su equipo debe dominarla. Infinity Academy ofrece programas intensivos de capacitación diseñados para cerrar la brecha de habilidades digitales.", ac_btn: "Solicitar Catálogo de Cursos"
+                },
+                form: {
+                    lbl_name: "IDENTIFICACIÓN PROFESIONAL", ph_name: "Nombre Completo",
+                    lbl_email: "EMAIL CORPORATIVO", ph_email: "ejemplo@empresa.com",
+                    lbl_org: "ORGANIZACIÓN", ph_org: "Empresa / StartUp",
+                    lbl_cat: "CATEGORÍA DEL PROYECTO", opt_default: "Seleccione el área de interés...",
+                    lbl_msg: "DETALLES ESTRATÉGICOS", ph_msg: "Describa brevemente el alcance y objetivos del proyecto...",
+                    btn: "ENVIAR SOLICITUD"
+                },
+                footer: {
+                    title: "OPERACIONES SIN FRONTERAS",
+                    desc: '"Despliegue estratégico universal. Nuestra infraestructura posee la capacidad operativa para ejecutar servicios en la totalidad de las jurisdicciones soberanas del planeta, garantizando una interoperabilidad lingüística y cultural absoluta."',
+                    copy: "&copy; 2050 Infinity Corp S.A. | Montevideo, Uruguay | Global Systems Online"
+                },
+                settings: {
+                    title: "SISTEMA",
+                    anim: "Animaciones HQ",
+                    lang: "Idioma"
+                },
+                chat: {
+                    welcome: "Hola. Soy Genesis, la IA de Infinity Corp. ¿En qué puedo asistirte hoy?",
+                    input: "Pregunta algo..."
+                }
+            },
+            en: {
+                nav: { home: "Home", serv: "Services", dev: "Development", acad: "Academy", cont: "Contact" },
+                hero: {
+                    title: "Global Tech Leadership",
+                    slogan: '"We deploy digital architectures that scale your business."',
+                    desc: "At Infinity Corp S.A., we catalyze business evolution by integrating advanced artificial intelligence and disruptive strategies. We design the digital ecosystems that will define tomorrow's competitiveness.",
+                    sub: "Explore our strategic foresight:",
+                    btn: "Generate Corporate Vision"
+                },
+                sections: {
+                    serv_title: "Business Solutions",
+                    serv_desc: "Technological infrastructure designed for future scalability and security.",
+                    dev_title: "Digital Engineering",
+                    dev_desc: "Custom software development for the hyper-connectivity era.",
+                    cont_title: "Initiate Alliance",
+                    cont_desc: "Exclusive channel for services, courses, and partnerships."
+                },
+                cards: {
+                    c1_title: "AI Consulting", c1_desc: "Implementation of predictive models and cognitive automation to optimize strategic decision-making in real-time.", c1_btn: "Explore Technology",
+                    c2_title: "Quantum Cybersecurity", c2_desc: "Advanced defense protocols and quantum-resistant encryption to protect your most valuable assets.", c2_btn: "Explore Protocol",
+                    c3_title: "IoT Ecosystems", c3_desc: "Massive interconnection of industrial devices with edge analysis (Edge Computing) for smart factories.", c3_btn: "Explore Sentinel Mesh",
+                    c4_title: "Blockchain Infrastructure", c4_desc: "Decentralized solutions for supply chain traceability and auditable, secure smart contracts.", c4_btn: "Explore Thetan Net",
+                    c5_title: "Mobile Ecosystems", c5_desc: "Native and cross-platform app development redefining user-device interaction with cutting-edge UX/UI.", c5_btn: "Nomad Platform",
+                    c6_title: "Web 4.0 Platforms", c6_desc: "Progressive and corporate web architectures designed for high traffic, global scalability, and instant loading.", c6_btn: "Global Architecture",
+                    c7_title: "Interactive Reality", c7_desc: "Creation of immersive video games and virtual simulations using next-gen graphics engines for entertainment or industry.", c7_btn: "Hydra-G Core",
+                    c8_title: "Robotics & Innovation", c8_desc: "Development of advanced control software, autonomous system integration, and AI algorithms for next-gen industrial and service robotics.", c8_btn: "Explore Autonomy"
+                },
+                modals: {
+                    proj_desc: "Enter an industry and our AI will design a project from the year 2050.",
+                    m1_title: "Quantum Nexus AI: The Cognitive Fabric", m1_quote: '"Designing the intelligence that anticipates the business future."', m1_desc: "At Infinity Corp, our patented framework, **Quantum Nexus AI (QNA)**, transcends conventional predictive analytics. It uses **neuromorphic deep learning** architectures to process petabytes of unstructured data in real-time.", m1_btn: "Request Strategic Audit",
+                    m2_title: "Citadel Quantum Protocol: Unbreakable Fortress", m2_quote: '"Defense that defies tomorrow\'s computing, protecting your critical assets."', m2_desc: "Our Citadel Quantum Protocol (CQP) implements quantum key distribution (QKD) to create communication channels secured by the laws of physics.", m2_btn: "Request Quantum Risk Assessment",
+                    m3_title: "Sentinel Interconnection Mesh: The Intelligent Edge", m3_quote: '"Where every sensor is an intelligence node. Transforming raw data into instant action."', m3_desc: "The Sentinel Mesh is a distributed neural network designed for industrial IoT hyperscale. It prioritizes **Edge Computing**, processing 95% of sensor data directly at the source.", m3_btn: "Request IIoT Infrastructure Assessment",
+                    m4_title: "Decentralized Trust Network: Thetan DLT", m4_quote: '"Immutable traceability and contract automation without intermediaries."', m4_desc: "Our **Thetan DLT** framework implements high-performance permissioned networks. Each transaction is a cryptographic record, guaranteeing provenance immutability.", m4_btn: "Request DLT Traceability Analysis",
+                    m5_title: "Nomad Platform: Hyper UX/UI", m5_quote: '"Taking the business experience beyond device limits."', m5_desc: "An Infinity Corp mobile ecosystem is the fluid integration of apps, APIs, and backend services allowing users to interact with corporate systems from **any device**.", m5_btn: "Start Mobile Prototype",
+                    m6_title: "Web 4.0 Platforms: Global Architecture", m6_quote: '"Websites that are applications. Infinite scalability with microsecond load times."', m6_desc: "Web 4.0 is an era of **hyper-personalized and distributed** digital experiences. We design corporate web portals and customer-facing apps under a decoupled architecture.", m6_btn: "Request Web 4.0 Audit",
+                    m7_title: "Simulation Core: Hydra-G Engine", m7_quote: '"Creating worlds with purpose: from entertainment to mission-critical simulation."', m7_desc: "At Infinity Corp, Interactive Reality covers full immersion experiences for accessible platforms: **PC, consoles, and mobile**. Based on our proprietary **Hydra-G** engine.", m7_btn: "Start Simulation Prototype",
+                    m8_title: "Planetary Neural Network", m8_quote: '"Distance no longer exists. Unified infrastructure for a multi-continental species."', m8_desc: "The backbone of Infinity Corp knows no borders. We operate a private dark fiber network and satellite links connecting **150 Edge Data Centers**.", m8_btn: "Request International Deployment",
+                    m9_title: "Robotics Engineering: Total Autonomy", m9_quote: '"Giving life to hardware through adaptive behavior algorithms."', m9_desc: "At Infinity Corp, we don't just program robots; we design their cognition. We develop low and high-level control software, integrating perception systems with autonomous decision-making.", m9_btn: "Start Robotics Project",
+                    ac_title: "Infinity Academy", ac_quote: '"Elite training for the Artificial Intelligence era."', ac_desc: "It's not enough to implement technology; your team must master it. Infinity Academy offers intensive training programs designed to close the digital skills gap.", ac_btn: "Request Course Catalog"
+                },
+                form: {
+                    lbl_name: "PROFESSIONAL ID", ph_name: "Full Name",
+                    lbl_email: "CORPORATE EMAIL", ph_email: "example@company.com",
+                    lbl_org: "ORGANIZATION", ph_org: "Company / StartUp",
+                    lbl_cat: "PROJECT CATEGORY", opt_default: "Select area of interest...",
+                    lbl_msg: "STRATEGIC DETAILS", ph_msg: "Briefly describe the scope and objectives of the project...",
+                    btn: "SEND REQUEST"
+                },
+                footer: {
+                    title: "BORDERLESS OPERATIONS",
+                    desc: '"Universal strategic deployment. Our infrastructure possesses the operational capacity to execute services in all sovereign jurisdictions on the planet, guaranteeing absolute linguistic and cultural interoperability."',
+                    copy: "&copy; 2050 Infinity Corp S.A. | Montevideo, Uruguay | Global Systems Online"
+                },
+                settings: {
+                    title: "SYSTEM",
+                    anim: "HQ Animations",
+                    lang: "Language"
+                },
+                chat: {
+                    welcome: "Hello. I am Genesis, Infinity Corp's AI. How may I assist you today?",
+                    input: "Ask something..."
+                }
+            },
+            fr: {
+                nav: { home: "Accueil", serv: "Services", dev: "Développement", acad: "Academy", cont: "Contact" },
+                hero: {
+                    title: "Leadership Technologique Mondial",
+                    slogan: '"Nous déployons des architectures numériques qui font évoluer votre entreprise."',
+                    desc: "Chez Infinity Corp S.A., nous catalysons l'évolution des entreprises en intégrant une intelligence artificielle avancée et des stratégies disruptives. Nous concevons les écosystèmes numériques qui définiront la compétitivité de demain.",
+                    sub: "Explorez notre prospective stratégique :",
+                    btn: "Générer une Vision Corporative"
+                },
+                sections: {
+                    serv_title: "Solutions d'Affaires",
+                    serv_desc: "Infrastructure technologique conçue pour l'évolutivité et la sécurité futures.",
+                    dev_title: "Ingénierie Numérique",
+                    dev_desc: "Développement logiciel sur mesure pour l'ère de l'hyperconnectivité.",
+                    cont_title: "Initier une Alliance",
+                    cont_desc: "Canal exclusif pour services, cours et partenariats."
+                },
+                cards: {
+                    c1_title: "Consulting en IA", c1_desc: "Implémentation de modèles prédictifs et automatisation cognitive pour optimiser la prise de décision stratégique en temps réel.", c1_btn: "Explorer la Technologie",
+                    c2_title: "Cybersécurité Quantique", c2_desc: "Protocolos de défense avancés et cryptage résistant au quantique pour protéger vos actifs les plus précieux.", c2_btn: "Explorer le Protocole",
+                    c3_title: "Écosystèmes IoT", c3_desc: "Interconnexion massive d'appareils industriels avec analyse en périphérie (Edge Computing) pour les usines intelligentes.", c3_btn: "Explorer le Maillage Sentinel",
+                    c4_title: "Infrastructure Blockchain", c4_desc: "Solutions décentralisées pour la traçabilité de la chaîne d'approvisionnement et contrats intelligents auditables et sécurisés.", c4_btn: "Explorer le Réseau Thetan",
+                    c5_title: "Écosystèmes Mobiles", c5_desc: "Développement natif et multiplateforme d'applications redéfinissant l'interaction utilisateur-appareil avec une UX/UI de pointe.", c5_btn: "Plateforme Nomade",
+                    c6_title: "Plateformes Web 4.0", c6_desc: "Architectures web progressives et corporatives, conçues pour un trafic élevé, une évolutivité mondiale et un chargement instantané.", c6_btn: "Architecture Mondiale",
+                    c7_title: "Réalité Interactive", c7_desc: "Création de jeux vidéo immersifs et de simulations virtuelles utilisant des moteurs graphiques de nouvelle génération pour le divertissement ou l'industrie.", c7_btn: "Noyau Hydra-G",
+                    c8_title: "Robotique & Innovation", c8_desc: "Développement de logiciels de contrôle avancés, intégration de systèmes autonomes et algorithmes d'IA pour la robotique industrielle et de service de nouvelle génération.", c8_btn: "Explorer l'Autonomie"
+                },
+                modals: {
+                    proj_desc: "Entrez une industrie et notre IA concevra un projet de l'année 2050.",
+                    m1_title: "Quantum Nexus AI : Le Tissu Cognitif", m1_quote: '"Concevoir l\'intelligence qui anticipe l\'avenir de l\'entreprise."', m1_desc: "Chez Infinity Corp, notre cadre breveté, le **Quantum Nexus AI (QNA)**, transcende l'analyse prédictive conventionnelle. Il utilise des architectures d'**apprentissage profond neuromorphique** pour traiter des pétaoctets de données non structurées en temps réel.", m1_btn: "Demander un Audit Stratégique",
+                    m2_title: "Protocole Citadelle Quantique : Forteresse Inviolable", m2_quote: '"La défense qui défie l\'informatique de demain, protégeant vos actifs critiques."', m2_desc: "Notre Protocole Citadelle Quantique (PCQ) implémente la distribution de clés quantiques (QKD) pour créer des canaux de communication sécurisés par les lois de la physique.", m2_btn: "Demander une Évaluation des Risques Quantiques",
+                    m3_title: "Maillage d'Interconnexion Sentinel : La Périphérie Intelligente", m3_quote: '"Où chaque capteur est un nœud d\'intelligence. Transformer les données brutes en action instantanée."', m3_desc: "Le Maillage Sentinel est un réseau neuronal distribué conçu pour l'hyperscale IoT industriel. Il privilégie l'**Edge Computing**, traitant 95 % des données des capteurs directement à la source.", m3_btn: "Demander une Évaluation d'Infrastructure IIoT",
+                    m4_title: "Réseau de Confiance Décentralisé : Thetan DLT", m4_quote: '"Traçabilité immuable et automatisation des contrats sans intermédiaires."', m4_desc: "Notre cadre **Thetan DLT** implémente des réseaux permissionnés haute performance. Chaque transaction est un enregistrement cryptographique, garantissant l'immuabilité de la provenance.", m4_btn: "Demander une Analyse de Traçabilité DLT",
+                    m5_title: "Plateforme Nomade : Hyper UX/UI", m5_quote: '"Porter l\'expérience professionnelle au-delà des limites de l\'appareil."', m5_desc: "Un écosystème mobile d'Infinity Corp est l'intégration fluide d'applications, d'API et de services backend permettant aux utilisateurs d'interagir avec les systèmes de l'entreprise depuis **n'importe quel appareil**.", m5_btn: "Démarrer le Prototype Mobile",
+                    m6_title: "Plateformes Web 4.0 : Architecture Mondiale", m6_quote: '"Des sites web qui sont des applications. Évolutivité infinie avec des temps de chargement de l\'ordre de la microseconde."', m6_desc: "Le Web 4.0 est une ère d'expériences numériques **hyper-personnalisées et distribuées**. Nous concevons des portails web d'entreprise et des applications clients sous une architecture découplée.", m6_btn: "Demander un Audit Web 4.0",
+                    m7_title: "Noyau de Simulation : Moteur Hydra-G", m7_quote: '"Créer des mondes avec un but : du divertissement à la simulation critique."', m7_desc: "Chez Infinity Corp, la Réalité Interactive couvre des expériences d'immersion totale pour les plateformes accessibles : **PC, consoles et mobiles**. Basé sur notre moteur propriétaire **Hydra-G**.", m7_btn: "Démarrer le Prototype de Simulation",
+                    m8_title: "Réseau Neuronal Planétaire", m8_quote: '"La distance n\'existe plus. Infrastructure unifiée pour une espèce multi-continentale."', m8_desc: "La colonne vertébrale d'Infinity Corp ne connaît pas de frontières. Nous exploitons un réseau privé de fibre noire et des liaisons satellitaires reliant **150 Centres de Données Périphériques (Edge Data Centers)**.", m8_btn: "Demander un Déploiement International",
+                    m9_title: "Ingénierie Robotique : Autonomie Totale", m9_quote: '"Donner vie au matériel grâce à des algorithmes de comportement adaptatif."', m9_desc: "Chez Infinity Corp, nous ne nous contentons pas de programmer des robots ; nous concevons leur cognition. Nous développons des logiciels de contrôle de bas et haut niveau, intégrant des systèmes de perception à une prise de décision autonome.", m9_btn: "Démarrer le Projet de Robotique",
+                    ac_title: "Infinity Academy", ac_quote: '"Formation d\'élite pour l\'ère de l\'Intelligence Artificielle."', ac_desc: "Il ne suffit pas de mettre en œuvre la technologie ; votre équipe doit la maîtriser. Infinity Academy propose des programmes de formation intensifs conçus pour combler le fossé des compétences numériques.", ac_btn: "Demander le Catalogue de Cours"
+                },
+                form: {
+                    lbl_name: "IDENTIFIANT PROFESSIONNEL", ph_name: "Nom Complet",
+                    lbl_email: "EMAIL CORPORATIF", ph_email: "exemple@entreprise.com",
+                    lbl_org: "ORGANISATION", ph_org: "Entreprise / StartUp",
+                    lbl_cat: "CATÉGORIE DU PROJET", opt_default: "Sélectionnez le domaine d'intérêt...",
+                    lbl_msg: "DÉTAILS STRATÉGIQUES", ph_msg: "Décrivez brièvement la portée et les objectifs du projet...",
+                    btn: "ENVOYER LA DEMANDE"
+                },
+                footer: {
+                    title: "OPÉRATIONS SANS FRONTIÈRES",
+                    desc: '"Déploiement stratégique universel. Notre infrastructure possède la capacité opérationnelle pour exécuter des services dans toutes les juridictions souveraines de la planète, garantissant une interopérabilité linguistique et culturelle absolue."',
+                    copy: "&copy; 2050 Infinity Corp S.A. | Montevideo, Uruguay | Systèmes Mondiaux en Ligne"
+                },
+                settings: {
+                    title: "SYSTÈME",
+                    anim: "Animations HQ",
+                    lang: "Langue"
+                },
+                chat: {
+                    welcome: "Bonjour. Je suis Genesis, l'IA d'Infinity Corp. Comment puis-je vous aider aujourd'hui ?",
+                    input: "Posez une question..."
+                }
+            },
+            pt: {
+                nav: { home: "Início", serv: "Serviços", dev: "Desenvolvimento", acad: "Academy", cont: "Contato" },
+                hero: {
+                    title: "Liderança Tecnológica Global",
+                    slogan: '"Implantamos arquiteturas digitais que escalam seu negócio."',
+                    desc: "Na Infinity Corp S.A. catalisamos a evolução empresarial integrando inteligência artificial avançada e estratégias disruptivas. Desenhamos os ecossistemas digitais que definirão a competitividade do amanhã.",
+                    sub: "Explore nossa prospecção estratégica:",
+                    btn: "Gerar Visão Corporativa"
+                },
+                sections: {
+                    serv_title: "Soluções Empresariais",
+                    serv_desc: "Infraestrutura tecnológica projetada para a escalabilidade e segurança do futuro.",
+                    dev_title: "Engenharia Digital",
+                    dev_desc: "Desenvolvimento de software sob medida para a era da hiperconectividade.",
+                    cont_title: "Iniciar Aliança",
+                    cont_desc: "Canal exclusivo para serviços, cursos e parcerias."
+                },
+                cards: {
+                    c1_title: "Consultoria em IA", c1_desc: "Implementação de modelos preditivos e automação cognitiva para otimizar a tomada de decisões estratégicas em tempo real.", c1_btn: "Explorar Tecnologia",
+                    c2_title: "Cibersegurança Quântica", c2_desc: "Protocolos de defesa avançados e criptografia resistente à computação quântica para proteger seus ativos mais valiosos.", c2_btn: "Explorar Protocolo",
+                    c3_title: "Ecossistemas IoT", c3_desc: "Interconexão massiva de dispositivos industriais com análise de borda (Edge Computing) para fábricas inteligentes.", c3_btn: "Explorar Malha Sentinel",
+                    c4_title: "Infraestrutura Blockchain", c4_desc: "Soluções descentralizadas para rastreabilidade de suprimentos e contratos inteligentes auditáveis e seguros.", c4_btn: "Explorar Rede Thetan",
+                    c5_title: "Ecossistemas Móveis", c5_desc: "Desenvolvimento nativo e multiplataforma de aplicativos que redefinem a interação usuário-dispositivo com UX/UI de vanguarda.", c5_btn: "Plataforma Nômade",
+                    c6_title: "Plataformas Web 4.0", c6_desc: "Arquiteturas web progressivas e corporativas, projetadas para alto tráfego, escalabilidade global e carregamento instantâneo.", c6_btn: "Arquitetura Global",
+                    c7_title: "Realidade Interativa", c7_desc: "Criação de videogames imersivos e simulações virtuais utilizando motores gráficos de última geração para entretenimento ou indústria.", c7_btn: "Núcleo Hydra-G",
+                    c8_title: "Robótica & Inovação", c8_desc: "Desenvolvimento de software de controle avançado, integração de sistemas autônomos e algoritmos de IA para a próxima geração de robótica industrial e de serviços.", c8_btn: "Explorar Autonomia"
+                },
+                modals: {
+                    proj_desc: "Insira uma indústria e nossa IA projetará um projeto do ano 2050.",
+                    m1_title: "Quantum Nexus AI: O Tecido Cognitivo", m1_quote: '"Desenhando a inteligência que antecipa o futuro empresarial."', m1_desc: "Na Infinity Corp, nosso framework patenteado, o **Quantum Nexus AI (QNA)**, transcende a análise preditiva convencional. Utiliza arquiteturas de **aprendizado profundo neuromórfico** para processar petabytes de dados não estruturados em tempo real.", m1_btn: "Solicitar Auditoria Estratégica",
+                    m2_title: "Protocolo Cidadela Quântica: Fortaleza Intransponível", m2_quote: '"A defesa que desafia a computação do amanhã, protegendo seus ativos críticos."', m2_desc: "Nosso Protocolo Cidadela Quântica (PCQ) implementa a distribuição de chave quântica (QKD) para criar canais de comunicação cuja segurança é garantida pelas leis da física.", m2_btn: "Solicitar Avaliação de Risco Quântico",
+                    m3_title: "Malha de Interconexão Sentinel: A Borda Inteligente", m3_quote: '"Onde cada sensor é um nó de inteligência. Transformando dados brutos em ação instantânea."', m3_desc: "A Malha Sentinel é uma rede neural distribuída projetada para a hiperescala de IoT industrial. Prioriza o **Edge Computing**, processando 95% dos dados gerados por sensores e dispositivos diretamente na fonte.", m3_btn: "Solicitar Avaliação de Infraestrutura IIoT",
+                    m4_title: "Rede de Confiança Descentralizada: Thetan DLT", m4_quote: '"Rastreabilidade imutável e automação de contratos sem intermediários."', m4_desc: "Nosso framework **Thetan DLT** implementa redes permissionadas de alto desempenho. Cada transação é um registro criptográfico, garantindo a imutabilidade da procedência.", m4_btn: "Solicitar Análise de Rastreabilidade DLT",
+                    m5_title: "Plataforma Nômade: Hyper UX/UI", m5_quote: '"Levamos a experiência empresarial além dos limites do dispositivo."', m5_desc: "Um ecossistema móvel da Infinity Corp é a integração fluida de aplicativos, APIs e serviços de backend que permitem aos usuários interagir com os sistemas corporativos de **qualquer dispositivo**.", m5_btn: "Iniciar Protótipo Móvel",
+                    m6_title: "Plataformas Web 4.0: Arquitetura Global", m6_quote: '"Sites que são aplicativos. Escalabilidade infinita com tempos de carregamento de microssegundos."', m6_desc: "A Web 4.0 é uma era de experiências digitais **hiperpersonalizadas e distribuídas**. Nós projetamos portais web corporativos e aplicativos voltados para o cliente sob uma arquitetura desacoplada.", m6_btn: "Solicitar Auditoria Web 4.0",
+                    m7_title: "Núcleo de Simulação: Motor Hydra-G", m7_quote: '"Criamos mundos com propósito: do entretenimento à simulação de missão crítica."', m7_desc: "Na Infinity Corp, a Realidade Interativa abrange o desenvolvimento de experiências de imersão total para plataformas acessíveis: **PC, consoles e dispositivos móveis**. Baseado em nosso motor proprietário **Hydra-G**.", m7_btn: "Iniciar Protótipo de Simulação",
+                    m8_title: "Rede Neural Planetária", m8_quote: '"A distância deixou de existir. Infraestrutura unificada para uma espécie multicontinental."', m8_desc: "A espinha dorsal da Infinity Corp não conhece fronteiras. Operamos uma rede privada de fibra escura e links de satélite conectando **150 Centros de Dados de Borda (Edge Data Centers)**.", m8_btn: "Solicitar Implantação Internacional",
+                    m9_title: "Engenharia Robótica: Autonomia Total", m9_quote: '"Dando vida ao hardware através de algoritmos de comportamento adaptativo."', m9_desc: "Na Infinity Corp, não apenas programamos robôs; desenhamos sua cognição. Desenvolvemos software de controle de baixo e alto nível, integrando sistemas de percepção com tomada de decisão autônoma.", m9_btn: "Iniciar Projeto de Robótica",
+                    ac_title: "Infinity Academy", ac_quote: '"Capacitação de elite para a era da Inteligência Artificial."', ac_desc: "Não basta implementar tecnologia; sua equipe deve dominá-la. A Infinity Academy oferece programas intensivos de capacitação projetados para fechar a lacuna de habilidades digitais em sua organização.", ac_btn: "Solicitar Catálogo de Cursos"
+                },
+                form: {
+                    lbl_name: "IDENTIFICAÇÃO PROFISSIONAL", ph_name: "Nome Completo",
+                    lbl_email: "EMAIL CORPORATIVO", ph_email: "exemplo@empresa.com",
+                    lbl_org: "ORGANIZAÇÃO", ph_org: "Empresa / StartUp",
+                    lbl_cat: "CATEGORIA DO PROJETO", opt_default: "Selecione a área de interesse...",
+                    lbl_msg: "DETALHES ESTRATÉGICOS", ph_msg: "Descreva brevemente o escopo e objetivos do projeto...",
+                    btn: "ENVIAR SOLICITAÇÃO"
+                },
+                footer: {
+                    title: "OPERAÇÕES SEM FRONTEIRAS",
+                    desc: '"Implantação estratégica universal. Nossa infraestrutura possui a capacidade operacional para executar serviços na totalidade das jurisdições soberanas do planeta, garantindo uma interoperabilidade linguística e cultural absoluta."',
+                    copy: "&copy; 2050 Infinity Corp S.A. | Montevidéu, Uruguai | Sistemas Globais Online"
+                },
+                settings: {
+                    title: "SISTEMA",
+                    anim: "Animações HQ",
+                    lang: "Idioma"
+                },
+                chat: {
+                    welcome: "Olá. Sou Genesis, a IA da Infinity Corp. Em que posso ajudar hoje?",
+                    input: "Pergunte algo..."
+                }
+            }
+        };
+
+        function changeLanguage(lang) {
+            const t = translations[lang];
+
+            // Navbar
+            document.getElementById('nav-home').textContent = t.nav.home;
+            document.getElementById('nav-services').textContent = t.nav.serv;
+            document.getElementById('nav-dev').textContent = t.nav.dev;
+            document.getElementById('nav-academy').textContent = t.nav.acad;
+            document.getElementById('nav-contact').textContent = t.nav.cont;
+
+            // Hero
+            document.getElementById('hero-title').textContent = t.hero.title;
+            document.getElementById('hero-slogan').textContent = t.hero.slogan;
+            document.getElementById('hero-desc').textContent = t.hero.desc;
+            document.getElementById('hero-sub').textContent = t.hero.sub;
+            document.getElementById('hero-btn').textContent = t.hero.btn;
+
+            // Sections
+            document.getElementById('serv-title').textContent = t.sections.serv_title;
+            document.getElementById('serv-desc').textContent = t.sections.serv_desc;
+            document.getElementById('dev-title').textContent = t.sections.dev_title;
+            document.getElementById('dev-desc').textContent = t.sections.dev_desc;
+            document.getElementById('contact-title').textContent = t.sections.cont_title;
+            document.getElementById('contact-desc').textContent = t.sections.cont_desc;
+
+            // Cards
+            document.getElementById('c1-title').textContent = t.cards.c1_title; document.getElementById('c1-desc').textContent = t.cards.c1_desc; document.getElementById('c1-btn').textContent = t.cards.c1_btn;
+            document.getElementById('c2-title').textContent = t.cards.c2_title; document.getElementById('c2-desc').textContent = t.cards.c2_desc; document.getElementById('c2-btn').textContent = t.cards.c2_btn;
+            document.getElementById('c3-title').textContent = t.cards.c3_title; document.getElementById('c3-desc').textContent = t.cards.c3_desc; document.getElementById('c3-btn').textContent = t.cards.c3_btn;
+            document.getElementById('c4-title').textContent = t.cards.c4_title; document.getElementById('c4-desc').textContent = t.cards.c4_desc; document.getElementById('c4-btn').textContent = t.cards.c4_btn;
+            document.getElementById('c5-title').textContent = t.cards.c5_title; document.getElementById('c5-desc').textContent = t.cards.c5_desc; document.getElementById('c5-btn').textContent = t.cards.c5_btn;
+            document.getElementById('c6-title').textContent = t.cards.c6_title; document.getElementById('c6-desc').textContent = t.cards.c6_desc; document.getElementById('c6-btn').textContent = t.cards.c6_btn;
+            document.getElementById('c7-title').textContent = t.cards.c7_title; document.getElementById('c7-desc').textContent = t.cards.c7_desc; document.getElementById('c7-btn').textContent = t.cards.c7_btn;
+            document.getElementById('c8-title').textContent = t.cards.c8_title; document.getElementById('c8-desc').textContent = t.cards.c8_desc; document.getElementById('c8-btn').textContent = t.cards.c8_btn;
+
+            // Modals
+            document.getElementById('modal-proj-desc').textContent = t.modals.proj_desc;
+            document.getElementById('m1-title').textContent = t.modals.m1_title; document.getElementById('m1-quote').textContent = t.modals.m1_quote; document.getElementById('m1-desc').innerHTML = t.modals.m1_desc; document.getElementById('m1-btn').textContent = t.modals.m1_btn;
+            document.getElementById('m2-title').textContent = t.modals.m2_title; document.getElementById('m2-quote').textContent = t.modals.m2_quote; document.getElementById('m2-desc').innerHTML = t.modals.m2_desc; document.getElementById('m2-btn').textContent = t.modals.m2_btn;
+            document.getElementById('m3-title').textContent = t.modals.m3_title; document.getElementById('m3-quote').textContent = t.modals.m3_quote; document.getElementById('m3-desc').innerHTML = t.modals.m3_desc; document.getElementById('m3-btn').textContent = t.modals.m3_btn;
+            document.getElementById('m4-title').textContent = t.modals.m4_title; document.getElementById('m4-quote').textContent = t.modals.m4_quote; document.getElementById('m4-desc').innerHTML = t.modals.m4_desc; document.getElementById('m4-btn').textContent = t.modals.m4_btn;
+            document.getElementById('m5-title').textContent = t.modals.m5_title; document.getElementById('m5-quote').textContent = t.modals.m5_quote; document.getElementById('m5-desc').innerHTML = t.modals.m5_desc; document.getElementById('m5-btn').textContent = t.modals.m5_btn;
+            document.getElementById('m6-title').textContent = t.modals.m6_title; document.getElementById('m6-quote').textContent = t.modals.m6_quote; document.getElementById('m6-desc').innerHTML = t.modals.m6_desc; document.getElementById('m6-btn').textContent = t.modals.m6_btn;
+            document.getElementById('m7-title').textContent = t.modals.m7_title; document.getElementById('m7-quote').textContent = t.modals.m7_quote; document.getElementById('m7-desc').innerHTML = t.modals.m7_desc; document.getElementById('m7-btn').textContent = t.modals.m7_btn;
+            document.getElementById('m8-title').textContent = t.modals.m8_title; document.getElementById('m8-quote').textContent = t.modals.m8_quote; document.getElementById('m8-desc').innerHTML = t.modals.m8_desc; document.getElementById('m8-btn').textContent = t.modals.m8_btn;
+            document.getElementById('m9-title').textContent = t.modals.m9_title; document.getElementById('m9-quote').textContent = t.modals.m9_quote; document.getElementById('m9-desc').innerHTML = t.modals.m9_desc; document.getElementById('m9-btn').textContent = t.modals.m9_btn;
+            document.getElementById('ac-title').textContent = t.modals.ac_title; document.getElementById('ac-quote').textContent = t.modals.ac_quote; document.getElementById('ac-desc').innerHTML = t.modals.ac_desc; document.getElementById('ac-btn').textContent = t.modals.ac_btn;
+
+            // Form
+            document.getElementById('lbl-name').textContent = t.form.lbl_name; document.getElementById('ph-name').placeholder = t.form.ph_name;
+            document.getElementById('lbl-email').textContent = t.form.lbl_email; document.getElementById('ph-email').placeholder = t.form.ph_email;
+            document.getElementById('lbl-org').textContent = t.form.lbl_org; document.getElementById('ph-org').placeholder = t.form.ph_org;
+            document.getElementById('lbl-cat').textContent = t.form.lbl_cat; document.getElementById('opt-default').textContent = t.form.opt_default;
+            document.getElementById('lbl-msg').textContent = t.form.lbl_msg; document.getElementById('ph-msg').placeholder = t.form.ph_msg;
+            document.getElementById('form-submit-btn').textContent = t.form.btn;
+
+            // Footer
+            document.getElementById('foot-title').textContent = t.footer.title;
+            document.getElementById('foot-desc').textContent = t.footer.desc.replace(/"/g, ''); // Quitar comillas dobles extra si existen
+            document.getElementById('foot-copy').innerHTML = t.footer.copy;
+
+            // Settings Modal
+            document.getElementById('set-title').textContent = t.settings.title;
+            document.getElementById('set-anim').textContent = t.settings.anim;
+            document.getElementById('set-lang').textContent = t.settings.lang;
+
+            // Chat
+            document.getElementById('chat-welcome').textContent = t.chat.welcome;
+            document.getElementById('chat-input').placeholder = t.chat.input;
+        }
+
         // --- CONFIGURACIÓN API KEY (CRÍTICO PARA GITHUB PAGES) ---
         // OPCIÓN A (FÁCIL): Pega tu API Key dentro de las comillas para que el chat funcione automáticamente para todos.
         // OPCIÓN B (DEMO): Déjalo vacío (""). El sitio le pedirá la clave al visitante cuando intente usar el chat.
@@ -2101,6 +2552,9 @@
 
         // --- LÓGICA DE LA NUEVA INTRO Y ANIMACIONES DE SCROLL ---
         window.onload = function() {
+            // INICIALIZAR PREFERENCIAS DE USUARIO
+            initSettings();
+
             const titleElement = document.getElementById("intro-title");
             const loadingBar = document.getElementById("loading-bar");
             const splashScreen = document.getElementById("splash-screen");
@@ -2560,6 +3014,56 @@
 
         function closeAcademyModal() {
             document.getElementById('academy-modal').classList.remove('active');
+        }
+
+        // --- FUNCIONES PARA EL NUEVO MODAL DE CONFIGURACIÓN ---
+        function openSettingsModal() {
+            document.getElementById('settings-modal').classList.add('active');
+        }
+
+        function closeSettingsModal() {
+            document.getElementById('settings-modal').classList.remove('active');
+        }
+
+        // --- SISTEMA DE GESTIÓN DE ANIMACIONES ---
+        let animationsEnabled = true;
+
+        function initSettings() {
+            // Revisar si el usuario ya guardó una preferencia
+            const savedAnim = localStorage.getItem('infinity_anim_enabled');
+            
+            if (savedAnim === 'false') {
+                setAnimations(false);
+            } else {
+                setAnimations(true);
+            }
+        }
+
+        function toggleAnimations() {
+            animationsEnabled = !animationsEnabled;
+            setAnimations(animationsEnabled);
+            // Guardar preferencia
+            localStorage.setItem('infinity_anim_enabled', animationsEnabled);
+        }
+
+        function setAnimations(enabled) {
+            animationsEnabled = enabled;
+            const icon = document.getElementById('anim-toggle-icon');
+            const body = document.body;
+            
+            if (enabled) {
+                // Activar Animaciones
+                body.classList.remove('no-animations');
+                icon.classList.remove('fa-toggle-off');
+                icon.classList.add('fa-toggle-on');
+                icon.style.color = '#00d2ff'; // Cian encendido
+            } else {
+                // Desactivar Animaciones (Modo Rendimiento)
+                body.classList.add('no-animations');
+                icon.classList.remove('fa-toggle-on');
+                icon.classList.add('fa-toggle-off');
+                icon.style.color = '#555'; // Gris apagado
+            }
         }
     </script>
 </body>
