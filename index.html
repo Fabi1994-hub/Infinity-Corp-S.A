@@ -667,7 +667,9 @@
         #mobile-ecosystems-modal .modal-content,
         #web-platforms-modal .modal-content,
         #interactive-reality-modal .modal-content,
-        #global-ops-modal .modal-content {
+        #global-ops-modal .modal-content,
+        #robotics-modal .modal-content,
+        #courses-modal .modal-content {
             max-width: 900px; 
             padding: 0; 
             border: none; 
@@ -833,7 +835,9 @@
             #mobile-ecosystems-modal .modal-content,
             #web-platforms-modal .modal-content,
             #interactive-reality-modal .modal-content,
-            #global-ops-modal .modal-content {
+            #global-ops-modal .modal-content,
+            #robotics-modal .modal-content,
+            #courses-modal .modal-content {
                 max-width: 95%;
             }
         }
@@ -861,6 +865,109 @@
         .chat-fab:hover {
             transform: scale(1.1) rotate(10deg);
             box-shadow: 0 8px 25px rgba(0, 210, 255, 0.5);
+        }
+
+        /* --- NUEVO BOTÓN FLOTANTE: ACADEMIA (CURSOS) --- */
+        .academy-fab {
+            position: fixed;
+            bottom: 30px;
+            left: 30px; /* Ubicado a la izquierda para no chocar con el chat */
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(45deg, #00ff00, #ccff00); /* Verde Neón */
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #0f1114; /* Icono oscuro para contraste con el neón */
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            transition: transform 0.3s, box-shadow 0.3s;
+            z-index: 5000;
+            animation: pulse-green 3s infinite;
+        }
+
+        .academy-fab:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 30px rgba(0, 255, 0, 0.6);
+        }
+        
+        /* Tooltip simple para el botón de academia */
+        .academy-fab::after {
+            content: 'Formación IA';
+            position: absolute;
+            bottom: 70px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.8);
+            color: #39ff14;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.8rem;
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+            border: 1px solid #39ff14;
+        }
+        .academy-fab:hover::after {
+            opacity: 1;
+        }
+
+        @keyframes pulse-green {
+            0% { box-shadow: 0 0 0 0 rgba(0, 255, 0, 0.4); }
+            70% { box-shadow: 0 0 0 15px rgba(0, 255, 0, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(0, 255, 0, 0); }
+        }
+
+        /* Botón Chat Flotante */
+        .chat-fab {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(45deg, #00d2ff, #0078ff);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            transition: transform 0.3s, box-shadow 0.3s;
+            z-index: 5000;
+        }
+        .chat-fab:hover {
+            transform: scale(1.1) rotate(10deg);
+            box-shadow: 0 8px 25px rgba(0, 210, 255, 0.5);
+        }
+
+        /* --- NUEVO TOOLTIP PARA GENESIS --- */
+        .chat-fab::after {
+            content: 'Genesis AI';
+            position: absolute;
+            bottom: 70px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.8);
+            color: #00d2ff;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.8rem;
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+            border: 1px solid #00d2ff;
+            font-family: 'Orbitron', sans-serif; /* Fuente tecnológica para el nombre */
+            letter-spacing: 1px;
+        }
+        
+        .chat-fab:hover::after {
+            opacity: 1;
         }
 
         /* Ventana Chat */
@@ -1141,6 +1248,8 @@
                 <a href="#">Inicio</a>
                 <a href="#services">Servicios</a>
                 <a href="#development">Desarrollo</a>
+                <!-- NUEVO BOTÓN: CURSOS DE IA -->
+                <a href="#" onclick="openAcademyModal(); return false;">Academy</a>
                 <a href="#contact">Contacto</a>
             </nav>
         </header>
@@ -1891,7 +2000,56 @@
         </div>
     </div>
     
-    <!-- CHAT FLOTANTE -->
+    <!-- MODAL 11: INFINITY ACADEMY (VERDE NEÓN) -->
+    <div id="academy-modal" class="modal-overlay">
+        <div class="modal-content">
+            <i class="fas fa-times close-modal" onclick="closeAcademyModal()"></i>
+            <div class="ai-page-content">
+                <h2 style="color: #39ff14; border-color: rgba(57, 255, 20, 0.3);">Infinity Academy</h2>
+                <p style="text-align: center; font-style: italic; color: #88ff88; font-weight: 500;">
+                    "Capacitación de élite para la era de la Inteligencia Artificial."
+                </p>
+
+                <div class="data-visualization-panel" style="border-color: #39ff14;">
+                    <div class="data-info">
+                        <h4 style="color: #39ff14;">Formación Corporativa</h4>
+                        <p>No basta con implementar tecnología; su equipo debe dominarla. Infinity Academy ofrece programas intensivos de capacitación diseñados para cerrar la brecha de habilidades digitales en su organización, desde ejecutivos hasta desarrolladores.</p>
+                    </div>
+                    <img src="https://placehold.co/400x250/1a1d24/39ff14?text=ACADEMIA+IA" alt="Aula futurista de aprendizaje digital.">
+                </div>
+
+                <h3>Programas Certificados</h3>
+                <div class="key-features-grid">
+                    <div class="feature-box" style="border-left-color: #39ff14;">
+                        <i class="fas fa-brain" style="color: #39ff14;"></i>
+                        <strong>Prompt Engineering Avanzado</strong>
+                        <p>Domine el arte de comunicarse con LLMs para maximizar la productividad y precisión de las respuestas.</p>
+                    </div>
+                    <div class="feature-box" style="border-left-color: #39ff14;">
+                        <i class="fas fa-code-branch" style="color: #39ff14;"></i>
+                        <strong>Desarrollo de Agentes IA</strong>
+                        <p>Curso técnico para ingenieros sobre la creación e implementación de agentes autónomos y sistemas RAG.</p>
+                    </div>
+                    <div class="feature-box" style="border-left-color: #39ff14;">
+                        <i class="fas fa-chess-king" style="color: #39ff14;"></i>
+                        <strong>Estrategia de IA para Directivos</strong>
+                        <p>Visión de alto nivel sobre cómo la IA redefinirá modelos de negocio, ética y gobernanza corporativa.</p>
+                    </div>
+                </div>
+
+                <button class="btn" onclick="document.getElementById('academy-modal').classList.remove('active'); document.getElementById('contact').scrollIntoView();" style="margin-top: 40px; width: 100%; background: linear-gradient(45deg, #00cc00, #39ff14); color: #0f1114;">
+                    <i class="fas fa-graduation-cap"></i> Solicitar Catálogo de Cursos
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- BOTÓN FLOTANTE DE ACADEMIA (IZQUIERDA) -->
+    <div class="academy-fab" onclick="openAcademyModal()">
+        <i class="fas fa-graduation-cap"></i>
+    </div>
+    
+    <!-- CHAT FLOTANTE (DERECHA) -->
     <div class="chat-fab" onclick="toggleChat()">
         <i class="fas fa-robot"></i>
     </div>
@@ -1916,7 +2074,7 @@
         // OPCIÓN B (DEMO): Déjalo vacío (""). El sitio le pedirá la clave al visitante cuando intente usar el chat.
         // Consigue tu clave gratis aquí: https://aistudio.google.com/app/apikey
         
-        const hardcodedApiKey = "AIzaSyA235D40VKZKRFHBbgiOLhTF9EqMVRIPX8"; // <--- CLAVE CONFIGURADA CORRECTAMENTE
+        const hardcodedApiKey = "AIzaSyAfJlxAoAvEnBWme6kqKNX5QEs60urKuMs"; // <--- CLAVE CONFIGURADA CORRECTAMENTE
         
         // --- CONFIGURACIÓN FORMULARIO DE CONTACTO ---
         // INSTRUCCIÓN: Si quieres que el formulario funcione de verdad, regístrate en https://formspree.io, 
@@ -2392,6 +2550,15 @@
 
         function closeRoboticsModal() {
             document.getElementById('robotics-modal').classList.remove('active');
+        }
+
+        // --- FUNCIONES PARA EL NUEVO MODAL DE ACADEMIA ---
+        function openAcademyModal() {
+            document.getElementById('academy-modal').classList.add('active');
+        }
+
+        function closeAcademyModal() {
+            document.getElementById('academy-modal').classList.remove('active');
         }
     </script>
 </body>
