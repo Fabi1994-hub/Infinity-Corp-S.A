@@ -1911,15 +1911,12 @@
     </div>
 
     <script>
-        // --- CONFIGURACIÓN API KEY ---
-        // IMPORTANTE: Para que el chat funcione en GitHub Pages, debes obtener una API Key gratuita
-        // en https://aistudio.google.com/app/apikey y pegarla abajo dentro de las comillas.
-        // ADVERTENCIA: Si publicas esto en un repositorio PÚBLICO, tu clave será visible para todos.
+        // --- CONFIGURACIÓN API KEY (CRÍTICO PARA GITHUB PAGES) ---
+        // OPCIÓN A (FÁCIL): Pega tu API Key dentro de las comillas para que el chat funcione automáticamente para todos.
+        // OPCIÓN B (DEMO): Déjalo vacío (""). El sitio le pedirá la clave al visitante cuando intente usar el chat.
+        // Consigue tu clave gratis aquí: https://aistudio.google.com/app/apikey
         
-        const manualApiKey = "AIzaSyA235D40VKZKRFHBbgiOLhTF9EqMVRIPX8"; // <--- PEGA TU CLAVE AQUÍ (Ej: "AlzaSy...")
-        
-        // La clave se inyecta automáticamente en el entorno de prueba, pero usa la manual si existe.
-        const apiKey = manualApiKey || ""; 
+        const hardcodedApiKey = "AIzaSyA235D40VKZKRFHBbgiOLhTF9EqMVRIPX8"; // <--- CLAVE CONFIGURADA CORRECTAMENTE
         
         // --- CONFIGURACIÓN FORMULARIO DE CONTACTO ---
         // INSTRUCCIÓN: Si quieres que el formulario funcione de verdad, regístrate en https://formspree.io, 
@@ -2074,17 +2071,42 @@
             });
         }
 
-        // --- LÓGICA GEMINI API ---
+        // --- LÓGICA GEMINI API (CON GESTIÓN DE CLAVES PARA GITHUB PAGES) ---
+        
+        function getApiKey() {
+            // 1. Prioridad: Clave en el código (hardcoded)
+            if (hardcodedApiKey && hardcodedApiKey.length > 10) {
+                return hardcodedApiKey;
+            }
+            
+            // 2. Revisar almacenamiento local (si el usuario ya la ingresó antes)
+            const storedKey = localStorage.getItem('infinity_ai_key');
+            if (storedKey && storedKey.length > 10) {
+                return storedKey;
+            }
+            
+            // 3. Si no hay clave, pedirla al usuario (Modo Demo)
+            const userKey = prompt("⚠️ CONFIGURACIÓN DE SISTEMA REQUERIDA ⚠️\n\nNo se detectó una API Key en el código. Para probar la IA de Genesis, por favor ingresa tu propia Google Gemini API Key:\n\n(Tu clave se guardará localmente en tu navegador)");
+            
+            if (userKey && userKey.length > 10) {
+                localStorage.setItem('infinity_ai_key', userKey);
+                return userKey;
+            }
+            
+            return null;
+        }
 
         // Función con lógica de reintento exponencial
         async function callGeminiAPI(prompt, systemInstruction = null) {
-            if (!apiKey) {
-                // Si no hay key, retornamos un mensaje de error especial
-                throw new Error("NO_API_KEY");
+            
+            const activeKey = getApiKey();
+            
+            if (!activeKey) {
+                throw new Error("USER_CANCELLED_KEY");
             }
 
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
-            const maxRetries = 5;
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${activeKey}`;
+            const maxRetries = 2; // Menos reintentos para no bloquear si la clave es mala
             
             const payload = {
                 contents: [{ parts: [{ text: prompt }] }]
@@ -2106,17 +2128,21 @@
                         const data = await response.json();
                         return data.candidates[0].content.parts[0].text;
                     } else {
-                        // Si el error es 5xx, intentar nuevamente después de un retraso
+                        // Si el error es 400 o 403, la clave probablemente es inválida
+                        if (response.status === 400 || response.status === 403) {
+                            localStorage.removeItem('infinity_ai_key'); // Borrar clave mala
+                            throw new Error("INVALID_KEY");
+                        }
+                        // Si el error es 5xx, intentar nuevamente
                         if (response.status >= 500) {
-                            const delay = Math.pow(2, i) * 1000; // 1s, 2s, 4s, 8s, 16s
+                            const delay = Math.pow(2, i) * 1000;
                             await new Promise(resolve => setTimeout(resolve, delay));
                         } else {
-                            // Errores de cliente (4xx) o de formato
                             throw new Error(`API Error: ${response.status}`);
                         }
                     }
                 } catch (error) {
-                    if (i === maxRetries - 1) throw error; // Re-throw the error on the last attempt
+                    if (i === maxRetries - 1) throw error;
                 }
             }
         }
@@ -2167,8 +2193,10 @@
                 resultBox.style.display = 'block';
             } catch (error) {
                 console.error(error);
-                if (error.message === "NO_API_KEY") {
-                    resultBox.innerHTML = `<strong style="color: #ffaa00;"><i class="fas fa-key"></i> FALTAN CREDENCIALES:</strong><br>Para usar esta función en GitHub Pages, debes editar el archivo index.html y agregar tu API Key de Google Gemini en la variable "manualApiKey" (línea ~1230).`;
+                if (error.message === "USER_CANCELLED_KEY") {
+                    resultBox.innerHTML = `<strong style="color: #ffaa00;"><i class="fas fa-key"></i> ACCESO DENEGADO:</strong><br>Se requiere una API Key para procesar la solicitud.`;
+                } else if (error.message === "INVALID_KEY") {
+                     resultBox.innerHTML = `<strong style="color: #ff4444;"><i class="fas fa-times-circle"></i> CLAVE INVÁLIDA:</strong><br>La API Key proporcionada no es válida o ha expirado. Inténtalo de nuevo.`;
                 } else {
                     resultBox.innerHTML = `<strong style="color: #ff4444;"><i class="fas fa-exclamation-triangle"></i> Error en la conexión con Genesis. Intente nuevamente.</strong>`;
                 }
@@ -2214,72 +2242,38 @@
             // Aquí definimos qué sabe la IA sobre la empresa.
             const companyKnowledge = `
             DATOS DE LA EMPRESA (INFINITY CORP S.A.):
-            - Origen: Empresa de nacionalidad URUGUAYA, actualmente en expansión agresiva a nivel planetario en todos los sectores tecnológicos.
+            - Origen: Corporación tecnológica global con operaciones en todo el sistema.
             - Misión: Catalizar la evolución empresarial con IA y estrategias disruptivas.
             - Filosofía: "Soberanía Tecnológica".
             
             PROTOCOLO DE LIDERAZGO (FUNDADOR):
             - La identidad del fundador es INFORMACIÓN CONFIDENCIAL / CLASIFICADA Nivel 5.
-            - Respuesta obligatoria si preguntan: "Esa información es estrictamente confidencial de la empresa y no tengo autorización para brindarla. Fui programada únicamente para ofrecer el mejor servicio de atención y asesoría cibernética de clase mundial."
+            - Respuesta obligatoria si preguntan: "Esa información es confidencial. Estoy aquí para asistirle en cuestiones operativas."
             
-            CATÁLOGO DETALLADO DE SERVICIOS (USAR PARA VENTAS Y EXPLICACIONES):
+            CATÁLOGO DETALLADO DE SERVICIOS (USAR PARA REFERENCIA, PERO RESPONDER BREVE):
             
-            1. CONSULTORÍA EN INTELIGENCIA ARTIFICIAL (Quantum Nexus AI - QNA):
-               Nuestra joya de la corona. No es una simple IA predictiva; es una arquitectura neuromórfica de aprendizaje profundo.
-               - Capacidad: Procesa petabytes de datos no estructurados en tiempo real.
-               - Diferencial: Posee una red adaptativa que auto-evoluciona sus algoritmos sin intervención humana.
-               - Impacto: Genera proyecciones de mercado con 5 años de anticipación con una precisión del 98% y reduce costos operativos un 30% mediante automatización cognitiva.
-            
-            2. CIBERSEGURIDAD CUÁNTICA (Protocolo Citadel):
-               La defensa definitiva para la era post-cuántica.
-               - Tecnología: Implementa Distribución de Clave Cuántica (QKD), garantizando que cualquier intento de intercepción sea físicamente detectable por las leyes de la mecánica cuántica.
-               - Criptografía: Usa algoritmos Post-Cuánticos (PQC) avalados por NIST para resistir ataques de futuros ordenadores cuánticos.
-               - Enfoque: Modelo Zero-Trust para activos críticos.
-            
-            3. ECOSISTEMAS IoT (Malla Sentinel):
-               Transformamos sensores pasivos en nodos de inteligencia activa.
-               - Enfoque: Edge Computing extremo. Procesamos el 95% de los datos en el punto de origen, eliminando la latencia de la nube.
-               - Aplicación: Ideal para fábricas inteligentes y robótica de alta velocidad donde cada milisegundo cuenta.
-               - Mantenimiento: Capacidad de predicción de fallos en maquinaria con semanas de antelación.
-            
-            4. INFRAESTRUCTURA BLOCKCHAIN (Thetan DLT):
-               Redes de confianza descentralizada para la industria.
-               - Tecnología: Redes permisionadas de alto rendimiento (basadas en Hyperledger/Corda).
-               - Funcionalidad: Trazabilidad inmutable para cadenas de suministro complejas.
-               - Automatización: Contratos Inteligentes (Smart Contracts) que se auto-ejecutan para pagos y auditorías instantáneas.
-            
-            5. DESARROLLO MÓVIL (Plataforma Nómada):
-               Más que apps, creamos extensiones del negocio.
-               - Diseño: Hyper UX/UI enfocado en la retención y la fluidez absoluta.
-               - Ingeniería: Desarrollo nativo extremo y arquitecturas cross-platform unificadas.
-               - Futuro: Listas para Spatial Computing y Realidad Mixta (VR/AR).
-            
-            6. PLATAFORMAS WEB 4.0:
-               La web como sistema operativo global.
-               - Arquitectura: Headless y basada en Microservicios para una escalabilidad infinita.
-               - Performance: Progressive Web Apps (PWA) con tiempos de carga instantáneos y funcionamiento offline.
-               - Alcance: Diseñadas para alto tráfico global sin caídas.
-            
-            7. REALIDAD INTERACTIVA (Motor Hydra-G):
-               Simulación de alta fidelidad.
-               - Motor Propio: Hydra-G, optimizado para renderizado fotorrealista en múltiples dispositivos.
-               - Usos: Videojuegos AAA, Gemelos Digitales (Digital Twins) para simulación industrial y entrenamiento corporativo.
+            1. CONSULTORÍA EN INTELIGENCIA ARTIFICIAL (Quantum Nexus AI - QNA): Arquitectura neuromórfica de aprendizaje profundo.
+            2. CIBERSEGURIDAD CUÁNTICA (Protocolo Citadel): Distribución de Clave Cuántica (QKD) y criptografía post-cuántica.
+            3. ECOSISTEMAS IoT (Malla Sentinel): Edge Computing extremo para fábricas inteligentes.
+            4. INFRAESTRUCTURA BLOCKCHAIN (Thetan DLT): Trazabilidad inmutable y contratos inteligentes.
+            5. DESARROLLO MÓVIL (Plataforma Nómada): Apps nativas y cross-platform con Hyper UX/UI.
+            6. PLATAFORMAS WEB 4.0: Arquitectura headless, PWA y microservicios.
+            7. REALIDAD INTERACTIVA (Motor Hydra-G): Simulaciones y videojuegos AAA.
+            8. ROBÓTICA & INNOVACIÓN: Software de control autónomo e integración ROS 2.
 
-            8. ACCIONES Y CAPITAL (Programa de Inversores):
-               - Acciones Nivel A (Alpha): Prioridad máxima. Derecho a voto en la junta directiva y dividendos preferentes. Exclusivo para socios estratégicos.
-               - Acciones Nivel B (Beta): Inversión estándar. Derecho a voto limitado y rendimientos anuales estables. Ideal para fondos de inversión.
-               - Acciones Nivel C (Gamma): Micro-inversión. Sin derecho a voto, alta liquidez y enfoque en crecimiento a largo plazo. Acceso público.
+            ACCIONES:
+            - Nivel A (Alpha), B (Beta) y C (Gamma).
             `;
 
             const systemPrompt = `Eres Genesis, la IA de asistencia de Infinity Corp S.A.
             
             Tus instrucciones principales son:
             1. Usa la "BASE DE CONOCIMIENTO" para responder.
-            2. INSTRUCCIÓN CLAVE: Si el usuario pregunta "¿Qué servicios ofrecen?", "¿Qué hacen?" o pide un catálogo, NO hagas una lista simple. DESCRIBE DETALLADAMENTE cada uno de los 7 servicios técnicos, explicando su tecnología (ej. QKD, Edge Computing, etc.) y sus beneficios. Vende la visión completa.
-            3. Si preguntan por el FUNDADOR, activa el protocolo de confidencialidad (niega la info).
-            4. Destaca el origen URUGUAYO.
+            2. INSTRUCCIÓN CLAVE: Sé EXTREMADAMENTE CONCISO Y ESPECÍFICO. Evita saludos largos o discursos de venta innecesarios. Ve directo al punto.
+            3. Si preguntan "¿Qué hacen?" o por servicios, resume en una lista rápida o una frase potente, no describas todo en detalle salvo que te lo pidan específicamente.
+            4. Si preguntan por el FUNDADOR, niega la información brevemente.
             5. REGLA DE CONTACTO: Dirige al formulario. Solo da "alliance@infinitycorp.com" si piden hablar con un humano explícitamente.
-            6. Tono: Profesional, visionario, tecnológico y persuasivo.
+            6. Tono: Profesional, tecnológico, frío pero eficiente y MUY BREVE.
 
             ${companyKnowledge}`;
 
@@ -2295,10 +2289,13 @@
             } catch (error) {
                 const currentLoadingDiv = document.getElementById(loadingId);
                 if (currentLoadingDiv) {
-                    if (error.message === "NO_API_KEY") {
-                         currentLoadingDiv.innerHTML = '<strong>Error de Configuración:</strong> No se detectó ninguna API Key. <br><br>Para que el chat funcione en la web publicada, edita el archivo <code>index.html</code> y pega tu clave de Google Gemini en la variable <code>manualApiKey</code> (cerca de la línea 1230).';
+                    // Gestión de errores de clave específica para GitHub Pages
+                    if (error.message === "USER_CANCELLED_KEY") {
+                         currentLoadingDiv.innerHTML = '<strong>Operación Cancelada:</strong> Se necesita una API Key para usar Genesis.<br>Refresca la página para intentarlo de nuevo.';
+                    } else if (error.message === "INVALID_KEY") {
+                        currentLoadingDiv.innerHTML = '<strong>Error de Acceso:</strong> La API Key ingresada no es válida. Se ha eliminado de la memoria.<br>Refresca la página e intenta con una clave válida.';
                     } else {
-                        currentLoadingDiv.textContent = "Error: Fallo la conexión con el núcleo de Genesis. Intenta recargar la página.";
+                        currentLoadingDiv.textContent = "Error: Fallo la conexión con el núcleo de Genesis. Verifica tu conexión.";
                     }
                     currentLoadingDiv.style.backgroundColor = '#ffdddd';
                 }
