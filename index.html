@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Infinity Corp S.A.</title>
-    <!-- Fuente futurista para el logo y títulos -->
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto:wght@300;400;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <!-- Fuente futurista para el logo y títulos + CAIRO para Árabe -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto:wght@300;400;700&family=Share+Tech+Mono&family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
     <!-- Iconos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
@@ -1606,6 +1606,8 @@
                         <option value="pt">PORTUGUÊS</option>
                         <option value="zh">中文 (CHINESE)</option>
                         <option value="ru">РУССКИЙ (RUSSIAN)</option>
+                        <option value="it">ITALIANO</option>
+                        <option value="ar">العربية (ARABIC)</option>
                     </select>
                 </div>
             </div>
@@ -2575,10 +2577,148 @@
                     welcome: "Здравствуйте. Я Genesis, ИИ Infinity Corp. Чем я могу помочь вам сегодня?",
                     input: "Спросите что-нибудь..."
                 }
+            },
+            it: {
+                nav: { home: "Home", serv: "Servizi", dev: "Sviluppo", acad: "Academy", cont: "Contatti" },
+                hero: {
+                    title: "Leadership Tecnologica Globale",
+                    slogan: '"Implementiamo architetture digitali che scalano il tuo business."',
+                    desc: "In Infinity Corp S.A., catalizziamo l'evoluzione aziendale integrando intelligenza artificiale avanzata e strategie disruptive. Progettiamo gli ecosistemi digitali che definiranno la competitività di domani.",
+                    sub: "Esplora la nostra prospettiva strategica:",
+                    btn: "Genera Visione Aziendale"
+                },
+                sections: {
+                    serv_title: "Soluzioni Aziendali",
+                    serv_desc: "Infrastruttura tecnologica progettata per la scalabilità e la sicurezza del futuro.",
+                    dev_title: "Ingegneria Digitale",
+                    dev_desc: "Sviluppo software su misura per l'era dell'iperconnettività.",
+                    cont_title: "Avviare Alleanza",
+                    cont_desc: "Canale esclusivo per servizi, corsi e partnership."
+                },
+                cards: {
+                    c1_title: "Consulenza IA", c1_desc: "Implementazione di modelli predittivi e automazione cognitiva per ottimizzare il processo decisionale strategico in tempo reale.", c1_btn: "Esplora Tecnologia",
+                    c2_title: "Cybersecurity Quantistica", c2_desc: "Protocolli di difesa avanzati e crittografia resistente ai quanti per proteggere i tuoi beni più preziosi.", c2_btn: "Esplora Protocollo",
+                    c3_title: "Ecosistemi IoT", c3_desc: "Interconnessione massiva di dispositivi industriali con analisi edge (Edge Computing) per fabbriche intelligenti.", c3_btn: "Esplora Rete Sentinel",
+                    c4_title: "Infrastruttura Blockchain", c4_desc: "Soluzioni decentralizzate per la tracciabilità della supply chain e smart contract verificabili e sicuri.", c4_btn: "Esplora Rete Thetan",
+                    c5_title: "Ecosistemi Mobili", c5_desc: "Sviluppo nativo e multipiattaforma di applicazioni che ridefiniscono l'interazione utente-dispositivo con UX/UI all'avanguardia.", c5_btn: "Piattaforma Nomad",
+                    c6_title: "Piattaforme Web 4.0", c6_desc: "Architetture web progressive e aziendali, progettate per alto traffico, scalabilità globale e caricamento istantaneo.", c6_btn: "Architettura Globale",
+                    c7_title: "Realtà Interattiva", c7_desc: "Creazione di videogiochi immersivi e simulazioni virtuali utilizzando motori grafici di nuova generazione per intrattenimento o industria.", c7_btn: "Core Hydra-G",
+                    c8_title: "Robotica & Innovazione", c8_desc: "Sviluppo di software di controllo avanzato, integrazione di sistemi autonomi e algoritmi di IA per la robotica industriale e di servizio di prossima generazione.", c8_btn: "Esplora Autonomia"
+                },
+                modals: {
+                    proj_desc: "Inserisci un settore e la nostra IA progetterà un progetto dell'anno 2050.",
+                    m1_title: "Quantum Nexus AI: Il Tessuto Cognitivo", m1_quote: '"Progettare l\'intelligenza che anticipa il futuro aziendale."', m1_desc: "In Infinity Corp, il nostro framework brevettato, il **Quantum Nexus AI (QNA)**, trascende l'analisi predittiva convenzionale. Utilizza architetture di **deep learning neuromorfico** per elaborare petabyte di dati non strutturati in tempo reale.", m1_btn: "Richiedi Audit Strategico",
+                    m2_title: "Protocollo Cittadella Quantistica", m2_quote: '"La difesa che sfida l\'informatica di domani, proteggendo i tuoi asset critici."', m2_desc: "Il nostro Protocollo Cittadella Quantistica (CQP) implementa la distribuzione a chiave quantistica (QKD) per creare canali di comunicazione protetti dalle leggi della fisica.", m2_btn: "Richiedi Valutazione Rischio",
+                    m3_title: "Maglia di Interconnessione Sentinel", m3_quote: '"Dove ogni sensore è un nodo di intelligenza. Trasformare dati grezzi in azione istantanea."', m3_desc: "La Maglia Sentinel è una rete neurale distribuita progettata per l'IoT industriale hyperscale. Prioritizza l'**Edge Computing**, elaborando il 95% dei dati dei sensori direttamente alla fonte.", m3_btn: "Richiedi Valutazione IIoT",
+                    m4_title: "Rete di Fiducia Decentralizzata", m4_quote: '"Tracciabilità immutabile e automazione dei contratti senza intermediari."', m4_desc: "Il nostro framework **Thetan DLT** implementa reti permissioned ad alte prestazioni. Ogni transazione è un record crittografico, garantendo l'immutabilità della provenienza.", m4_btn: "Richiedi Analisi Tracciabilità",
+                    m5_title: "Piattaforma Nomad: Hyper UX/UI", m5_quote: '"Portare l\'esperienza aziendale oltre i limiti del dispositivo."', m5_desc: "Un ecosistema mobile di Infinity Corp è l'integrazione fluida di app, API e servizi backend che consentono agli utenti di interagire con i sistemi aziendali da **qualsiasi dispositivo**.", m5_btn: "Avvia Prototipo Mobile",
+                    m6_title: "Piattaforme Web 4.0", m6_quote: '"Siti web che sono applicazioni. Scalabilità infinita."', m6_desc: "Il Web 4.0 è un'era di esperienze digitali **iper-personalizzate e distribuite**. Progettiamo portali web aziendali e app rivolte ai clienti con un'architettura disaccoppiata.", m6_btn: "Richiedi Audit Web 4.0",
+                    m7_title: "Core di Simulazione: Motore Hydra-G", m7_quote: '"Creare mondi con uno scopo: dall\'intrattenimento alla simulazione critica."', m7_desc: "In Infinity Corp, la Realtà Interattiva copre lo sviluppo di esperienze di immersione totale per piattaforme accessibili: **PC, console e dispositivi mobili**. Basato sul nostro motore proprietario **Hydra-G**.", m7_btn: "Avvia Prototipo Simulazione",
+                    m8_title: "Rete Neurale Planetaria", m8_quote: '"La distanza non esiste più. Infrastruttura unificata."', m8_desc: "La spina dorsale di Infinity Corp non conosce confini. Gestiamo una rete privata di fibra oscura e collegamenti satellitari che collegano **150 Edge Data Center**.", m8_btn: "Richiedi Dispiegamento Internazionale",
+                    m9_title: "Ingegneria Robotica: Autonomia Totale", m9_quote: '"Dare vita all\'hardware attraverso algoritmi di comportamento adattivo."', m9_desc: "In Infinity Corp, non ci limitiamo a programmare robot; progettiamo la loro cognizione. Sviluppiamo software di controllo di basso e alto livello.", m9_btn: "Avvia Progetto Robotica",
+                    ac_title: "Infinity Academy", ac_quote: '"Formazione d\'élite per l\'era dell\'Intelligenza Artificiale."', ac_desc: "Non basta implementare la tecnologia; il tuo team deve padroneggiarla. Infinity Academy offre programmi di formazione intensivi progettati per colmare il divario di competenze digitali.", ac_btn: "Richiedi Catalogo Corsi"
+                },
+                form: {
+                    lbl_name: "ID PROFESSIONALE", ph_name: "Nome Completo",
+                    lbl_email: "EMAIL AZIENDALE", ph_email: "esempio@azienda.com",
+                    lbl_org: "ORGANIZZAZIONE", ph_org: "Azienda / StartUp",
+                    lbl_cat: "CATEGORIA PROGETTO", opt_default: "Seleziona area di interesse...",
+                    lbl_msg: "DETTAGLI STRATEGICI", ph_msg: "Descrivi brevemente l'ambito e gli obiettivi del progetto...",
+                    btn: "INVIA RICHIESTA"
+                },
+                footer: {
+                    title: "OPERAZIONI SENZA FRONTIERE",
+                    desc: '"Dispiegamento strategico universale. La nostra infrastruttura possiede la capacità operativa per eseguire servizi in tutte le giurisdizioni sovrane del pianeta, garantendo assoluta interoperabilità linguistica e culturale."',
+                    copy: "&copy; 2050 Infinity Corp S.A. | Montevideo, Uruguay | Global Systems Online"
+                },
+                settings: {
+                    title: "SISTEMA",
+                    anim: "Animazioni HQ",
+                    lang: "Lingua"
+                },
+                chat: {
+                    welcome: "Ciao. Sono Genesis, l'IA di Infinity Corp. Come posso aiutarti oggi?",
+                    input: "Chiedi qualcosa..."
+                }
+            },
+            ar: {
+                nav: { home: "الرئيسية", serv: "الخدمات", dev: "التطوير", acad: "الأكاديمية", cont: "اتصل بنا" },
+                hero: {
+                    title: "الريادة التكنولوجية العالمية",
+                    slogan: '"ننشر معماريات رقمية توسع نطاق عملك."',
+                    desc: "في إنفينيتي كورب، نحفز تطور الأعمال من خلال دمج الذكاء الاصطناعي المتقدم والاستراتيجيات المبتكرة. نصمم الأنظمة البيئية الرقمية التي ستحدد التنافسية في المستقبل.",
+                    sub: "اكتشف رؤيتنا الاستراتيجية:",
+                    btn: "توليد رؤية مؤسسية"
+                },
+                sections: {
+                    serv_title: "حلول الأعمال",
+                    serv_desc: "بنية تحتية تكنولوجية مصممة لقابلية التوسع والأمان في المستقبل.",
+                    dev_title: "الهندسة الرقمية",
+                    dev_desc: "تطوير برمجيات مخصصة لعصر الاتصال الفائق.",
+                    cont_title: "بدء تحالف",
+                    cont_desc: "قناة حصرية للخدمات، الدورات والشراكات."
+                },
+                cards: {
+                    c1_title: "استشارات الذكاء الاصطناعي", c1_desc: "تنفيذ النماذج التنبؤية والأتمتة المعرفية لتحسين اتخاذ القرارات الاستراتيجية في الوقت الفعلي.", c1_btn: "استكشاف التكنولوجيا",
+                    c2_title: "الأمن السيبراني الكمي", c2_desc: "بروتوكولات دفاع متقدمة وتشفير مقاوم للحوسبة الكمية لحماية أصولك الأكثر قيمة.", c2_btn: "استكشاف البروتوكول",
+                    c3_title: "نظم إنترنت الأشياء", c3_desc: "الربط الهائل للأجهزة الصناعية مع التحليل الطرفي (Edge Computing) للمصانع الذكية.", c3_btn: "استكشاف شبكة Sentinel",
+                    c4_title: "بنية البلوكشين", c4_desc: "حلول لامركزية لتتبع سلاسل التوريد وعقود ذكية آمنة وقابلة للتدقيق.", c4_btn: "استكشاف شبكة Thetan",
+                    c5_title: "النظم البيئية المتنقلة", c5_desc: "تطوير تطبيقات أصلية ومتعددة المنصات تعيد تعريف تفاعل المستخدم مع الجهاز بواجهات متطورة.", c5_btn: "منصة Nomad",
+                    c6_title: "منصات الويب 4.0", c6_desc: "معماريات ويب تقدمية ومؤسسية، مصممة لحركة المرور العالية، وقابلية التوسع العالمية والتحميل الفوري.", c6_btn: "العمارة العالمية",
+                    c7_title: "الواقع التفاعلي", c7_desc: "إنشاء ألعاب فيديو غامرة ومحاكاة افتراضية باستخدام محركات رسومات من الجيل التالي للترفيه أو الصناعة.", c7_btn: "نواة Hydra-G",
+                    c8_title: "الروبوتات والابتكار", c8_desc: "تطوير برمجيات تحكم متقدمة، وتكامل الأنظمة المستقلة وخوارزميات الذكاء الاصطناعي للجيل القادم من الروبوتات.", c8_btn: "استكشاف الاستقلالية"
+                },
+                modals: {
+                    proj_desc: "أدخل صناعة وسيقوم ذكاؤنا الاصطناعي بتصميم مشروع لعام 2050.",
+                    m1_title: "Quantum Nexus AI: النسيج المعرفي", m1_quote: '"تصميم الذكاء الذي يستبق مستقبل الأعمال."', m1_desc: "في إنفينيتي كورب، يتجاوز إطار عملنا **Quantum Nexus AI (QNA)** التحليلات التنبؤية التقليدية. يستخدم معماريات **التعلم العميق العصبي** لمعالجة بيتابايت من البيانات غير المهيكلة.", m1_btn: "طلب تدقيق استراتيجي",
+                    m2_title: "بروتوكول القلعة الكمية", m2_quote: '"الدفاع الذي يتحدى حوسبة الغد، ويحمي أصولك الحيوية."', m2_desc: "ينفذ بروتوكول القلعة الكمية (CQP) توزيع المفتاح الكمي (QKD) لإنشاء قنوات اتصال مؤمنة بقوانين الفيزياء.", m2_btn: "طلب تقييم المخاطر",
+                    m3_title: "شبكة Sentinel للترابط", m3_quote: '"حيث كل مستشعر هو عقدة ذكاء. تحويل البيانات الخام إلى إجراء فوري."', m3_desc: "شبكة Sentinel هي شبكة عصبية موزعة مصممة لإنترنت الأشياء الصناعي فائق النطاق. تعطي الأولوية لـ **الحوسبة الطرفية**.", m3_btn: "طلب تقييم البنية التحتية",
+                    m4_title: "شبكة الثقة اللامركزية", m4_quote: '"تتبع غير قابل للتغيير وأتمتة العقود دون وسطاء."', m4_desc: "ينفذ إطار عمل **Thetan DLT** شبكات عالية الأداء. كل معاملة هي سجل مشفر، يضمن عدم قابلية تغيير المصدر.", m4_btn: "طلب تحليل التتبع",
+                    m5_title: "منصة Nomad: واجهة فائقة", m5_quote: '"نقل تجربة الأعمال إلى ما وراء حدود الجهاز."', m5_desc: "النظام البيئي المتنقل لإنفينيتي كورب هو التكامل السلس للتطبيقات وواجهات برمجة التطبيقات والخدمات الخلفية للتفاعل من **أي جهاز**.", m5_btn: "بدء النموذج الأولي",
+                    m6_title: "منصات الويب 4.0", m6_quote: '"مواقع ويب هي في الواقع تطبيقات. قابلية توسع لا نهائية."', m6_desc: "الويب 4.0 هو عصر التجارب الرقمية **فائقة التخصيص والموزعة**. نصمم بوابات الويب المؤسسية بهندسة مفصولة.", m6_btn: "طلب تدقيق الويب 4.0",
+                    m7_title: "نواة المحاكاة: محرك Hydra-G", m7_quote: '"خلق عوالم ذات هدف: من الترفيه إلى المحاكاة الحيوية."', m7_desc: "في إنفينيتي كورب، يغطي الواقع التفاعلي تطوير تجارب الانغماس الكامل للمنصات المتاحة: **الكمبيوتر، وحدات التحكم والهواتف**.", m7_btn: "بدء نموذج المحاكاة",
+                    m8_title: "الشبكة العصبية الكوكبية", m8_quote: '"المسافة لم تعد موجودة. بنية تحتية موحدة."', m8_desc: "العمود الفقري لإنفينيتي كورب لا يعرف حدوداً. ندير شبكة ألياف مظلمة خاصة وروابط أقمار صناعية تربط **150 مركز بيانات طرفي**.", m8_btn: "طلب نشر دولي",
+                    m9_title: "هندسة الروبوتات: استقلالية تامة", m9_quote: '"بث الحياة في الأجهزة من خلال خوارزميات السلوك التكيفي."', m9_desc: "في إنفينيتي كورب، لا نبرمج الروبوتات فحسب؛ بل نصمم إدراكها. نطور برمجيات تحكم عالية ومنخفضة المستوى.", m9_btn: "بدء مشروع روبوتات",
+                    ac_title: "أكاديمية إنفينيتي", ac_quote: '"تدريب النخبة لعصر الذكاء الاصطناعي."', ac_desc: "لا يكفي تنفيذ التكنولوجيا؛ يجب أن يتقنها فريقك. تقدم أكاديمية إنفينيتي برامج تدريب مكثفة.", ac_btn: "طلب كتالوج الدورات"
+                },
+                form: {
+                    lbl_name: "المعرف المهني", ph_name: "الاسم الكامل",
+                    lbl_email: "البريد الإلكتروني للشركة", ph_email: "example@company.com",
+                    lbl_org: "المؤسسة", ph_org: "شركة / شركة ناشئة",
+                    lbl_cat: "فئة المشروع", opt_default: "اختر مجال الاهتمام...",
+                    lbl_msg: "تفاصيل استراتيجية", ph_msg: "صف بإيجاز نطاق وأهداف المشروع...",
+                    btn: "إرسال الطلب"
+                },
+                footer: {
+                    title: "عمليات بلا حدود",
+                    desc: '"نشر استراتيجي عالمي. تمتلك بنيتنا التحتية القدرة التشغيلية لتنفيذ الخدمات في جميع الولايات القضائية السيادية على هذا الكوكب، مما يضمن قابلية التشغيل البيني اللغوي والثقافي المطلق."',
+                    copy: "&copy; 2050 Infinity Corp S.A. | مونتيفيديو، أوروغواي | الأنظمة العالمية عبر الإنترنت"
+                },
+                settings: {
+                    title: "النظام",
+                    anim: "رسوم متحركة عالية الجودة",
+                    lang: "اللغة"
+                },
+                chat: {
+                    welcome: "مرحبًا. أنا Genesis، الذكاء الاصطناعي لشركة إنفينيتي كورب. كيف يمكنني مساعدتك اليوم؟",
+                    input: "اسأل شيئًا..."
+                }
             }
         };
 
         function changeLanguage(lang) {
+            // --- LÓGICA RTL (Right-to-Left) PARA ÁRABE ---
+            if (lang === 'ar') {
+                document.documentElement.dir = 'rtl';
+                document.body.style.fontFamily = "'Cairo', sans-serif"; // Fuente especial para árabe
+                // Ajustes específicos para RTL si es necesario
+                document.querySelectorAll('.service-card').forEach(el => el.style.textAlign = 'right');
+            } else {
+                document.documentElement.dir = 'ltr';
+                document.body.style.fontFamily = "'Roboto', sans-serif"; // Fuente original
+                document.querySelectorAll('.service-card').forEach(el => el.style.textAlign = 'left');
+            }
+
             const t = translations[lang];
 
             // Navbar
