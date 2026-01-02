@@ -1,406 +1,294 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Infinity Corp S.A.</title>
-    <!-- Fuentes: Orbitron (Futurista), Share Tech Mono (Código), Cairo (Árabe), Noto (Global) -->
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto:wght@300;400;700&family=Share+Tech+Mono&family=Cairo:wght@400;600;700&family=Noto+Sans+Devanagari:wght@400;700&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
-    <!-- Iconos -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
+    <title>Infinity Corp - Programación con Claude: la IA Generativa</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        /* --- SISTEMA DE VARIABLES DE COLOR (THEMING) --- */
-        :root {
-            /* TEMA POR DEFECTO (DARK MODE) */
-            --primary-color: #00d2ff;
-            --secondary-color: #0078ff;
-            --glow-color: rgba(0, 210, 255, 0.5);
-            
-            /* Variables de Fondo (Dark por defecto) */
-            --bg-dark: #0f1114;
-            --bg-panel: #1a1d24;
-            --bg-card: #232730;
-            --bg-input: #13161c;
-            --bg-header: rgba(15, 17, 20, 0.95);
-            
-            /* Textos (BLANCO PURO EN MODO OSCURO) */
-            --text-main: #ffffff;
-            --text-dim: #e0e0e0;
-            --text-header: #ffffff;
-            
-            /* Sombras */
-            --shadow-color: rgba(0,0,0,0.5);
-            --border-color: #333;
-            
-            /* Planeta */
-            --planet-overlay: rgba(0, 0, 0, 0.5);
-        }
-
-        /* --- MODO CLARO (LIGHT MODE) --- */
-        body.light-mode {
-            /* Fondos Claros */
-            --bg-dark: #f0f4f8;       
-            --bg-panel: #ffffff;      
-            --bg-card: #ffffff;       
-            --bg-input: #f8f9fa;      
-            --bg-header: rgba(255, 255, 255, 0.95);
-            
-            /* Textos Oscuros */
-            --text-main: #1a202c;     
-            --text-dim: #4a5568;      
-            --text-header: #1a202c;
-            
-            /* Ajustes Visuales */
-            --shadow-color: rgba(0,0,0,0.1); 
-            --border-color: #e2e8f0;
-            --glow-color: rgba(0, 0, 0, 0.1); 
-            --planet-overlay: rgba(255, 255, 255, 0.2);
-        }
-        
-        /* Ajuste para mantener acentos brillantes en modo claro */
-        body.light-mode .btn, body.light-mode .service-icon {
-             --glow-color: rgba(0, 210, 255, 0.3);
-        }
-
-        /* --- DEFINICIÓN DE TODOS LOS TEMAS DE COLOR --- */
-        body.theme-purple { --primary-color: #bc13fe; --secondary-color: #8a2be2; --glow-color: rgba(188, 19, 254, 0.5); }
-        body.theme-green { --primary-color: #39ff14; --secondary-color: #008f11; --glow-color: rgba(57, 255, 20, 0.5); }
-        body.theme-red { --primary-color: #ff073a; --secondary-color: #990000; --glow-color: rgba(255, 7, 58, 0.5); }
-        body.theme-gold { --primary-color: #ffbf00; --secondary-color: #ff8c00; --glow-color: rgba(255, 191, 0, 0.5); }
-        body.theme-mint { --primary-color: #50fece; --secondary-color: #00c9a7; --glow-color: rgba(80, 254, 206, 0.5); }
-        body.theme-yellow { --primary-color: #fcee0a; --secondary-color: #d5c600; --glow-color: rgba(252, 238, 10, 0.5); }
-        body.theme-blue { --primary-color: #0051ff; --secondary-color: #002a85; --glow-color: rgba(0, 81, 255, 0.5); }
-        body.theme-mars { --primary-color: #ff4500; --secondary-color: #b33200; --glow-color: rgba(255, 69, 0, 0.5); }
-        body.theme-silver { --primary-color: #e0e0e0; --secondary-color: #757575; --glow-color: rgba(224, 224, 224, 0.5); }
-        body.theme-indigo { --primary-color: #651fff; --secondary-color: #311b92; --glow-color: rgba(101, 31, 255, 0.5); }
-        
-        /* --- ESTILOS GENERALES --- */
-        * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
-
         body {
-            font-family: 'Roboto', sans-serif;
-            background-color: var(--bg-dark);
-            color: var(--text-main);
-            overflow-x: hidden;
-            transition: background-color 0.5s ease, color 0.5s ease;
+            font-family: 'Inter', sans-serif;
+            background-color: #020617;
         }
-
-        .reveal-element { opacity: 0; transform: translateY(40px); transition: all 0.8s cubic-bezier(0.165, 0.84, 0.44, 1); }
-        .reveal-element.visible { opacity: 1; transform: translateY(0); }
-        .delay-100 { transition-delay: 0.1s; } .delay-200 { transition-delay: 0.2s; } .delay-300 { transition-delay: 0.3s; } .delay-400 { transition-delay: 0.4s; }
-
-        /* --- INTRO SCREEN --- */
-        #splash-screen {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background-color: #000;
-            display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 9999; overflow: hidden; transition: opacity 0.8s ease-in-out;
+        .glow-effect {
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(6, 182, 212, 0.12) 0%, rgba(6, 182, 212, 0) 70%);
+            border-radius: 50%;
+            pointer-events: none;
         }
-        .intro-grid {
-            position: absolute; width: 200%; height: 200%;
-            background-image: linear-gradient(var(--primary-color) 1px, transparent 1px), linear-gradient(90deg, var(--primary-color) 1px, transparent 1px);
-            background-size: 50px 50px; transform: perspective(500px) rotateX(60deg) translateY(-100px) translateZ(-200px);
-            animation: gridMove 20s linear infinite; opacity: 0.2; pointer-events: none;
+        .bento-card {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(51, 65, 85, 0.5);
+            backdrop-filter: blur(12px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        @keyframes gridMove { 0% { transform: perspective(500px) rotateX(60deg) translateY(0) translateZ(-200px); } 100% { transform: perspective(500px) rotateX(60deg) translateY(50px) translateZ(-200px); } }
-        .scanlines { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 50%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.2)); background-size: 100% 4px; pointer-events: none; z-index: 10; }
-        .vignette { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle, transparent 50%, #000 150%); z-index: 11; pointer-events: none; }
-        .intro-content { position: relative; z-index: 20; text-align: center; display: flex; flex-direction: column; align-items: center; }
-        .infinity-loader { width: 120px; height: 60px; position: relative; margin-bottom: 30px; }
-        .infinity-svg { width: 100%; height: 100%; fill: none; stroke-width: 8; stroke-linecap: round; filter: drop-shadow(0 0 10px var(--primary-color)); }
-        .infinity-bg { stroke: #333; }
-        .infinity-path { stroke: var(--primary-color); stroke-dasharray: 20 100; animation: dash 1.5s linear infinite; }
-        @keyframes dash { 0% { stroke-dashoffset: 0; } 100% { stroke-dashoffset: -240; } }
-        .decode-text { font-family: 'Orbitron', sans-serif; font-size: 3.5rem; font-weight: 900; letter-spacing: 8px; color: white; text-transform: uppercase; text-shadow: 0 0 20px var(--primary-color); }
-        .intro-subtitle { font-family: 'Share Tech Mono', monospace; color: var(--primary-color); font-size: 1rem; margin-top: 10px; letter-spacing: 2px; opacity: 0; animation: fadeInSub 0.5s ease-out 1.5s forwards; }
-        @keyframes fadeInSub { to { opacity: 0.8; } }
-        .loading-bar-container { width: 200px; height: 2px; background: #333; margin-top: 25px; position: relative; overflow: hidden; }
-        .loading-bar-fill { width: 0%; height: 100%; background: var(--primary-color); box-shadow: 0 0 10px var(--primary-color); transition: width 0.1s linear; }
-
-        #main-website { opacity: 0; transition: opacity 1.5s ease-in-out; position: relative; min-height: 100vh; }
-
-        /* --- HEADER & NAV --- */
-        header {
-            background: var(--bg-header); padding: 0 50px; height: 80px;
-            display: flex; justify-content: space-between; align-items: center;
-            box-shadow: 0 2px 10px var(--shadow-color); position: fixed; width: 100%; top: 0; z-index: 1000;
-            backdrop-filter: blur(5px);
-            border-bottom: 1px solid var(--border-color);
+        .bento-card:hover {
+            border-color: rgba(6, 182, 212, 0.5);
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px -20px rgba(6, 182, 212, 0.2);
         }
-
-        .nav-logo { font-family: 'Orbitron', sans-serif; font-weight: 700; font-size: 1.5rem; color: var(--text-header); z-index: 1002; }
-        .nav-logo span { color: var(--primary-color); transition: color 0.3s; }
-        .nav-menu { display: flex; gap: 5px; list-style: none; transition: transform 0.4s ease, opacity 0.4s ease; }
-        .nav-menu a {
-            text-decoration: none; color: var(--text-main); font-weight: bold; padding: 10px 20px;
-            border-radius: 30px; position: relative; z-index: 1; transition: color 0.3s ease; display: block;
+        .laptop-mockup {
+            perspective: 1000px;
         }
-        .nav-menu a::before {
-            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
-            border-radius: 30px; z-index: -1; transform: scale(0.5); opacity: 0; transition: all 0.4s;
+        .laptop-screen {
+            transform: rotateY(-10deg) rotateX(5deg);
+            box-shadow: -20px 20px 50px rgba(0,0,0,0.5), 0 0 20px rgba(6, 182, 212, 0.2);
         }
-        .nav-menu a:hover { color: white; }
-        .nav-menu a:hover::before { transform: scale(1); opacity: 1; box-shadow: 0 5px 15px var(--glow-color); }
-        
-        .nav-settings-btn {
-            color: var(--text-dim) !important; font-size: 1.2rem; margin-left: 10px;
-            display: flex; align-items: center; justify-content: center; width: 45px; padding: 0 !important;
-            height: 45px; border: 1px solid var(--border-color); border-radius: 5px;
-        }
-        .nav-settings-btn:hover { color: var(--primary-color) !important; border-color: var(--primary-color); transform: rotate(90deg); }
-
-        .menu-toggle { display: none; flex-direction: column; justify-content: space-between; width: 30px; height: 21px; cursor: pointer; z-index: 1002; }
-        .menu-toggle .bar { width: 100%; height: 3px; background-color: var(--text-main); border-radius: 3px; transition: 0.3s; }
-
-        @media (max-width: 768px) {
-            header { padding: 0 20px; } .menu-toggle { display: flex; }
-            .nav-menu {
-                position: absolute; top: 0; left: 0; width: 100%; height: 100vh;
-                background-color: var(--bg-panel); flex-direction: column; align-items: center; justify-content: center; gap: 30px; 
-                transform: translateY(-100%); opacity: 0; z-index: 1001; pointer-events: none;
-            }
-            .nav-menu.active { transform: translateY(0); opacity: 1; pointer-events: auto; }
-            .nav-menu a { color: var(--text-main); font-size: 1.5rem; }
-            
-            /* Animación de las barras a X */
-            .menu-toggle.active .bar:nth-child(1) { transform: translateY(9px) rotate(45deg); }
-            .menu-toggle.active .bar:nth-child(2) { opacity: 0; }
-            .menu-toggle.active .bar:nth-child(3) { transform: translateY(-9px) rotate(-45deg); }
-        }
-
-        /* --- HERO --- */
-        .hero {
-            height: 100vh;
-            background: linear-gradient(rgba(15, 17, 20, 0.7), rgba(15, 17, 20, 0.7)), url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?ixlib=rb-1.2.1&auto=format&fit=crop&w=1352&q=80');
-            background-size: cover; background-position: center; background-attachment: fixed;
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-            color: white; text-align: center; padding: 20px;
-        }
-        body.light-mode .hero {
-            background: linear-gradient(rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.6)), url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?ixlib=rb-1.2.1&auto=format&fit=crop&w=1352&q=80');
-            background-size: cover; background-position: center; background-attachment: fixed;
-            color: #1a202c;
-        }
-        body.light-mode .hero h1, body.light-mode .hero p, body.light-mode .section-title { color: #1a202c; text-shadow: none; }
-        body.light-mode .hero-slogan { color: var(--primary-color); text-shadow: none; font-weight: 700; }
-
-        .hero h1 { font-size: 3.5rem; margin-bottom: 20px; font-family: 'Orbitron', sans-serif; text-shadow: 0 0 20px var(--glow-color); line-height: 1.2; }
-        .hero-slogan { font-family: 'Roboto', sans-serif; font-size: 1.3rem; color: var(--primary-color); margin-bottom: 25px; font-weight: 300; letter-spacing: 2px; text-transform: uppercase; position: relative; padding-bottom: 15px; text-shadow: 0 0 10px var(--glow-color); }
-        .hero-slogan::after { content: ''; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 60px; height: 2px; background: linear-gradient(90deg, transparent, var(--primary-color), transparent); }
-        .hero p { font-size: 1.2rem; max-width: 700px; line-height: 1.6; color: #dbe4eb; }
-        
-        .btn { 
-            margin-top: 30px; padding: 15px 40px; background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
-            border: none; color: white; font-weight: bold; font-size: 1rem; cursor: pointer; border-radius: 30px; transition: 0.3s; 
-            box-shadow: 0 0 15px var(--glow-color); display: flex; align-items: center; justify-content: center; gap: 10px;
-            text-decoration: none; animation: pulse-glow 3s infinite;
-        }
-        .btn:hover { transform: scale(1.05); box-shadow: 0 0 25px var(--glow-color); }
-        @keyframes pulse-glow { 0% { box-shadow: 0 0 0 0 var(--glow-color); } 50% { box-shadow: 0 0 20px 0 var(--glow-color); } 100% { box-shadow: 0 0 0 0 var(--glow-color); } }
-
-        /* --- CONTENT SECTIONS --- */
-        .services-section { padding: 100px 50px; background-color: var(--bg-panel); text-align: center; }
-        .dev-section { background-color: var(--bg-dark); padding: 100px 50px; text-align: center; position: relative; }
-        .dev-section::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 1px; background: linear-gradient(90deg, transparent, var(--border-color), transparent); }
-
-        .section-title { font-family: 'Orbitron', sans-serif; font-size: 2.5rem; color: var(--text-main); margin-bottom: 15px; position: relative; display: inline-block; }
-        .section-title::after { content: ''; display: block; width: 60%; height: 3px; background: var(--primary-color); margin: 10px auto 0; box-shadow: 0 0 10px var(--glow-color); }
-        .section-desc { color: var(--text-dim); max-width: 600px; margin: 0 auto 60px; font-size: 1.1rem; }
-
-        .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; max-width: 1200px; margin: 0 auto; }
-        .service-card {
-            background: var(--bg-card); padding: 40px 30px; border-radius: 15px; border: 1px solid var(--border-color);
-            transition: all 0.4s ease; position: relative; overflow: hidden; text-align: left;
-            display: flex; flex-direction: column; justify-content: space-between;
-            box-shadow: 0 5px 15px var(--shadow-color);
-        }
-        .service-card::before {
-            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px;
-            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
-            transform: scaleX(0); transform-origin: left; transition: transform 0.4s ease;
-        }
-        .service-card:hover { transform: translateY(-10px); box-shadow: 0 15px 30px var(--shadow-color); border-color: var(--primary-color); }
-        .service-card:hover::before { transform: scaleX(1); }
-        .service-icon { font-size: 2.5rem; color: var(--primary-color); margin-bottom: 25px; display: inline-block; }
-        .service-card h3 { font-family: 'Orbitron', sans-serif; color: var(--text-main); font-size: 1.4rem; margin-bottom: 15px; }
-        .service-card p { color: var(--text-dim); line-height: 1.6; font-size: 0.95rem; margin-bottom: 20px; }
-        .card-btn {
-            background: none; border: 1px solid var(--primary-color); color: var(--primary-color);
-            padding: 8px 15px; border-radius: 20px; font-size: 0.9rem; font-weight: bold;
-            transition: all 0.3s; cursor: pointer; width: fit-content; margin-top: auto;
-        }
-        .card-btn:hover { background: var(--primary-color); color: #fff; box-shadow: 0 0 10px var(--glow-color); }
-
-        .contact-section {
-            padding: 100px 20px;
-            background: radial-gradient(circle at bottom, var(--bg-panel) 0%, var(--bg-dark) 100%);
-            text-align: center;
-        }
-        .contact-container {
-            max-width: 700px; margin: 0 auto; background: var(--bg-card); padding: 50px;
-            border-radius: 20px; border: 1px solid var(--border-color); box-shadow: 0 20px 50px var(--shadow-color);
-            position: relative; overflow: hidden;
-        }
-        .contact-container::after {
-            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 5px;
-            background: linear-gradient(90deg, var(--primary-color), transparent, var(--secondary-color));
-        }
-        .form-group { margin-bottom: 25px; text-align: left; }
-        .form-group label { display: block; color: var(--primary-color); font-size: 0.9rem; margin-bottom: 8px; font-weight: bold; letter-spacing: 1px; }
-        .form-control {
-            width: 100%; padding: 15px; background: var(--bg-input); border: 1px solid var(--border-color);
-            color: var(--text-main); border-radius: 5px; font-family: 'Roboto', sans-serif; transition: 0.3s;
-        }
-        .form-control:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 10px var(--glow-color); }
-
-        /* --- PLANET ANIMATION --- */
-        .planet-container {
-            width: 112px; height: 112px; margin: 0 auto 30px; border-radius: 50%; position: relative;
-            box-shadow: inset 10px 0 50px var(--planet-overlay), 0 0 30px var(--glow-color), inset 0 0 10px var(--glow-color);
-            background: 
-                repeating-linear-gradient(90deg, transparent 0, transparent 15px, rgba(0, 210, 255, 0.3) 16px),
-                repeating-linear-gradient(0deg, transparent 0, transparent 15px, rgba(0, 210, 255, 0.3) 16px),
-                url('https://raw.githubusercontent.com/yoshiharuyamashita/css-earth/master/images/earth.png');
-            background-size: 100% 100%, 100% 100%, 224px 112px;
-            animation: planet-rotate 25s linear infinite;
-            filter: grayscale(100%) contrast(150%) brightness(1.2) drop-shadow(0 0 5px var(--primary-color));
-            background-blend-mode: overlay; cursor: pointer; transition: transform 0.3s ease;
-        }
-        .planet-container:hover { transform: scale(1.05); }
-        .planet-container::after {
-            content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotateX(70deg);
-            width: 144px; height: 144px; border: 1px solid var(--glow-color); border-radius: 50%;
-            animation: ring-rotate 10s linear infinite reverse; pointer-events: none;
-        }
-        .planet-container::before {
-            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; border-radius: 50%;
-            background: linear-gradient(180deg, transparent 40%, rgba(0, 210, 255, 0.2) 50%, transparent 60%);
-            background-size: 100% 200%; animation: planet-scan 3s linear infinite; z-index: 10; pointer-events: none;
-        }
-        @keyframes planet-rotate { 0% { background-position: center center, center center, 0 0; } 100% { background-position: center center, center center, -224px 0; } }
-        @keyframes ring-rotate { 0% { transform: translate(-50%, -50%) rotateX(75deg) rotate(0deg); } 100% { transform: translate(-50%, -50%) rotateX(75deg) rotate(360deg); } }
-        @keyframes planet-scan { 0% { background-position: 0% -100%; } 100% { background-position: 0% 200%; } }
-
-        /* --- MODALES --- */
-        .modal-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); z-index: 10000;
-            display: none; justify-content: center; align-items: center; opacity: 0; transition: opacity 0.3s ease;
-        }
-        .modal-overlay.active { display: flex; opacity: 1; }
-        .modal-content {
-            background: var(--bg-panel); padding: 40px; border-radius: 15px;
-            border: 1px solid var(--primary-color); box-shadow: 0 0 30px var(--glow-color);
-            max-width: 500px; width: 90%; text-align: center; color: var(--text-main); position: relative;
-            transform: scale(0.9); transition: transform 0.3s; max-height: 90vh; overflow-y: auto;
-        }
-        .modal-overlay.active .modal-content { transform: scale(1); }
-        /* Ajuste específico para modales grandes */
-        #ai-consulting-modal .modal-content, #quantum-security-modal .modal-content,
-        #iot-ecosystems-modal .modal-content, #blockchain-infrastructure-modal .modal-content,
-        #mobile-ecosystems-modal .modal-content, #web-platforms-modal .modal-content,
-        #interactive-reality-modal .modal-content, #global-ops-modal .modal-content,
-        #robotics-modal .modal-content, #courses-modal .modal-content, #academy-modal .modal-content { max-width: 900px; background: var(--bg-dark); }
-        
-        #settings-modal .modal-content { max-width: 400px; text-align: left; border: 1px solid var(--border-color); background: var(--bg-panel); }
-        .settings-option { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid var(--border-color); }
-        .settings-label { color: var(--text-main); font-size: 0.95rem; }
-
-        .close-modal { position: absolute; top: 15px; right: 15px; color: var(--text-dim); cursor: pointer; font-size: 1.5rem; z-index: 100; }
-        .close-modal:hover { color: var(--primary-color); }
-        .modal-input { width: 100%; padding: 12px; margin: 20px 0; background: var(--bg-input); border: 1px solid var(--border-color); color: var(--text-main); border-radius: 5px; font-size: 1rem; }
-        
-        .ai-page-content h3 { font-family: 'Orbitron', sans-serif; color: var(--text-main); font-size: 1.5rem; margin-top: 30px; margin-bottom: 20px; }
-        .data-visualization-panel { background: var(--bg-panel); border: 1px solid var(--border-color); padding: 30px; border-radius: 10px; margin-bottom: 30px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: center; }
-        .data-visualization-panel img { max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 0 15px var(--glow-color); }
-        .data-info h4 { font-family: 'Orbitron', sans-serif; color: var(--primary-color); margin-bottom: 10px; font-size: 1.2rem; }
-        .data-info p { color: var(--text-dim); }
-
-        .chat-fab, .academy-fab { 
-            position: fixed; width: 60px; height: 60px; border-radius: 50%; display: flex; justify-content: center; align-items: center;
-            font-size: 1.5rem; cursor: pointer; box-shadow: 0 5px 20px rgba(0,0,0,0.3); z-index: 5000; color: white;
-            transition: transform 0.3s;
-        }
-        .chat-fab { bottom: 30px; right: 30px; background: linear-gradient(45deg, var(--primary-color), var(--secondary-color)); }
-        .academy-fab { bottom: 30px; left: 30px; background: linear-gradient(45deg, #00ff00, #ccff00); animation: pulse-green 3s infinite; color: #000; }
-        @keyframes pulse-green { 0% { box-shadow: 0 0 0 0 rgba(0, 255, 0, 0.4); } 70% { box-shadow: 0 0 0 15px rgba(0, 255, 0, 0); } 100% { box-shadow: 0 0 0 0 rgba(0, 255, 0, 0); } }
-
-        .chat-window { position: fixed; bottom: 100px; right: 30px; width: 320px; height: 450px; background: var(--bg-panel); border-radius: 15px; box-shadow: 0 10px 30px var(--shadow-color); z-index: 4999; display: flex; flex-direction: column; overflow: hidden; transform: translateY(20px); opacity: 0; pointer-events: none; transition: 0.3s; border: 1px solid var(--border-color); }
-        .chat-window.active { opacity: 1; transform: translateY(0); pointer-events: auto; }
-        .chat-header { background: linear-gradient(90deg, #2b303b, #1a1d24); color: white; padding: 15px; font-family: 'Orbitron'; display: flex; }
-        .chat-body { flex: 1; padding: 15px; overflow-y: auto; background: var(--bg-input); color: var(--text-main); display: flex; flex-direction: column; }
-        .chat-footer { padding: 10px; border-top: 1px solid var(--border-color); display: flex; background: var(--bg-panel); }
-        .chat-input { flex: 1; padding: 8px 15px; border: 1px solid var(--border-color); border-radius: 20px; outline: none; background: var(--bg-input); color: var(--text-main); }
-        .chat-send { background: none; border: none; color: var(--primary-color); margin-left: 10px; cursor: pointer; font-size: 1.2rem; }
-        .message { margin-bottom: 10px; padding: 8px 12px; border-radius: 10px; max-width: 80%; }
-        .message.user { background: var(--primary-color); color: white; align-self: flex-end; margin-left: auto; }
-        .message.bot { background: var(--bg-card); color: var(--text-main); border: 1px solid var(--border-color); align-self: flex-start; }
-
-        .settings-select { background: var(--bg-input); border: 1px solid var(--primary-color); color: var(--primary-color); font-weight: bold; font-family: 'Orbitron'; padding: 5px 10px; border-radius: 5px; cursor: pointer; outline: none; }
-        
-        body.no-animations *, body.no-animations *::before, body.no-animations *::after { transition-duration: 0s !important; animation: none !important; }
-        body.no-animations .reveal-element { opacity: 1 !important; transform: none !important; }
-        body.no-animations .intro-grid, body.no-animations .planet-container::before, body.no-animations .planet-container::after { display: none !important; }
-
     </style>
 </head>
-<body>
+<body class="text-slate-200 antialiased overflow-x-hidden">
 
-    <!-- INTRO -->
-    <div id="splash-screen">
-        <div class="intro-grid"></div>
-        <div class="scanlines"></div>
-        <div class="vignette"></div>
-        <div class="intro-content">
-            <div class="infinity-loader">
-                <svg class="infinity-svg" viewBox="0 0 200 100">
-                    <path class="infinity-bg" d="M50,50 C50,20 100,20 100,50 C100,80 150,80 150,50 C150,20 100,20 100,50 C100,80 50,80 50,50 Z" />
-                    <path class="infinity-path" d="M50,50 C50,20 100,20 100,50 C100,80 150,80 150,50 C150,20 100,20 100,50 C100,80 50,80 50,50 Z" />
-                </svg>
+    <!-- Navegación -->
+    <nav class="fixed w-full z-50 bg-slate-950/80 backdrop-blur-md border-b border-slate-800/50">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex justify-between items-center">
+            <div class="text-2xl font-bold bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent flex items-center gap-2">
+                <i data-lucide="hexagon" class="text-cyan-500 w-8 h-8"></i>
+                Infinity Corp<span class="text-cyan-500">.</span>
             </div>
-            <h1 class="decode-text" id="intro-title" data-value="INFINITY">_</h1>
-            <div class="intro-subtitle">INFINITY CORP S.A. | SYSTEMS ONLINE</div>
-            <div class="loading-bar-container"><div class="loading-bar-fill" id="loading-bar"></div></div>
+            <div class="hidden md:flex gap-8 text-sm font-medium text-slate-400">
+                <a href="#beneficios" class="hover:text-white transition-colors">Beneficios</a>
+                <a href="#temario" class="hover:text-white transition-colors">Temario</a>
+                <a href="#precios" class="hover:text-white transition-colors">Precios</a>
+            </div>
+            <a href="#precios" class="bg-cyan-600 text-white px-6 py-2.5 rounded-full text-sm font-semibold hover:bg-cyan-500 transition-all shadow-lg shadow-cyan-500/20 active:scale-95">
+                Comenzar ahora
+            </a>
         </div>
-    </div>
+    </nav>
 
-    <!-- MAIN -->
-    <main id="main-website">
-        <header>
-            <div class="nav-logo">INFINITY <span>CORP</span></div>
-            <div class="menu-toggle" id="mobile-menu">
-                <span class="bar"></span>
-                <span class="bar"></span>
-                <span class="bar"></span>
+    <!-- Sección Hero -->
+    <header class="relative pt-32 lg:pt-48 pb-32 px-6 overflow-hidden">
+        <div class="glow-effect top-[-200px] left-1/2 -translate-x-1/2 opacity-60"></div>
+        
+        <div class="max-w-7xl mx-auto relative z-10 flex flex-col lg:flex-row items-center gap-16 lg:gap-8">
+            <!-- Columna Texto -->
+            <div class="flex-1 text-center lg:text-left">
+                <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-slate-800 bg-slate-900/50 text-xs font-medium mb-10">
+                    <span class="flex h-2 w-2 rounded-full bg-cyan-500 animate-pulse"></span>
+                    <span class="text-slate-300 uppercase tracking-widest">Edición Profesional • 2026</span>
+                </div>
+                
+                <h1 class="text-5xl md:text-7xl font-extrabold tracking-tighter text-white mb-8 leading-[1.1]">
+                    Programación con Claude:<br/> 
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-emerald-500">La IA Generativa</span>
+                </h1>
+                
+                <p class="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto lg:mx-0 mb-12 leading-relaxed font-light">
+                    Redefine tu flujo de trabajo con <strong>Infinity Corp</strong>. Domina herramientas esenciales como <strong>HTML, CSS y JavaScript</strong> para orquestar proyectos de frontend profesionales, asistidos por la inteligencia artificial más avanzada del mercado.
+                </p>
+
+                <div class="flex flex-col sm:flex-row justify-center lg:justify-start gap-4 items-center">
+                    <a href="https://go.hotmart.com/Y103615423R?ap=52f2" target="_blank" class="w-full sm:w-auto bg-white text-black px-10 py-5 rounded-2xl font-bold text-lg shadow-xl hover:bg-slate-200 transition-all hover:-translate-y-1">
+                        Inscribirme por $39
+                    </a>
+                    <a href="#temario" class="w-full sm:w-auto bg-slate-900 border border-slate-800 hover:bg-slate-800 text-white px-10 py-5 rounded-2xl font-bold text-lg transition-all">
+                        Explorar Plan Maestro
+                    </a>
+                </div>
             </div>
-            <nav class="nav-menu">
-                <a href="#" id="nav-home">Inicio</a>
-                <a href="#services" id="nav-services">Servicios</a>
-                <a href="#development" id="nav-dev">Desarrollo</a>
-                <a href="#" onclick="openAcademyModal(); return false;" id="nav-academy">Academy</a>
-                <a href="#contact" id="nav-contact">Contacto</a>
-                <a href="#" class="nav-settings-btn" onclick="openSettingsModal(); return false;"><i class="fas fa-cog"></i></a>
-            </nav>
-        </header>
 
-        <section class="hero">
-            <h1 class="reveal-element" id="hero-title">Liderazgo Tecnológico Global</h1>
-            <h2 class="hero-slogan reveal-element delay-100" id="hero-slogan">"Desplegamos arquitecturas digitales que escalan tu negocio."</h2>
-            <p class="reveal-element delay-200" id="hero-desc">En Infinity Corp S.A. catalizamos la evolución empresarial integrando inteligencia artificial avanzada y estrategias disruptivas.</p>
-            <p class="reveal-element delay-300" style="font-size: 0.9rem; margin-top: 10px; opacity: 0.8;" id="hero-sub">Explore nuestra prospectiva estratégica:</p>
-            <button class="btn reveal-element delay-400" onclick="openProjectModal()"><i class="fas fa-chart-line"></i> <span id="btn-text">Generar Visión Corporativa</span></button>
-        </section>
-
-        <section id="services" class="services-section">
-            <h2 class="section-title reveal-element" id="serv-title">Soluciones Empresariales</h2>
-            <p class="section-desc reveal-element delay-100" id="serv-desc">Infraestructura tecnológica diseñada para la escalabilidad y seguridad del futuro.</p>
-            <div class="services-grid">
-                <div class="service-card reveal-element delay-100">
-                    <div><i class="fas fa-brain service-icon"></i><h3 id="c1-title">Consultoría en IA</h3><p id="c1-desc">Implementación de modelos predictivos y automatización cognitiva.</p></div>
-                    <button class="card-btn" onclick="openAIConsultingModal()"><i class="fas fa-arrow-right"></i> <span id="c1-btn">Explorar Tecnología</span></button>
+            <!-- Columna Imagen / Laptop -->
+            <div class="flex-1 w-full max-w-2xl laptop-mockup group">
+                <div class="relative laptop-screen transition-transform duration-700 group-hover:rotate-y-0 group-hover:rotate-x-0">
+                    <!-- Marco de Laptop -->
+                    <div class="bg-slate-800 p-2 rounded-2xl border border-slate-700 relative overflow-hidden">
+                        <div class="bg-slate-950 rounded-lg overflow-hidden border border-slate-800 aspect-video relative">
+                            <!-- Imagen de Código Realista -->
+                            <img src="https://images.unsplash.com/photo-1542831371-29b0f74f9713?auto=format&fit=crop&q=80&w=1000" 
+                                 alt="Pantalla de código" 
+                                 class="w-full h-full object-cover opacity-80"
+                                 onerror="this.src='https://via.placeholder.com/1000x600/020617/06B6D4?text=Code+Interface'">
+                            
+                            <!-- Overlay de Resplandor Turquesa -->
+                            <div class="absolute inset-0 bg-gradient-to-tr from-cyan-500/10 to-transparent pointer-events-none"></div>
+                            
+                            <!-- Elementos de Interfaz Ficticios -->
+                            <div class="absolute top-4 left-4 flex gap-1.5">
+                                <div class="w-2.5 h-2.5 rounded-full bg-red-500/50"></div>
+                                <div class="w-2.5 h-2.5 rounded-full bg-yellow-500/50"></div>
+                                <div class="w-2.5 h-2.5 rounded-full bg-green-500/50"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Reflejo en la base -->
+                    <div class="h-4 w-[90%] mx-auto bg-slate-800 rounded-b-xl border-x border-b border-slate-700"></div>
                 </div>
-                <div class="service-card reveal-element delay-200">
-                    <div><i class="fas fa-shield-alt service-icon"></i><h3 id="c2-title">Ciberseguridad Cuántica</h3><p id="c2-desc">Protocolos de defensa avanzados y encriptación resistente.</p></div>
-                    <button class="card-btn" onclick="openQuantumSecurityModal()"><i class="fas fa-fingerprint"></i> <span id="c2-btn">Explorar Protocolo</span></button>
+                
+                <!-- Sombra proyectada -->
+                <div class="mt-8 h-4 w-full bg-cyan-500/5 blur-2xl rounded-full"></div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Bento Grid (Lo que aprenderás) -->
+    <section id="beneficios" class="max-w-7xl mx-auto px-6 py-24 border-t border-slate-900">
+        <div class="mb-16 text-center">
+            <h2 class="text-3xl md:text-5xl font-bold text-white mb-4 tracking-tight">Ingeniería y Arquitectura Frontend Profesional</h2>
+            <p class="text-slate-400">Metodologías de alto rendimiento para el desarrollador moderno.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-6 gap-6">
+            <!-- Card 1: HTML -->
+            <div class="md:col-span-3 bento-card p-10 rounded-[2.5rem]">
+                <div class="mb-4 bg-cyan-500/10 w-12 h-12 rounded-xl flex items-center justify-center text-cyan-500">
+                    <i data-lucide="layout"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-white mb-4">Estructura & Semántica</h3>
+                <p class="text-slate-400">Implementa arquitecturas HTML5 robustas. Claude te guiará en la creación de sitios accesibles y optimizados para los estándares de la industria.</p>
+            </div>
+            <!-- Card 2: CSS -->
+            <div class="md:col-span-3 bento-card p-10 rounded-[2.5rem]">
+                <div class="mb-4 bg-emerald-500/10 w-12 h-12 rounded-xl flex items-center justify-center text-emerald-400">
+                    <i data-lucide="layers"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-white mb-4">Sistemas de Diseño</h3>
+                <p class="text-slate-400">Domina CSS moderno y Tailwind. Construye interfaces escalables y adaptables que cumplen con los requisitos de diseño más exigentes.</p>
+            </div>
+            <!-- Card 3: JS -->
+            <div class="md:col-span-6 bento-card p-10 rounded-[2.5rem] bg-gradient-to-r from-slate-900 to-cyan-900/10">
+                <div class="flex flex-col md:flex-row gap-8 items-center">
+                    <div class="flex-1">
+                        <div class="mb-4 bg-cyan-500/10 w-12 h-12 rounded-xl flex items-center justify-center text-cyan-500">
+                            <i data-lucide="shield-check"></i>
+                        </div>
+                        <h3 class="text-3xl font-bold text-white mb-4">Ingeniería con JavaScript</h3>
+                        <p class="text-slate-400 text-lg">Eleva tu lógica de programación. Desarrolla aplicaciones dinámicas y seguras utilizando patrones de diseño modernos y el poder de depuración de la IA.</p>
+                    </div>
+                    <div class="flex-shrink-0 bg-slate-800/50 p-6 rounded-2xl border border-slate-700 font-mono">
+                        <code class="text-cyan-400 text-sm">class InfinityApp {<br>&nbsp;&nbsp;constructor() {<br>&nbsp;&nbsp;&nbsp;&nbsp;this.status = 'Ready';<br>&nbsp;&nbsp;}<br>}</code>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contenido del Curso -->
+    <section id="temario" class="bg-slate-900/30 py-24">
+        <div class="max-w-4xl mx-auto px-6">
+            <h2 class="text-4xl font-bold text-white mb-16 text-center">Plan de Estudios</h2>
+            
+            <div class="space-y-4">
+                <!-- Módulo 1 -->
+                <div class="p-8 border border-slate-800 rounded-2xl bg-slate-950 hover:border-cyan-500/50 transition-all cursor-default">
+                    <div class="flex items-center gap-4 mb-2">
+                        <span class="bg-cyan-500/10 text-cyan-500 text-[10px] px-2 py-0.5 rounded font-bold uppercase tracking-widest">Módulo 01</span>
+                    </div>
+                    <h4 class="text-xl font-bold text-white mt-1 mb-3">Fundamentos de HTML & Semántica Profesional</h4>
+                    <ul class="text-slate-400 space-y-2 text-sm">
+                        <li class="flex items-center gap-2"><i data-lucide="chevron-right" class="w-4 h-4 text-cyan-500"></i> Dominio de etiquetas HTML5 y SEO-ready con Claude</li>
+                        <li class="flex items-center gap-2"><i data-lucide="chevron-right" class="w-4 h-4 text-cyan-500"></i> Accesibilidad web y estándares internacionales W3C</li>
+                    </ul>
                 </div>
 
+                <!-- Módulo 2 -->
+                <div class="p-8 border border-slate-800 rounded-2xl bg-slate-950 hover:border-cyan-500/50 transition-all cursor-default">
+                    <div class="flex items-center gap-4 mb-2">
+                        <span class="bg-cyan-500/10 text-cyan-500 text-[10px] px-2 py-0.5 rounded font-bold uppercase tracking-widest">Módulo 02</span>
+                    </div>
+                    <h4 class="text-xl font-bold text-white mt-1 mb-3">Arquitectura Visual & Responsividad</h4>
+                    <ul class="text-slate-400 space-y-2 text-sm">
+                        <li class="flex items-center gap-2"><i data-lucide="chevron-right" class="w-4 h-4 text-cyan-500"></i> CSS Grid y Flexbox avanzado</li>
+                        <li class="flex items-center gap-2"><i data-lucide="chevron-right" class="w-4 h-4 text-cyan-500"></i> Frameworks de utilidad: Tailwind CSS Pro</li>
+                    </ul>
+                </div>
+
+                <!-- Módulo 3 -->
+                <div class="p-8 border border-slate-800 rounded-2xl bg-slate-950 hover:border-cyan-500/50 transition-all cursor-default">
+                    <div class="flex items-center gap-4 mb-2">
+                        <span class="bg-cyan-500/10 text-cyan-500 text-[10px] px-2 py-0.5 rounded font-bold uppercase tracking-widest">Módulo 03</span>
+                    </div>
+                    <h4 class="text-xl font-bold text-white mt-1 mb-3">Lógica Frontend & Deployment</h4>
+                    <ul class="text-slate-400 space-y-2 text-sm">
+                        <li class="flex items-center gap-2"><i data-lucide="chevron-right" class="w-4 h-4 text-cyan-500"></i> JavaScript moderno para apps dinámicas</li>
+                        <li class="flex items-center gap-2"><i data-lucide="chevron-right" class="w-4 h-4 text-cyan-500"></i> Integración continua y flujo Claude-to-Prod</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Precio -->
+    <section id="precios" class="py-32 relative">
+        <div class="glow-effect bottom-[-100px] right-0 opacity-40"></div>
+        <div class="max-w-4xl mx-auto px-6 text-center">
+            <h2 class="text-4xl md:text-5xl font-bold text-white mb-6">Inversión Profesional</h2>
+            <p class="text-slate-400 mb-16">Acceso corporativo ilimitado a la plataforma de Infinity Corp.</p>
+
+            <div class="bg-gradient-to-b from-slate-900 to-slate-950 border border-cyan-500/30 p-12 rounded-[3.5rem] relative overflow-hidden shadow-2xl shadow-cyan-500/5">
+                <div class="absolute top-0 right-0 bg-cyan-600 text-white px-8 py-2 rounded-bl-3xl text-sm font-bold uppercase tracking-widest">
+                    Tarifa Preferencial
+                </div>
+                
+                <div class="flex flex-col items-center">
+                    <span class="text-slate-500 line-through text-2xl mb-2">$89 USD</span>
+                    <div class="flex items-baseline gap-2 mb-8">
+                        <span class="text-8xl font-black text-white">$39</span>
+                        <span class="text-slate-400 font-medium">USD</span>
+                    </div>
+
+                    <ul class="text-left space-y-4 mb-12 max-w-sm">
+                        <li class="flex items-center gap-3 text-slate-300">
+                            <i data-lucide="check-circle" class="text-cyan-500 w-5 h-5"></i>
+                            Certificación Infinity Corp
+                        </li>
+                        <li class="flex items-center gap-3 text-slate-300">
+                            <i data-lucide="check-circle" class="text-cyan-500 w-5 h-5"></i>
+                            Workflows avanzados con Claude
+                        </li>
+                        <li class="flex items-center gap-3 text-slate-300">
+                            <i data-lucide="check-circle" class="text-cyan-500 w-5 h-5"></i>
+                            Librería de componentes corporativos
+                        </li>
+                        <li class="flex items-center gap-3 text-slate-300">
+                            <i data-lucide="check-circle" class="text-cyan-500 w-5 h-5"></i>
+                            Soporte prioritario 24/7
+                        </li>
+                    </ul>
+
+                    <!-- Botón conectado a Hotmart -->
+                    <a href="https://go.hotmart.com/Y103615423R?ap=52f2" target="_blank" class="block w-full bg-cyan-600 text-white py-6 rounded-3xl font-black text-xl hover:bg-cyan-500 transition-all shadow-xl shadow-cyan-600/20 active:scale-95 text-center">
+                        ADQUIRIR ACCESO
+                    </a>
+                    <p class="mt-6 text-slate-500 text-sm flex items-center gap-2 justify-center">
+                        <i data-lucide="shield-check" class="w-4 h-4"></i> Facturación disponible y garantía de satisfacción
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-16 border-t border-slate-900 px-6">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-10">
+            <div>
+                <div class="text-2xl font-bold text-white mb-2 flex items-center gap-2">
+                    <i data-lucide="hexagon" class="text-cyan-500 w-6 h-6"></i>
+                    Infinity Corp<span class="text-cyan-500">.</span>
+                </div>
+                <p class="text-slate-500 text-sm max-w-xs text-center md:text-left font-light">
+                    Sistemas de aprendizaje de alto rendimiento para ingenieros de software.
+                </p>
+            </div>
+            
+            <div class="flex gap-8 text-slate-400 text-sm">
+                <a href="#" class="hover:text-cyan-400 transition-colors">Legal</a>
+                <a href="#" class="hover:text-cyan-400 transition-colors">Privacidad</a>
+                <a href="#" class="hover:text-cyan-400 transition-colors">Contacto</a>
+            </div>
+            
+            <p class="text-slate-600 text-xs">© 2026 Infinity Corp. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Inicializar iconos de Lucide
+        lucide.createIcons();
+    </script>
+</body>
+</html>
