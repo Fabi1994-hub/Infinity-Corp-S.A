@@ -1,277 +1,639 @@
 <!DOCTYPE html>
-<html lang="es" class="scroll-smooth">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Infinity Corp - Aprende Desarrollo Web y Genera Ingresos</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <title>ICE STORE</title>
+    <!-- Fuentes Premium: Playfair Display (Titular Serio) + Inter (Texto Moderno) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <!-- Iconos Phosphor (Más elegantes) -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <style>
-        body {
+        /* --- DISEÑO PREMIUM CORPORATE --- */
+        :root {
+            /* Paleta de Colores "Autoridad" */
+            --royal-blue: #0f172a; /* Fondo oscuro premium */
+            --accent-gold: #c29d59; /* Dorado elegante, no amarillo */
+            --text-dark: #1e293b;
+            --text-light: #f8fafc;
+            --text-muted: #64748b;
+            --bg-light: #f1f5f9;
+            --white: #ffffff;
+            
+            /* Efectos */
+            --shadow-card: 0 10px 30px -10px rgba(0,0,0,0.1);
+            --shadow-hover: 0 20px 40px -10px rgba(0,0,0,0.2);
+            --gradient-hero: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
             font-family: 'Inter', sans-serif;
-            background-color: #020617;
         }
-        .glow-effect {
+
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Playfair Display', serif; /* Toque editorial/serio */
+        }
+
+        a { text-decoration: none; transition: all 0.3s ease; }
+        ul { list-style: none; }
+
+        /* --- HEADER --- */
+        header {
+            background-color: var(--white);
+            padding: 15px 5%;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* LOGO NUEVO: 3D PRISM DIAMOND */
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800; /* Más grueso */
+            color: var(--royal-blue);
+            display: flex;
+            align-items: center;
+            gap: 18px; /* Más espacio para el efecto 3D */
+            letter-spacing: -0.5px;
+            /* Sutil sombra de texto para efecto relieve */
+            text-shadow: 1px 1px 0px rgba(0,0,0,0.1);
+        }
+
+        .logo-mark {
+            width: 44px;
+            height: 44px;
+            /* Degradado tipo gema: Luz arriba izq, Oscuridad abajo der */
+            background: radial-gradient(circle at 30% 30%, #334155, #0f172a);
+            border-radius: 6px;
+            transform: rotate(45deg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            
+            /* Borde superior brillante (Luz) */
+            border-top: 1px solid rgba(255, 255, 255, 0.4);
+            border-left: 1px solid rgba(255, 255, 255, 0.4);
+            
+            /* EFECTO 3D EXTRUIDO (Capas de oro sólido) */
+            box-shadow: 
+                1px 1px 0px #9f7d3d,
+                2px 2px 0px #9f7d3d,
+                3px 3px 0px #9f7d3d,
+                4px 4px 0px #9f7d3d,
+                5px 5px 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        .logo:hover .logo-mark {
+            /* Al pasar el mouse, se "levanta" más */
+            transform: rotate(45deg) translate(-2px, -2px);
+            box-shadow: 
+                1px 1px 0px #c29d59,
+                2px 2px 0px #c29d59,
+                3px 3px 0px #c29d59,
+                4px 4px 0px #c29d59,
+                5px 5px 0px #c29d59,
+                6px 6px 0px #c29d59,
+                8px 8px 15px rgba(0, 0, 0, 0.3);
+            background: radial-gradient(circle at 30% 30%, #475569, #1e293b);
+        }
+
+        .logo-mark i {
+            /* Contrarrotar icono y dar profundidad interna */
+            transform: rotate(-45deg);
+            color: var(--accent-gold);
+            font-size: 24px;
+            filter: drop-shadow(1px 1px 0px rgba(0,0,0,0.5));
+        }
+
+        nav ul { display: flex; gap: 30px; }
+        
+        nav a {
+            color: var(--text-dark);
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+
+        nav a:hover { color: var(--accent-gold); }
+
+        .btn-nav {
+            background-color: var(--royal-blue);
+            color: var(--white);
+            padding: 10px 25px;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        
+        .btn-nav:hover { background-color: #334155; }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            background: var(--gradient-hero);
+            color: var(--white);
+            /* EDITADO: Reduje el padding-bottom de 160px a 80px para balancear la eliminación del overlap */
+            padding: 120px 20px 80px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Patrón de fondo sutil */
+        .hero::before {
+            content: '';
             position: absolute;
-            width: 600px;
-            height: 600px;
-            background: radial-gradient(circle, rgba(6, 182, 212, 0.12) 0%, rgba(6, 182, 212, 0) 70%);
-            border-radius: 50%;
-            pointer-events: none;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: radial-gradient(rgba(255,255,255,0.1) 1px, transparent 1px);
+            background-size: 30px 30px;
+            opacity: 0.3;
         }
-        .bento-card {
-            background: rgba(15, 23, 42, 0.6);
-            border: 1px solid rgba(51, 65, 85, 0.5);
-            backdrop-filter: blur(12px);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            margin: 0 auto;
         }
-        .bento-card:hover {
-            border-color: rgba(6, 182, 212, 0.5);
-            transform: translateY(-4px);
-            box-shadow: 0 20px 40px -20px rgba(6, 182, 212, 0.2);
+
+        .badge-hero {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            padding: 8px 16px;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--accent-gold);
+            display: inline-block;
+            margin-bottom: 25px;
         }
-        .laptop-mockup {
-            perspective: 1000px;
+
+        .hero h1 {
+            font-size: 3.5rem;
+            line-height: 1.2;
+            margin-bottom: 25px;
         }
-        .laptop-screen {
-            transform: rotateY(-10deg) rotateX(5deg);
-            box-shadow: -20px 20px 50px rgba(0,0,0,0.5), 0 0 20px rgba(6, 182, 212, 0.2);
+
+        .hero p {
+            font-size: 1.2rem;
+            color: #cbd5e1;
+            margin-bottom: 40px;
+            font-weight: 300;
+        }
+
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 50px;
+            margin-top: 50px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 30px;
+        }
+
+        .stat-item h4 { font-size: 1.8rem; color: var(--white); margin-bottom: 5px; }
+        .stat-item p { font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+
+        /* --- SECCIÓN PRINCIPAL (Overlapping Cards) --- */
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            /* EDITADO: Eliminé margin-top negativo y ajusté padding para que el texto quede en lo blanco */
+            padding: 60px 20px 100px;
+            margin-top: 0; 
+            position: relative;
+            z-index: 10;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 50px;
+            color: var(--text-dark);
+        }
+        
+        .section-title h2 { font-size: 2.2rem; margin-bottom: 10px; }
+        .section-title p { color: var(--text-muted); }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+        }
+
+        /* --- TARJETAS PREMIUM --- */
+        .card {
+            background: var(--white);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: var(--shadow-card);
+            transition: transform 0.3s, box-shadow 0.3s;
+            display: flex;
+            flex-direction: column;
+            border-top: 4px solid transparent;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .card.featured { border-top-color: var(--accent-gold); }
+        .card.standard { border-top-color: var(--royal-blue); }
+
+        .card-img {
+            height: 200px;
+            background-color: #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            font-size: 3rem;
+            position: relative;
+        }
+
+        .card-img::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(to top, rgba(0,0,0,0.1), transparent);
+        }
+
+        .card-body {
+            padding: 30px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .category {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--accent-gold);
+            margin-bottom: 10px;
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--royal-blue);
+            font-weight: 700;
+        }
+
+        .card-desc {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-bottom: 25px;
+            flex-grow: 1;
+        }
+
+        .price-tag {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--royal-blue);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: baseline;
+            gap: 10px;
+        }
+
+        .price-tag span {
+            font-size: 1rem;
+            color: var(--text-muted);
+            text-decoration: line-through;
+            font-weight: 400;
+        }
+
+        .features-list {
+            margin-bottom: 30px;
+            border-top: 1px solid #f1f5f9;
+            padding-top: 20px;
+        }
+
+        .feature {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+            font-size: 0.9rem;
+            color: var(--text-dark);
+        }
+
+        .feature i { color: var(--accent-gold); }
+
+        .btn-card {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            text-align: center;
+            background: var(--royal-blue);
+            color: var(--white);
+            font-weight: 600;
+            border-radius: 4px;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-card:hover { background: #334155; }
+        
+        .btn-card.outline {
+            background: transparent;
+            border: 1px solid var(--royal-blue);
+            color: var(--royal-blue);
+        }
+        
+        .btn-card.outline:hover { background: var(--bg-light); }
+
+        /* --- TRUST SECTION --- */
+        .trust-section {
+            background-color: var(--white);
+            padding: 80px 20px;
+            text-align: center;
+        }
+
+        .trust-grid {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 40px;
+            margin-top: 40px;
+        }
+
+        .trust-item i {
+            font-size: 2.5rem;
+            color: var(--royal-blue);
+            margin-bottom: 20px;
+        }
+
+        .trust-item h3 { font-size: 1.2rem; margin-bottom: 10px; font-family: 'Inter', sans-serif; font-weight: 600; }
+        .trust-item p { color: var(--text-muted); font-size: 0.9rem; }
+
+        /* --- FOOTER --- */
+        footer {
+            background-color: var(--royal-blue);
+            color: var(--white);
+            padding: 80px 20px 40px;
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 50px;
+            padding-bottom: 50px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .footer-brand p {
+            color: #94a3b8;
+            margin-top: 20px;
+            max-width: 300px;
+        }
+
+        .footer-col h4 {
+            font-family: 'Inter', sans-serif;
+            margin-bottom: 25px;
+            font-size: 1.1rem;
+        }
+
+        .footer-col ul li { margin-bottom: 12px; }
+        .footer-col a { color: #cbd5e1; font-size: 0.9rem; }
+        .footer-col a:hover { color: var(--accent-gold); }
+
+        .copyright {
+            text-align: center;
+            padding-top: 40px;
+            color: #64748b;
+            font-size: 0.85rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.5rem; }
+            .hero-stats { flex-direction: column; gap: 20px; }
+            .grid { grid-template-columns: 1fr; }
+            .trust-grid { grid-template-columns: 1fr; }
+            .nav-container nav { display: none; }
         }
     </style>
 </head>
-<body class="text-slate-200 antialiased overflow-x-hidden">
+<body>
 
-    <!-- Navegación -->
-    <nav class="fixed w-full z-50 bg-slate-950/80 backdrop-blur-md border-b border-slate-800/50">
-        <div class="max-w-7xl mx-auto px-6 h-20 flex justify-between items-center">
-            <div class="text-2xl font-bold bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent flex items-center gap-2">
-                <i data-lucide="hexagon" class="text-cyan-500 w-8 h-8"></i>
-                Infinity Corp<span class="text-cyan-500">.</span>
-            </div>
-            <div class="hidden md:flex gap-8 text-sm font-medium text-slate-400">
-                <a href="#beneficios" class="hover:text-white transition-colors">Beneficios</a>
-                <a href="#temario" class="hover:text-white transition-colors">Temario</a>
-                <a href="#precios" class="hover:text-white transition-colors">Precios</a>
-            </div>
-            <a href="#precios" class="bg-cyan-600 text-white px-6 py-2.5 rounded-full text-sm font-semibold hover:bg-cyan-500 transition-all shadow-lg shadow-cyan-500/20 active:scale-95">
-                Comenzar ahora
-            </a>
-        </div>
-    </nav>
-
-    <!-- Sección Hero -->
-    <header class="relative pt-32 lg:pt-48 pb-32 px-6 overflow-hidden">
-        <div class="glow-effect top-[-200px] left-1/2 -translate-x-1/2 opacity-60"></div>
-        
-        <div class="max-w-7xl mx-auto relative z-10 flex flex-col lg:flex-row items-center gap-16 lg:gap-8">
-            <!-- Columna Texto -->
-            <div class="flex-1 text-center lg:text-left">
-                <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-slate-800 bg-slate-900/50 text-xs font-medium mb-10">
-                    <span class="flex h-2 w-2 rounded-full bg-cyan-500 animate-pulse"></span>
-                    <span class="text-slate-300 uppercase tracking-widest">Modelo de Negocio 2026</span>
+    <!-- HEADER -->
+    <header>
+        <div class="nav-container">
+            <div class="logo">
+                <div class="logo-mark">
+                    <i class="ph-fill ph-infinity"></i>
                 </div>
-                
-                <h1 class="text-5xl md:text-6xl font-extrabold tracking-tighter text-white mb-8 leading-[1.1]">
-                    Aprende Desarrollo Web y <br/> 
-                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-emerald-500 font-black">Genera Ingresos Vendiendo Páginas</span>
-                </h1>
-                
-                <p class="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto lg:mx-0 mb-12 leading-relaxed font-light">
-                    Domina <strong>HTML, CSS y JavaScript</strong> con la ayuda de Claude AI. No solo aprenderás a programar desde cero, sino que te enseñaremos a orquestar proyectos de frontend profesionales para monetizar tus habilidades en el mercado actual.
-                </p>
-
-                <div class="flex flex-col sm:flex-row justify-center lg:justify-start gap-4 items-center">
-                    <a href="https://go.hotmart.com/J103966161R?dp=1" target="_blank" class="w-full sm:w-auto bg-white text-black px-10 py-5 rounded-2xl font-bold text-lg shadow-xl hover:bg-slate-200 transition-all hover:-translate-y-1">
-                        Inscribirme por $29
-                    </a>
-                    <a href="#temario" class="w-full sm:w-auto bg-slate-900 border border-slate-800 hover:bg-slate-800 text-white px-10 py-5 rounded-2xl font-bold text-lg transition-all">
-                        Ver Plan Estratégico
-                    </a>
-                </div>
+                ICE STORE
             </div>
-
-            <!-- Columna Imagen / Laptop -->
-            <div class="flex-1 w-full max-w-2xl laptop-mockup group">
-                <div class="relative laptop-screen transition-transform duration-700 group-hover:rotate-y-0 group-hover:rotate-x-0">
-                    <div class="bg-slate-800 p-2 rounded-2xl border border-slate-700 relative overflow-hidden">
-                        <div class="bg-slate-950 rounded-lg overflow-hidden border border-slate-800 aspect-video relative">
-                            <img src="https://images.unsplash.com/photo-1542831371-29b0f74f9713?auto=format&fit=crop&q=80&w=1000" 
-                                 alt="Interfaz de desarrollo web" 
-                                 class="w-full h-full object-cover opacity-80"
-                                 onerror="this.src='https://via.placeholder.com/1000x600/020617/06B6D4?text=Interface+Maestra'">
-                            <div class="absolute inset-0 bg-gradient-to-tr from-cyan-500/10 to-transparent pointer-events-none"></div>
-                            <div class="absolute top-4 left-4 flex gap-1.5">
-                                <div class="w-2.5 h-2.5 rounded-full bg-red-500/50"></div>
-                                <div class="w-2.5 h-2.5 rounded-full bg-yellow-500/50"></div>
-                                <div class="w-2.5 h-2.5 rounded-full bg-green-500/50"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="h-4 w-[90%] mx-auto bg-slate-800 rounded-b-xl border-x border-b border-slate-700"></div>
-                </div>
-                <div class="mt-8 h-4 w-full bg-cyan-500/5 blur-2xl rounded-full"></div>
-            </div>
+            <nav>
+                <ul>
+                    <li><a href="#">Inicio</a></li>
+                    <li><a href="#catalogo">Formación</a></li>
+                    <li><a href="#metodologia">Metodología</a></li>
+                    <li><a href="#">Contacto</a></li>
+                </ul>
+            </nav>
+            <a href="#" class="btn-nav">Portal Alumnos</a>
         </div>
     </header>
 
-    <!-- Bento Grid (Lo que aprenderás) -->
-    <section id="beneficios" class="max-w-7xl mx-auto px-6 py-24 border-t border-slate-900">
-        <div class="mb-16 text-center">
-            <h2 class="text-3xl md:text-5xl font-bold text-white mb-4 tracking-tight">Ingeniería y Arquitectura Frontend Profesional</h2>
-            <p class="text-slate-400">Metodologías de alto rendimiento para el desarrollador moderno que busca rentabilidad.</p>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-6 gap-6">
-            <div class="md:col-span-3 bento-card p-10 rounded-[2.5rem]">
-                <div class="mb-4 bg-cyan-500/10 w-12 h-12 rounded-xl flex items-center justify-center text-cyan-500">
-                    <i data-lucide="layout"></i>
+    <!-- HERO SECTION -->
+    <section class="hero">
+        <div class="hero-content">
+            <span class="badge-hero">Educación Ejecutiva Digital</span>
+            <h1>Excelencia en Tecnología y<br>Estrategia de Negocios</h1>
+            <p>Una plataforma de formación diseñada para líderes, desarrolladores y emprendedores que buscan resultados tangibles en la economía de la Inteligencia Artificial.</p>
+            
+            <div class="hero-stats">
+                <div class="stat-item">
+                    <h4>+1</h4>
+                    <p>Alumnos Activos</p>
                 </div>
-                <h3 class="text-2xl font-bold text-white mb-4">Estructura & Semántica</h3>
-                <p class="text-slate-400">Implementa arquitecturas HTML5 robustas. Claude te guiará en la creación de sitios accesibles y optimizados para los estándares de la industria.</p>
-            </div>
-            <div class="md:col-span-3 bento-card p-10 rounded-[2.5rem]">
-                <div class="mb-4 bg-emerald-500/10 w-12 h-12 rounded-xl flex items-center justify-center text-emerald-400">
-                    <i data-lucide="layers"></i>
+                <div class="stat-item">
+                    <h4>100%</h4>
+                    <p>Contenido Actualizado</p>
                 </div>
-                <h3 class="text-2xl font-bold text-white mb-4">Sistemas de Diseño</h3>
-                <p class="text-slate-400">Domina CSS moderno y Tailwind. Construye interfaces escalables y adaptables que cumplen con los requisitos de diseño más exigentes.</p>
-            </div>
-            <div class="md:col-span-6 bento-card p-10 rounded-[2.5rem] bg-gradient-to-r from-slate-900 to-cyan-900/10">
-                <div class="flex flex-col md:flex-row gap-8 items-center">
-                    <div class="flex-1">
-                        <div class="mb-4 bg-cyan-500/10 w-12 h-12 rounded-xl flex items-center justify-center text-cyan-500">
-                            <i data-lucide="shield-check"></i>
-                        </div>
-                        <h3 class="text-3xl font-bold text-white mb-4">Ingeniería con JavaScript</h3>
-                        <p class="text-slate-400 text-lg">Eleva tu lógica de programación. Desarrolla aplicaciones dinámicas y seguras utilizando patrones de diseño modernos y el poder de depuración de la IA.</p>
-                    </div>
-                    <div class="flex-shrink-0 bg-slate-800/50 p-6 rounded-2xl border border-slate-700 font-mono">
-                        <code class="text-cyan-400 text-sm">class InfinityApp {<br>&nbsp;&nbsp;constructor() {<br>&nbsp;&nbsp;&nbsp;&nbsp;this.status = 'Ready';<br>&nbsp;&nbsp;}<br>}</code>
-                    </div>
+                <div class="stat-item">
+                    <h4>24/7</h4>
+                    <p>Acceso Global</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Contenido del Curso -->
-    <section id="temario" class="bg-slate-900/30 py-24">
-        <div class="max-w-4xl mx-auto px-6">
-            <h2 class="text-4xl font-bold text-white mb-16 text-center">Plan de Estudios Maestro</h2>
+    <!-- CATÁLOGO (Cards superpuestas) -->
+    <section id="catalogo" class="main-container">
+        
+        <div class="section-title" style="margin-bottom: 40px; text-align: left; padding-top: 20px;">
+            <p style="text-transform: uppercase; letter-spacing: 1px; font-size: 0.8rem; margin-bottom: 10px; color: var(--accent-gold); font-weight: bold;">Programas Disponibles</p>
+            <h2>Catálogo de Especialización</h2>
+        </div>
+
+        <div class="grid">
             
-            <div class="space-y-4">
-                <div class="p-8 border border-slate-800 rounded-2xl bg-slate-950 hover:border-cyan-500/50 transition-all cursor-default">
-                    <div class="flex items-center gap-4 mb-2">
-                        <span class="bg-cyan-500/10 text-cyan-500 text-[10px] px-2 py-0.5 rounded font-bold uppercase tracking-widest">Módulo 01</span>
-                    </div>
-                    <h4 class="text-xl font-bold text-white mt-1 mb-3">Fundamentos de HTML & Semántica Profesional</h4>
-                    <ul class="text-slate-400 space-y-2 text-sm">
-                        <li class="flex items-center gap-2"><i data-lucide="chevron-right" class="w-4 h-4 text-cyan-500"></i> Dominio de etiquetas HTML5 y SEO-ready con Claude</li>
-                        <li class="flex items-center gap-2"><i data-lucide="chevron-right" class="w-4 h-4 text-cyan-500"></i> Accesibilidad web y estándares internacionales W3C</li>
-                    </ul>
+            <!-- PRODUCTO 1: ENTRY ($10) -->
+            <div class="card standard">
+                <div class="card-img">
+                    <i class="ph-light ph-trend-up"></i>
                 </div>
+                <div class="card-body">
+                    <div class="category">Negocios Digitales</div>
+                    <h3 class="card-title">Monetización de Conocimiento</h3>
+                    <p class="card-desc">Estrategia integral para transformar experiencia profesional en activos digitales rentables y escalables.</p>
+                    
+                    <div class="price-tag">
+                        $10 USD
+                    </div>
 
-                <div class="p-8 border border-slate-800 rounded-2xl bg-slate-950 hover:border-cyan-500/50 transition-all cursor-default">
-                    <div class="flex items-center gap-4 mb-2">
-                        <span class="bg-cyan-500/10 text-cyan-500 text-[10px] px-2 py-0.5 rounded font-bold uppercase tracking-widest">Módulo 02</span>
+                    <div class="features-list">
+                        <div class="feature"><i class="ph-fill ph-check-circle"></i> Creación de Infoproductos</div>
+                        <div class="feature"><i class="ph-fill ph-check-circle"></i> Embudos de Venta Orgánicos</div>
+                        <div class="feature"><i class="ph-fill ph-check-circle"></i> Plantillas Ejecutivas</div>
                     </div>
-                    <h4 class="text-xl font-bold text-white mt-1 mb-3">Arquitectura Visual & Responsividad</h4>
-                    <ul class="text-slate-400 space-y-2 text-sm">
-                        <li class="flex items-center gap-2"><i data-lucide="chevron-right" class="w-4 h-4 text-cyan-500"></i> CSS Grid y Flexbox avanzado</li>
-                        <li class="flex items-center gap-2"><i data-lucide="chevron-right" class="w-4 h-4 text-cyan-500"></i> Frameworks de utilidad: Tailwind CSS Pro</li>
-                    </ul>
-                </div>
 
-                <div class="p-8 border border-slate-800 rounded-2xl bg-slate-950 hover:border-cyan-500/50 transition-all cursor-default">
-                    <div class="flex items-center gap-4 mb-2">
-                        <span class="bg-cyan-500/10 text-cyan-500 text-[10px] px-2 py-0.5 rounded font-bold uppercase tracking-widest">Módulo 03</span>
-                    </div>
-                    <h4 class="text-xl font-bold text-white mt-1 mb-3">Lógica Frontend & Monetización</h4>
-                    <ul class="text-slate-400 space-y-2 text-sm">
-                        <li class="flex items-center gap-2"><i data-lucide="chevron-right" class="w-4 h-4 text-cyan-500"></i> JavaScript moderno para apps dinámicas</li>
-                        <li class="flex items-center gap-2"><i data-lucide="chevron-right" class="w-4 h-4 text-cyan-500"></i> Cómo estructurar y vender tus servicios web</li>
-                    </ul>
+                    <a href="https://go.hotmart.com/N103942095R?dp=1" target="_blank" class="btn-card outline">Adquirir Programa</a>
                 </div>
+            </div>
+
+            <!-- PRODUCTO 2: PREMIUM ($29) -->
+            <div class="card featured">
+                <div class="card-img">
+                    <i class="ph-light ph-code"></i>
+                </div>
+                <div class="card-body">
+                    <div class="category">Desarrollo & IA</div>
+                    <h3 class="card-title">Programación con Claude AI</h3>
+                    <p class="card-desc">Masterclass técnica para integrar Inteligencia Artificial generativa en flujos de desarrollo de software complejos.</p>
+                    
+                    <div class="price-tag">
+                        $29 USD <span>$39 USD</span>
+                    </div>
+
+                    <div class="features-list">
+                        <div class="feature"><i class="ph-fill ph-check-circle"></i> Prompt Engineering Avanzado</div>
+                        <div class="feature"><i class="ph-fill ph-check-circle"></i> Automatización de Código</div>
+                        <div class="feature"><i class="ph-fill ph-check-circle"></i> Certificación Profesional</div>
+                    </div>
+
+                    <a href="https://go.hotmart.com/J103966161R?dp=1" target="_blank" class="btn-card">Inscribirse Ahora</a>
+                </div>
+            </div>
+
+            <!-- PRODUCTO 3: FUTURO (Próximamente) -->
+            <div class="card" style="opacity: 0.8; background: #f8fafc;">
+                <div class="card-img">
+                    <i class="ph-light ph-lock-key"></i>
+                </div>
+                <div class="card-body">
+                    <div class="category">Membresía Elite</div>
+                    <h3 class="card-title">Infinity Pass</h3>
+                    <p class="card-desc">Acceso ilimitado a la biblioteca completa, sesiones de mentoría privada y comunidad de alto nivel.</p>
+                    
+                    <div class="price-tag" style="font-size: 1.5rem; color: var(--text-muted);">
+                        Próximamente
+                    </div>
+
+                    <div class="features-list">
+                        <div class="feature"><i class="ph-fill ph-lock"></i> Acceso Total</div>
+                        <div class="feature"><i class="ph-fill ph-lock"></i> Networking</div>
+                    </div>
+
+                    <button class="btn-card outline" disabled style="opacity: 0.5; cursor: not-allowed;">Unirse a Lista de Espera</button>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- TRUST ICONS -->
+    <section id="metodologia" class="trust-section">
+        <div class="section-title">
+            <h2>Por qué elegir Infinity Corp</h2>
+            <p>Nuestra metodología se basa en tres pilares fundamentales.</p>
+        </div>
+        <div class="trust-grid">
+            <div class="trust-item">
+                <i class="ph-light ph-lightning"></i>
+                <h3>Velocidad de Implementación</h3>
+                <p>Contenidos diseñados para ser aplicados el mismo día. Sin teoría innecesaria.</p>
+            </div>
+            <div class="trust-item">
+                <i class="ph-light ph-certificate"></i>
+                <h3>Calidad Verificada</h3>
+                <p>Metodologías probadas en el mercado real con resultados auditables.</p>
+            </div>
+            <div class="trust-item">
+                <i class="ph-light ph-users-three"></i>
+                <h3>Soporte Dedicado</h3>
+                <p>Acompañamiento continuo para asegurar que alcances tus objetivos.</p>
             </div>
         </div>
     </section>
 
-    <!-- Precio -->
-    <section id="precios" class="py-32 relative">
-        <div class="glow-effect bottom-[-100px] right-0 opacity-40"></div>
-        <div class="max-w-4xl mx-auto px-6 text-center">
-            <h2 class="text-4xl md:text-5xl font-bold text-white mb-6">Inversión Profesional</h2>
-            <p class="text-slate-400 mb-16">Acceso corporativo ilimitado a la plataforma de Infinity Corp.</p>
-
-            <div class="bg-gradient-to-b from-slate-900 to-slate-950 border border-cyan-500/30 p-12 rounded-[3.5rem] relative overflow-hidden shadow-2xl shadow-cyan-500/5">
-                <div class="absolute top-0 right-0 bg-cyan-600 text-white px-8 py-2 rounded-bl-3xl text-sm font-bold uppercase tracking-widest">
-                    Tarifa Preferencial
-                </div>
-                
-                <div class="flex flex-col items-center">
-                    <span class="text-slate-500 line-through text-2xl mb-2">$89 USD</span>
-                    <div class="flex items-baseline gap-2 mb-8">
-                        <span class="text-8xl font-black text-white">$29</span>
-                        <span class="text-slate-400 font-medium">USD</span>
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-brand">
+                <div class="logo" style="color: white; text-shadow: none;">
+                    <!-- Logo mark adaptado para fondo oscuro -->
+                    <div class="logo-mark" style="background: linear-gradient(135deg, #1e293b, #020617); border-color: rgba(255,255,255,0.1);">
+                        <i class="ph-fill ph-infinity"></i>
                     </div>
-
-                    <ul class="text-left space-y-4 mb-12 max-w-sm">
-                        <li class="flex items-center gap-3 text-slate-300">
-                            <i data-lucide="check-circle" class="text-cyan-500 w-5 h-5"></i>
-                            Certificación Infinity Corp
-                        </li>
-                        <li class="flex items-center gap-3 text-slate-300">
-                            <i data-lucide="check-circle" class="text-cyan-500 w-5 h-5"></i>
-                            Workflows avanzados con Claude
-                        </li>
-                        <li class="flex items-center gap-3 text-slate-300">
-                            <i data-lucide="check-circle" class="text-cyan-500 w-5 h-5"></i>
-                            Guía para vender tus proyectos
-                        </li>
-                        <li class="flex items-center gap-3 text-slate-300">
-                            <i data-lucide="check-circle" class="text-cyan-500 w-5 h-5"></i>
-                            Soporte prioritario 24/7
-                        </li>
-                    </ul>
-
-                    <a href="https://go.hotmart.com/J103966161R?dp=1" target="_blank" class="block w-full bg-cyan-600 text-white py-6 rounded-3xl font-black text-xl hover:bg-cyan-500 transition-all shadow-xl shadow-cyan-600/20 active:scale-95 text-center">
-                        ADQUIRIR ACCESO
-                    </a>
-                    <p class="mt-6 text-slate-500 text-sm flex items-center gap-2 justify-center">
-                        <i data-lucide="shield-check" class="w-4 h-4"></i> Facturación disponible y garantía de satisfacción
-                    </p>
+                    ICE STORE
                 </div>
+                <p>Liderando la educación ejecutiva en la era de la inteligencia artificial y los negocios digitales.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Programas</h4>
+                <ul>
+                    <li><a href="#">Desarrollo IA</a></li>
+                    <li><a href="#">Negocios Online</a></li>
+                    <li><a href="#">Consultoría</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Empresa</h4>
+                <ul>
+                    <li><a href="#">Sobre Nosotros</a></li>
+                    <li><a href="#">Términos y Condiciones</a></li>
+                    <li><a href="#">Política de Privacidad</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Contacto</h4>
+                <ul>
+                    <li><a href="#">Infinitycorpsa1@gmail.com</a></li>
+                    <li><a href="#">Discord Comunidad</a></li>
+                </ul>
             </div>
         </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="py-16 border-t border-slate-900 px-6">
-        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-10">
-            <div>
-                <div class="text-2xl font-bold text-white mb-2 flex items-center gap-2">
-                    <i data-lucide="hexagon" class="text-cyan-500 w-6 h-6"></i>
-                    Infinity Corp<span class="text-cyan-500">.</span>
-                </div>
-                <p class="text-slate-500 text-sm max-w-xs text-center md:text-left font-light">
-                    Sistemas de aprendizaje de alto rendimiento para emprendedores digitales.
-                </p>
-            </div>
-            
-            <div class="flex gap-8 text-slate-400 text-sm">
-                <a href="#" class="hover:text-cyan-400 transition-colors">Legal</a>
-                <a href="#" class="hover:text-cyan-400 transition-colors">Privacidad</a>
-                <a href="#" class="hover:text-cyan-400 transition-colors">Contacto</a>
-            </div>
-            
-            <p class="text-slate-600 text-xs">© 2026 Infinity Corp. All rights reserved.</p>
+        <div class="copyright">
+            &copy; 2026 Infinity Corp Empresarial Store. Todos los derechos reservados.
         </div>
     </footer>
 
-    <script>
-        lucide.createIcons();
-    </script>
 </body>
 </html>
